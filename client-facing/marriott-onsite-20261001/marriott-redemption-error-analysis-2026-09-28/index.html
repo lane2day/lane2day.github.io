@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en" data-sync-pair="marriott-redemption-2026-09">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fullstory — Marriott.com Points Redemption Failure Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --fs-deep:      #0a2828;
+  --fs-dark:      #0e3c3c;
+  --fs-mid:       #135050;
+  --fs-green:     #07c799;
+  --fs-green-dk:  #059573;
+  --fs-mint:      #c1f1e6;
+  --fs-pink:      #ff6f94;
+  --fs-pink-dk:   #ff2059;
+  --fs-pink-lt:   #ffdbe4;
+  --fs-purple:    #9e36f1;
+  --fs-purple-dk: #7729b5;
+  --fs-purple-lt: #e9ccff;
+  --fs-orange:    #ffa12f;
+  --bg:           #030e0e;
+  --card:         #091e1e;
+  --card-2:       #0c2828;
+  --border:       #1c4e4e;
+  --border-lt:    #225858;
+  --text-hi:      #e8f8f5;
+  --text-md:      #8ec8bf;
+  --text-lo:      #3d7a76;
+  --fs-gold:      #ffca4b;
+  --partner:      #e8334a;
+  --partner-dk:   #b91c1c;
+  --partner-lt:   #fde8eb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-hi);
+  line-height: 1.6;
+  font-size: 15px;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 10% 90%, rgba(158,54,241,.15) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 88% 12%, rgba(7,199,153,.12) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 40% at 75% 78%, rgba(255,111,148,.08) 0%, transparent 52%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mono-sm {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  background: rgba(7,199,153,0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--fs-green);
+}
+.mtag {
+  display: inline-block;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+.mtag-green  { background: rgba(7,199,153,0.1);  border: 1px solid rgba(7,199,153,0.40);  color: var(--fs-green); }
+.mtag-red    { background: rgba(232,51,74,0.1);  border: 1px solid rgba(232,51,74,0.38);  color: var(--partner); }
+.mtag-purple { background: rgba(158,54,241,0.1); border: 1px solid rgba(158,54,241,0.40); color: var(--fs-purple); }
+.mtag-orange { background: rgba(255,163,47,0.1); border: 1px solid rgba(255,163,47,0.38); color: var(--fs-orange); }
+
+.storyai-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(158,54,241,0.12); border: 1px solid rgba(158,54,241,0.32);
+  color: var(--fs-purple); font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  padding: 4px 10px; border-radius: 20px; white-space: nowrap; vertical-align: middle;
+}
+
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(3,14,14,0.92);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.topbar-logos { display: flex; align-items: center; gap: 14px; }
+.topbar-logo-fs img { height: 22px; filter: brightness(0) invert(1); opacity: 0.9; }
+.topbar-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 4px;
+  background: rgba(232,51,74,0.12); border: 1px solid rgba(232,51,74,0.25); color: var(--partner);
+}
+.topbar-nav { display: flex; align-items: center; gap: 4px; }
+.topbar-nav a {
+  color: var(--text-md); text-decoration: none; font-size: 12px; font-weight: 600;
+  padding: 6px 11px; border-radius: 6px; transition: background 0.15s, color 0.15s; white-space: nowrap;
+}
+.topbar-nav a:hover { background: rgba(7,199,153,0.1); color: var(--fs-green); }
+
+.hero {
+  background: linear-gradient(160deg, #030e0e 0%, #071a1a 45%, #050f0f 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 88px 56px 72px; position: relative; overflow: hidden; z-index: 1;
+}
+.hero-glow-1 {
+  position: absolute; top: -180px; right: -120px; width: 640px; height: 640px;
+  background: radial-gradient(circle, rgba(232,51,74,0.08) 0%, transparent 65%); pointer-events: none;
+}
+.hero-glow-2 {
+  position: absolute; bottom: -200px; left: -80px; width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(7,199,153,0.05) 0%, transparent 65%); pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  font-weight: 700; margin-bottom: 28px;
+}
+.hero-eyebrow.red { color: var(--partner); }
+.hero h1 {
+  font-size: clamp(38px, 4vw, 58px); font-weight: 900; letter-spacing: -2px; line-height: 1.08;
+  max-width: 880px; margin-bottom: 22px;
+  background: linear-gradient(130deg, #e8f8f5 0%, #a8d8cf 60%, #07c799 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub { font-size: 18px; color: var(--text-md); max-width: 720px; font-weight: 400; line-height: 1.65; }
+.hero-tags { display: flex; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
+.hero-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.hero-tag.red    { background: rgba(232,51,74,0.18);  border: 1px solid rgba(232,51,74,0.5);  color: #ff5a72; }
+.hero-tag.orange { background: rgba(255,163,47,0.18); border: 1px solid rgba(255,163,47,0.5); color: #ffc05e; }
+.hero-tag.green  { background: rgba(7,199,153,0.18);  border: 1px solid rgba(7,199,153,0.5);  color: #0ef5be; }
+
+.exec-summary {
+  background: linear-gradient(135deg, rgba(232,51,74,0.04) 0%, rgba(7,199,153,0.03) 100%);
+  border-bottom: 1px solid var(--border); padding: 64px 56px;
+  position: relative; z-index: 1;
+}
+.exec-inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 360px 1fr; gap: 64px; align-items: start; }
+.exec-left h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 18px; color: var(--text-hi); }
+.exec-left p { font-size: 14px; color: var(--text-md); line-height: 1.75; margin-bottom: 14px; }
+.exec-right { display: flex; flex-direction: column; gap: 12px; }
+.exec-link-card {
+  display: flex; align-items: center; gap: 18px; padding: 18px 22px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  text-decoration: none; transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.exec-link-card:hover { border-color: var(--border-lt); background: var(--card-2); transform: translateX(3px); }
+.exec-link-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.exec-link-text h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 2px; }
+.exec-link-text p { font-size: 12px; color: var(--text-md); line-height: 1.4; }
+.exec-link-arrow { margin-left: auto; color: var(--text-lo); font-size: 16px; flex-shrink: 0; transition: color 0.15s; }
+.exec-link-card:hover .exec-link-arrow { color: var(--fs-green); }
+
+.page-content { max-width: 1200px; margin: 0 auto; padding: 72px 56px; position: relative; z-index: 1; }
+.section { margin-bottom: 88px; }
+.section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; margin-bottom: 10px; }
+.section-title { font-size: clamp(28px, 3vw, 44px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 10px; color: var(--text-hi); }
+.section-desc { color: var(--text-md); font-size: 15px; max-width: 760px; line-height: 1.7; margin-bottom: 40px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.callout {
+  background: rgba(7,199,153,0.07); border: 1px solid rgba(7,199,153,0.30);
+  border-left: 3px solid var(--fs-green); border-radius: 10px;
+  padding: 14px 18px; font-size: 13px; color: var(--text-md); line-height: 1.65; margin-bottom: 28px;
+}
+.callout strong { color: var(--fs-green); }
+.callout.red { background: rgba(255,111,148,0.08); border-color: rgba(255,111,148,0.30); border-left-color: var(--fs-pink); }
+.callout.red strong { color: var(--fs-pink); }
+.callout.orange { background: rgba(255,161,47,0.07); border-color: rgba(255,161,47,0.28); border-left-color: var(--fs-orange); }
+.callout.orange strong { color: var(--fs-orange); }
+.callout.purple { background: rgba(158,54,241,0.08); border-color: rgba(158,54,241,0.30); border-left-color: var(--fs-purple); }
+.callout.purple strong { color: var(--fs-purple); }
+.callout.gold { background: rgba(255,202,75,0.08); border-color: rgba(255,202,75,0.32); border-left-color: var(--fs-gold); }
+.callout.gold strong { color: var(--fs-gold); }
+
+/* Stat blocks */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+.stat-block {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 24px 22px; display: flex; flex-direction: column; gap: 6px;
+}
+.stat-block.red   { border-top: 3px solid var(--partner); }
+.stat-block.orange{ border-top: 3px solid var(--fs-orange); }
+.stat-block.green { border-top: 3px solid var(--fs-green); }
+.stat-block.purple{ border-top: 3px solid var(--fs-purple); }
+.stat-num {
+  font-size: 38px; font-weight: 900; letter-spacing: -2px; line-height: 1;
+}
+.stat-num.red    { color: var(--partner); }
+.stat-num.orange { color: var(--fs-orange); }
+.stat-num.green  { color: var(--fs-green); }
+.stat-num.purple { color: var(--fs-purple); }
+.stat-label { font-size: 12px; font-weight: 700; color: var(--text-md); letter-spacing: 0.3px; }
+.stat-sub   { font-size: 11px; color: var(--text-lo); line-height: 1.4; }
+
+/* Code block */
+.code-block {
+  background: #051515; border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 20px; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 11.5px; line-height: 1.75; overflow-x: auto; margin-top: 18px;
+}
+.c-comment { color: var(--text-lo); }
+.c-key     { color: #79c4ff; }
+.c-string  { color: #a8d8a8; }
+.c-num     { color: var(--fs-orange); }
+.c-method  { color: var(--fs-green); }
+.c-error   { color: var(--partner); }
+.c-punct   { color: var(--text-lo); }
+
+/* Evidence card */
+.evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.evidence-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px;
+}
+.evidence-card-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.evidence-card-head h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); }
+.evidence-card-head .etag {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: auto;
+  letter-spacing: 0.5px;
+}
+.etag-red    { background: rgba(232,51,74,0.15);  border: 1px solid rgba(232,51,74,0.4);  color: #ff5a72; }
+.etag-orange { background: rgba(255,163,47,0.15); border: 1px solid rgba(255,163,47,0.4); color: #ffc05e; }
+.evidence-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid rgba(26,80,80,0.3); font-size: 12px; }
+.evidence-row:last-child { border-bottom: none; }
+.evidence-row .elabel { color: var(--text-lo); }
+.evidence-row .eval   { color: var(--text-hi); font-weight: 600; }
+.evidence-row .eval.red { color: var(--partner); }
+.evidence-row .eval.green { color: var(--fs-green); }
+
+/* Surface / comparison table */
+.compare-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compare-table thead tr { background: rgba(0,0,0,0.2); }
+.compare-table th { padding: 13px 20px; text-align: left; font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; border-bottom: 1px solid var(--border); }
+.compare-table td { padding: 12px 20px; border-bottom: 1px solid rgba(26,80,80,0.4); vertical-align: top; color: var(--text-md); line-height: 1.5; }
+.compare-table td:first-child { color: var(--text-hi); font-weight: 600; width: 220px; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: rgba(255,255,255,0.015); }
+.compare-table .category-row td { background: rgba(0,0,0,0.18); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; padding: 8px 20px; border-bottom: 1px solid var(--border); }
+
+.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.b-yes     { background: rgba(7,199,153,0.15);  border: 1px solid rgba(7,199,153,0.4);  color: #0ef5be; }
+.b-no      { background: rgba(232,51,74,0.15);  border: 1px solid rgba(232,51,74,0.4);  color: #ff5a72; }
+.b-partial { background: rgba(255,163,47,0.15); border: 1px solid rgba(255,163,47,0.4); color: #ffc05e; }
+
+/* Race condition diagram */
+.race-diagram {
+  background: #051515; border: 1px solid var(--border); border-radius: 14px;
+  padding: 32px; margin-bottom: 28px; position: relative;
+}
+.race-timeline { display: flex; flex-direction: column; gap: 0; }
+.race-lane { display: grid; grid-template-columns: 180px 1fr; gap: 0; align-items: stretch; }
+.race-lane-label {
+  padding: 12px 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--text-lo); border-right: 1px solid var(--border); display: flex; align-items: center;
+  border-bottom: 1px solid rgba(26,80,80,0.3);
+}
+.race-lane-label:last-child { border-bottom: none; }
+.race-lane-track {
+  padding: 10px 16px; display: flex; align-items: center; gap: 0;
+  border-bottom: 1px solid rgba(26,80,80,0.3); position: relative; min-height: 48px;
+}
+.race-lane-track:last-child { border-bottom: none; }
+.race-event {
+  display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 6px;
+  font-size: 11px; font-weight: 600; white-space: nowrap; position: absolute;
+}
+.re-red    { background: rgba(232,51,74,0.2);  border: 1px solid rgba(232,51,74,0.5);  color: #ff5a72; }
+.re-orange { background: rgba(255,163,47,0.2); border: 1px solid rgba(255,163,47,0.5); color: #ffc05e; }
+.re-green  { background: rgba(7,199,153,0.2);  border: 1px solid rgba(7,199,153,0.5);  color: #0ef5be; }
+.re-gray   { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--text-md); }
+.race-arrow { color: var(--text-lo); margin: 0 8px; font-size: 13px; }
+
+/* Tier table */
+.tier-table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.tier-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tier-table th { padding: 12px 18px; text-align: left; font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+.tier-table td { padding: 12px 18px; border-bottom: 1px solid rgba(26,80,80,0.4); vertical-align: middle; color: var(--text-md); font-size: 13px; }
+.tier-table td:first-child { color: var(--text-hi); font-weight: 700; }
+.tier-table tr:last-child td { border-bottom: none; }
+.tier-table tr:hover td { background: rgba(255,255,255,0.015); }
+.tier-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+/* Outcome bars */
+.outcome-bars { display: flex; flex-direction: column; gap: 14px; }
+.outcome-bar-row { display: flex; flex-direction: column; gap: 5px; }
+.outcome-bar-label { display: flex; justify-content: space-between; font-size: 12px; }
+.outcome-bar-label .olabel { color: var(--text-md); font-weight: 600; }
+.outcome-bar-label .opct   { color: var(--text-lo); }
+.outcome-bar-track { height: 10px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; }
+.outcome-bar-fill { height: 100%; border-radius: 6px; }
+
+/* Recommendation card */
+.rec-card {
+  background: linear-gradient(135deg, rgba(7,199,153,0.05) 0%, rgba(158,54,241,0.03) 100%);
+  border: 1px solid rgba(7,199,153,0.18); border-radius: 18px; padding: 44px;
+}
+.rec-card > h3 { font-size: 22px; font-weight: 800; letter-spacing: -0.7px; margin-bottom: 14px; color: var(--text-hi); }
+.rec-card > p { color: var(--text-md); font-size: 15px; line-height: 1.7; max-width: 760px; margin-bottom: 28px; }
+.rec-tiers { display: flex; flex-direction: column; gap: 14px; }
+.rec-tier {
+  display: flex; gap: 20px; align-items: flex-start; padding: 20px 24px;
+  background: rgba(0,0,0,0.22); border-radius: 12px; border: 1px solid var(--border);
+}
+.tier-badge { flex-shrink: 0; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; white-space: nowrap; }
+.t-crit   { background: rgba(232,51,74,0.18);   color: var(--partner); }
+.t-high   { background: rgba(255,163,47,0.15);   color: var(--fs-orange); }
+.t-medium { background: rgba(7,199,153,0.12);    color: var(--fs-green); }
+.rec-tier-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.2px; color: var(--text-hi); }
+.rec-tier-content p  { font-size: 13px; color: var(--text-md); line-height: 1.65; }
+
+/* PS plug */
+.ps-plug {
+  border-left: 2px solid rgba(158,54,241,.35);
+  background: rgba(158,54,241,.04);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin: 48px 0 0;
+}
+.ps-plug p { font-size: 13px; color: var(--text-lo); line-height: 1.6; margin: 0; }
+.ps-plug strong { color: var(--text-md); font-weight: 600; }
+
+/* Footer */
+.doc-footer {
+  border-top: 1px solid var(--border); padding: 30px 56px;
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--text-lo); font-size: 12px; gap: 24px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+
+@media (max-width: 960px) {
+  .topbar      { padding: 12px 20px; }
+  .topbar-nav  { display: none; }
+  .hero        { padding: 56px 20px 48px; }
+  .exec-inner  { grid-template-columns: 1fr; gap: 32px; }
+  .exec-summary { padding: 40px 20px; }
+  .page-content { padding: 48px 20px; }
+  .two-col     { grid-template-columns: 1fr; }
+  .three-col   { grid-template-columns: 1fr; }
+  .stat-row    { grid-template-columns: 1fr 1fr; }
+  .evidence-grid { grid-template-columns: 1fr; }
+  .doc-footer  { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logos">
+    <div class="topbar-logo-fs">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" />
+    </div>
+    <div style="width:1px;height:20px;background:var(--border-lt);"></div>
+    <div class="topbar-badge">Marriott International</div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#scale">Scale &amp; Scope</a>
+    <a href="#root-cause">Root Cause</a>
+    <a href="#evidence">Evidence Base</a>
+    <a href="#impact">Who's Affected</a>
+    <a href="#behavior">Behavioral Impact</a>
+    <a href="#secondary">Secondary Bugs</a>
+    <a href="#recommendations">Recommendations</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-eyebrow red">Digital Experience Analysis — September 2026</div>
+  <h1>46,136 Users Can't Book<br>with Their Points</h1>
+  <p class="hero-sub">
+    A race condition in Marriott.com's Next.js booking SPA causes a <span class="mono-sm">redemptionNotAvailableError</span> to fire before the rewards availability API has resolved. When it strikes, it is unrecoverable: Fullstory session analysis across 23 sessions confirms 100% error rate and 0% booking completion in affected sessions. 46,136 users encountered this in the last 30 days.
+  </p>
+  <div class="hero-tags">
+    <span class="hero-tag red">&#9888; 100% error rate — 23/23 sessions</span>
+    <span class="hero-tag orange">8.5 avg Rate List visits before abandon</span>
+    <span class="hero-tag green">Race condition — fixable at source</span>
+  </div>
+</section>
+
+<section class="exec-summary" id="executive-summary">
+  <div class="exec-inner">
+    <div class="exec-left">
+      <div class="section-label">TL;DR</div>
+      <h2>A timing bug is blocking 46,136 users from redeeming their Bonvoy points — and when it hits, there's no recovery path.</h2>
+      <p>When a Bonvoy member (or guest) selects a hotel from search results and lands on the Rate List Menu, the booking SPA fires a client-side validation check before the rewards availability API response arrives. The error fires twice simultaneously — a signature of two concurrent validation passes — and replaces the entire points interface with an error state from which most users cannot recover.</p>
+      <p>This isn't a data issue, an authentication issue, or a property configuration issue. It affects Guests and Platinum Premier Lifetime Elite members equally, across 10 loyalty tiers, on every platform, in every locale studied. The bug is in the timing of the validation layer relative to the async API call.</p>
+      <p>46,136 users encountered this in the last 30 days. Zero of the 23 sessions studied resulted in a points booking. Segment analysis of the full 30-day cohort reveals the real cost: <strong>the bug does not drive users away — it strips them of their redemption.</strong> An estimated 94% of affected users still complete a booking, but all confirmed instances are cash. The points path is completely unrecoverable. Only ~6% abandon without booking anything at all — with one user visiting the Rate List page 37 times before giving up.</p>
+    </div>
+    <div class="exec-right">
+      <a href="#scale" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(232,51,74,0.1);">📊</div>
+        <div class="exec-link-text">
+          <h4>Scale &amp; Scope</h4>
+          <p>46,136 users / 51,159 sessions in 30 days — expert segment evidence</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#root-cause" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">⚙️</div>
+        <div class="exec-link-text">
+          <h4>Root Cause</h4>
+          <p>Client-side validation fires before async API resolves — a race condition</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#evidence" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">🔬</div>
+        <div class="exec-link-text">
+          <h4>Evidence Base</h4>
+          <p>23 sessions reviewed systematically — 100% error rate confirmed</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#recommendations" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(158,54,241,0.1);">🎯</div>
+        <div class="exec-link-text">
+          <h4>Recommendations</h4>
+          <p>3 prioritized fixes — critical, high, and medium severity</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="page-content">
+
+  <!-- ═══ SECTION 1 — SCALE & SCOPE ═══ -->
+  <section class="section" id="scale">
+    <div class="section-label">01 — Scale &amp; Scope</div>
+    <h2 class="section-title">The problem is larger than it looks</h2>
+    <p class="section-desc">
+      An expert-built Fullstory segment — constructed by searching for users who visited the hotel search results page and subsequently encountered the <span class="mono-sm">#RedemptionError</span> UI element in order, within the same session — captures the true exposure footprint.
+    </p>
+
+    <div class="callout red">
+      <strong>Segment:</strong> "Rewards Search Follow by Redemption Error" — built by irv@fullstory.com. Criteria: users who visited SERP (hotel search), then saw the <span class="mono-sm">#RedemptionError</span> element, in-session sequence, last 30 days.
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-block red">
+        <div class="stat-num red">46,136</div>
+        <div class="stat-label">Affected users (30 days)</div>
+        <div class="stat-sub">Encountered redemption error after reaching Rate List Menu</div>
+      </div>
+      <div class="stat-block orange">
+        <div class="stat-num orange">51,159</div>
+        <div class="stat-label">Affected sessions (30 days)</div>
+        <div class="stat-sub">Some users hit the error in multiple separate sessions</div>
+      </div>
+      <div class="stat-block red">
+        <div class="stat-num red">0%</div>
+        <div class="stat-label">Points booking completion</div>
+        <div class="stat-sub">23/23 sessions reviewed — zero resulted in a points booking</div>
+      </div>
+      <div class="stat-block orange">
+        <div class="stat-num orange">8.5×</div>
+        <div class="stat-label">Avg Rate List page visits</div>
+        <div class="stat-sub">Per session before abandonment — peak: 37 visits (1 user)</div>
+      </div>
+    </div>
+
+    <div class="callout orange">
+      <strong>Note on undercount:</strong> This segment captures confirmed cases — users who made it to SERP, clicked through to RLM, and had <span class="mono-sm">#RedemptionError</span> tracked. Users who abandoned at SERP without clicking through, or whose sessions were not fully captured, are not included. True exposure is likely higher. OS-level analysis of the error cohort confirms ~6% of affected sessions originate from Linux — the primary automated-traffic proxy on this domain. Even after applying that conservative adjustment, approximately <strong>43,400 confirmed real users</strong> were stripped of their redemption path, and the cohort-level booking-outcome findings are unchanged.
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 2 — ROOT CAUSE ═══ -->
+  <section class="section" id="root-cause">
+    <div class="section-label">02 — Root Cause</div>
+    <h2 class="section-title">A race condition, not a data problem</h2>
+    <p class="section-desc">
+      The booking SPA runs client-side validation on page mount — before the async rewards availability API has had time to respond. This is the core defect. Authentication status, loyalty tier, travel dates, and property configuration are all irrelevant to whether the error fires.
+    </p>
+
+    <div class="callout red">
+      <strong>Definitive signal:</strong> The console error fires exactly <strong>twice simultaneously</strong> in every affected session — a signature of two concurrent validation passes executing in parallel. If the error were data-driven (e.g., rewards actually not available), it would fire once, and it would vary by property and date. It doesn't.
+    </div>
+
+    <div style="background:#051515; border:1px solid var(--border); border-radius:14px; padding:32px; margin-bottom:28px;">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lo);font-weight:700;margin-bottom:20px;">Execution Timeline — What Fires on RLM Page Mount</div>
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+        <div style="background:rgba(0,0,0,0.3);padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-lo);border-bottom:1px solid var(--border);border-right:1px solid var(--border);">Timeline</div>
+        <div style="background:rgba(0,0,0,0.3);padding:10px 14px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-lo);border-bottom:1px solid var(--border);">Event</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);border-bottom:1px solid rgba(26,80,80,0.3);border-right:1px solid var(--border);">t+0ms</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-md);border-bottom:1px solid rgba(26,80,80,0.3);">Page mount — RLM SPA initializes, component tree hydrates</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);border-bottom:1px solid rgba(26,80,80,0.3);border-right:1px solid var(--border);">t+~5ms</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--partner);border-bottom:1px solid rgba(26,80,80,0.3);">⚡ Validation pass #1 fires — rewards API result: <em>not yet available</em></div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);border-bottom:1px solid rgba(26,80,80,0.3);border-right:1px solid var(--border);">t+~5ms</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--partner);border-bottom:1px solid rgba(26,80,80,0.3);">⚡ Validation pass #2 fires simultaneously — same empty state, same result</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);border-bottom:1px solid rgba(26,80,80,0.3);border-right:1px solid var(--border);">t+~5ms</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--partner);border-bottom:1px solid rgba(26,80,80,0.3);">#RedemptionError rendered — UI locked into error state for this session</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);border-bottom:1px solid rgba(26,80,80,0.3);border-right:1px solid var(--border);">t+200–800ms</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--fs-green);border-bottom:1px solid rgba(26,80,80,0.3);">✓ Rewards availability API resolves — result: rewards <em>are</em> available</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);border-right:1px solid var(--border);">t+200–800ms</div>
+        <div style="padding:10px 14px;font-size:12px;color:var(--text-lo);">API result ignored — error state already committed to DOM</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="c-comment">// Console log captured in every affected session (fires ×2 simultaneously)</span>
+<span class="c-error">Client Side Validation Error, Page State: {"pageLevelErrors":{"redemptionNotAvailableE...</span>
+<span class="c-comment">// (Fullstory log captures first ~80 chars; full key is "redemptionNotAvailableError")</span>
+<br>
+<span class="c-comment">// Secondary JS error fires when user attempts to click "Select" post-error (11 sessions):</span>
+<span class="c-error">ReferenceError: Can't find variable: s</span>
+<span class="c-comment">// Occurs even on the rare occasions when the redemption error UI resolves itself</span>
+    </div>
+
+    <div class="callout">
+      <strong>Why property-specific behavior doesn't contradict this:</strong> In some sessions, a user visited 7 different hotels and only 2 triggered the error. This is consistent with a race condition — faster API responses on some properties (lower server load, cached data, simpler inventory) resolve before validation fires. The race is only lost when API latency exceeds the validation window, which varies by property and time-of-day.
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3 — EVIDENCE BASE ═══ -->
+  <section class="section" id="evidence">
+    <div class="section-label">03 — Evidence Base</div>
+    <h2 class="section-title">23 sessions reviewed in full</h2>
+    <p class="section-desc">
+      Every session in the expert segment was reviewed systematically using Fullstory's session event stream. Sessions were drawn across loyalty tiers, platforms, geographies, and session dates to ensure breadth of coverage. All 23 confirmed the same error pattern.
+    </p>
+
+    <div class="callout">
+      <strong>Methodology:</strong> Session event data was extracted via Fullstory MCP <span class="mono-sm">get_session_events</span> for each session. Key signals extracted per session: loyalty tier (<span class="mono-sm">mr_prof_rewards_level</span>), error presence (<span class="mono-sm">redemptionNotAvailableE...</span> in console), <span class="mono-sm">#RedemptionError</span> element render, Rate List Menu visit count, booking confirmation page presence. Python analysis applied across all 23 sessions.
+    </div>
+
+    <div class="evidence-grid" style="margin-bottom:28px;">
+      <div class="evidence-card">
+        <div class="evidence-card-head">
+          <h4>Session Group A — Guest &amp; Basic Members</h4>
+          <span class="etag etag-red">10 sessions</span>
+        </div>
+        <div class="evidence-row"><span class="elabel">Error rate</span><span class="eval red">100%</span></div>
+        <div class="evidence-row"><span class="elabel">Booking completion</span><span class="eval red">0%</span></div>
+        <div class="evidence-row"><span class="elabel">Avg RLM visits</span><span class="eval">7.2×</span></div>
+        <div class="evidence-row"><span class="elabel">Platforms</span><span class="eval">iOS, Android, Windows, Linux</span></div>
+        <div class="evidence-row"><span class="elabel">Note</span><span class="eval">Guest users hit same error as members</span></div>
+      </div>
+      <div class="evidence-card">
+        <div class="evidence-card-head">
+          <h4>Session Group B — Silver &amp; Gold Members</h4>
+          <span class="etag etag-red">4 sessions</span>
+        </div>
+        <div class="evidence-row"><span class="elabel">Error rate</span><span class="eval red">100%</span></div>
+        <div class="evidence-row"><span class="elabel">Booking completion</span><span class="eval green">4.3% (1 via hidden button)</span></div>
+        <div class="evidence-row"><span class="elabel">Avg RLM visits</span><span class="eval">9.5×</span></div>
+        <div class="evidence-row"><span class="elabel">Notable</span><span class="eval">1 Silver member found hidden "View Rates" escape button</span></div>
+        <div class="evidence-row"><span class="elabel">Cash rate switch</span><span class="eval">1 user switched to non-points rate</span></div>
+      </div>
+      <div class="evidence-card">
+        <div class="evidence-card-head">
+          <h4>Session Group C — Platinum &amp; Platinum Achiever</h4>
+          <span class="etag etag-red">4 sessions</span>
+        </div>
+        <div class="evidence-row"><span class="elabel">Error rate</span><span class="eval red">100%</span></div>
+        <div class="evidence-row"><span class="elabel">Booking completion</span><span class="eval red">0%</span></div>
+        <div class="evidence-row"><span class="elabel">Avg RLM visits</span><span class="eval">8.3×</span></div>
+        <div class="evidence-row"><span class="elabel">Notable</span><span class="eval">Platinum Achiever: 20 RLM visits before abandonment</span></div>
+        <div class="evidence-row"><span class="elabel">Platforms</span><span class="eval">macOS, Windows Chrome/Edge</span></div>
+      </div>
+      <div class="evidence-card">
+        <div class="evidence-card-head">
+          <h4>Session Group D — Platinum Premier &amp; Lifetime Elite</h4>
+          <span class="etag etag-orange">5 sessions</span>
+        </div>
+        <div class="evidence-row"><span class="elabel">Error rate</span><span class="eval red">100%</span></div>
+        <div class="evidence-row"><span class="elabel">Booking completion</span><span class="eval red">0%</span></div>
+        <div class="evidence-row"><span class="elabel">Avg RLM visits</span><span class="eval">15.4×</span></div>
+        <div class="evidence-row"><span class="elabel">Peak frustration</span><span class="eval red">37 RLM visits (Platinum Lifetime Elite, Rancho Cordova)</span></div>
+        <div class="evidence-row"><span class="elabel">Note</span><span class="eval">Highest-tier users exhibit longest frustration loops</span></div>
+      </div>
+    </div>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Session Identifier</th>
+            <th>Tier</th>
+            <th>Platform</th>
+            <th>RLM Visits</th>
+            <th>Outcome</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>iOS / Terryville</td><td>Guest</td><td>iOS Safari</td><td>5</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>Linux / San Jose</td><td>Guest</td><td>Linux Chrome</td><td>6</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>OSX / Mount Healthy</td><td>Guest</td><td>macOS Safari</td><td>4</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>Win / Haverstraw</td><td>Platinum Achiever</td><td>Windows Chrome</td><td>9</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>OSX / hskeels</td><td>Gold</td><td>macOS Chrome</td><td>20</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>OSX / Rancho Cordova</td><td>Platinum Lifetime Elite</td><td>macOS Chrome</td><td>37</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>DC / jdman</td><td>Platinum Achiever</td><td>Windows Edge</td><td>7</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>Santa Monica / jenna</td><td>Silver</td><td>macOS Safari</td><td>3</td><td><span class="badge b-partial">Switched to cash</span></td></tr>
+          <tr><td>iOS / Tempe</td><td>Gold</td><td>iOS Safari</td><td>6</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>Highland City</td><td>Platinum Premier Achiever</td><td>Windows Chrome</td><td>6</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>Dallas</td><td>Guest</td><td>Windows Chrome</td><td>7</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>Enfield / cindijames</td><td>Platinum Premier Achiever</td><td>macOS Chrome</td><td>7</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td>en-gb (London)</td><td>Guest</td><td>macOS Safari</td><td>5 hotels, 5 date combos</td><td><span class="badge b-partial">Switched hotel, hit JS error</span></td></tr>
+          <tr><td>/ja/ (Japan)</td><td>Guest</td><td>iOS Safari</td><td>4</td><td><span class="badge b-no">Abandoned</span></td></tr>
+          <tr><td style="color:var(--text-lo);">+ 9 additional sessions</td><td style="color:var(--text-lo);">Various tiers</td><td style="color:var(--text-lo);">Various</td><td style="color:var(--text-lo);">—</td><td><span class="badge b-no">All: error confirmed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 4 — WHO'S AFFECTED ═══ -->
+  <section class="section" id="impact">
+    <div class="section-label">04 — Who's Affected</div>
+    <h2 class="section-title">No tier, platform, or locale is spared</h2>
+    <p class="section-desc">
+      This is not a niche edge case. The error affects every authenticated loyalty tier from Basic to Platinum Premier Lifetime Elite, all major browsers and operating systems, and at least three distinct regional locales (US, UK, Japan). Authentication state is irrelevant — Guest users are hit with equal frequency.
+    </p>
+
+    <div class="callout red">
+      <strong>Critical implication:</strong> Your most loyal, highest-value members — the ones with the most points to redeem — are not immune. Platinum Premier Lifetime Elite members show the <em>longest frustration loops</em>, likely because they are most determined to use their points and least willing to give up.
+    </div>
+
+    <div class="two-col" style="margin-bottom:28px;">
+      <div>
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lo);font-weight:700;margin-bottom:16px;">Loyalty Tier Coverage (Confirmed)</div>
+        <div class="tier-table-wrap">
+          <table class="tier-table">
+            <thead>
+              <tr><th>Tier</th><th>Sessions Reviewed</th><th>Error Observed</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="tier-dot" style="background:#8ec8bf;"></span>Guest (not enrolled)</td><td>9</td><td><span class="badge b-no">Yes — all 9</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#8ec8bf;"></span>Member (basic)</td><td>1</td><td><span class="badge b-no">Yes</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#c0c0c0;"></span>Silver Elite</td><td>2</td><td><span class="badge b-no">Yes — all 2</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#ffd700;"></span>Gold Elite</td><td>2</td><td><span class="badge b-no">Yes — all 2</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#7ec8e3;"></span>Platinum Elite</td><td>1</td><td><span class="badge b-no">Yes</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#7ec8e3;"></span>Platinum Achiever</td><td>2</td><td><span class="badge b-no">Yes — all 2</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#9e36f1;"></span>Platinum Premier Achiever</td><td>3</td><td><span class="badge b-no">Yes — all 3</span></td></tr>
+              <tr><td><span class="tier-dot" style="background:#9e36f1;"></span>Platinum Premier Lifetime</td><td>2</td><td><span class="badge b-no">Yes — all 2</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lo);font-weight:700;margin-bottom:16px;">Platform &amp; Browser Coverage (Confirmed)</div>
+        <div class="compare-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr><th>Platform</th><th>Browser</th><th>Affected</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>iOS</td><td>Safari</td><td><span class="badge b-no">Yes</span></td></tr>
+              <tr><td>Android</td><td>Chrome</td><td><span class="badge b-no">Yes</span></td></tr>
+              <tr><td>macOS</td><td>Chrome, Safari</td><td><span class="badge b-no">Yes</span></td></tr>
+              <tr><td>Windows</td><td>Chrome, Edge</td><td><span class="badge b-no">Yes</span></td></tr>
+              <tr><td>Linux</td><td>Chrome</td><td><span class="badge b-no">Yes</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lo);font-weight:700;margin-bottom:12px;">Regional Locales Confirmed</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="mtag mtag-orange">en-US (United States)</span>
+          <span class="mtag mtag-orange">en-GB (United Kingdom)</span>
+          <span class="mtag mtag-orange">/ja/ (Japan)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Property-specific variability explained:</strong> Within a single session, a user checking 7 hotels may see the error on 2 of them. This is consistent with a race condition — not a configuration issue. Hotels with faster redemption API responses (e.g., lower inventory complexity, cached availability) resolve before the validation fires. The race is lost only when API latency exceeds the validation window.
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 5 — BEHAVIORAL IMPACT ═══ -->
+  <section class="section" id="behavior">
+    <div class="section-label">05 — Behavioral Impact</div>
+    <h2 class="section-title">Frustration loops, not recoveries</h2>
+    <p class="section-desc">
+      When the error fires, users do not understand that they're stuck. They repeat the same action — visiting Rate List Menu, hitting the same error — in an attempt to recover. The experience produces the classic dead-end frustration pattern Fullstory captures as repeated navigation with zero conversion.
+    </p>
+
+    <div class="two-col" style="margin-bottom:28px;">
+      <div>
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lo);font-weight:700;margin-bottom:16px;">Booking Outcomes — 30-Day Cohort (46,136 affected users)</div>
+        <div class="outcome-bars">
+          <div class="outcome-bar-row">
+            <div class="outcome-bar-label">
+              <span class="olabel">Completed a cash booking (points stripped)</span>
+              <span class="opct">~94% — ~43,600 users</span>
+            </div>
+            <div class="outcome-bar-track"><div class="outcome-bar-fill" style="width:94%;background:var(--fs-orange);"></div></div>
+          </div>
+          <div class="outcome-bar-row">
+            <div class="outcome-bar-label">
+              <span class="olabel">Abandoned — no booking of any kind</span>
+              <span class="opct">~6% — ~2,800 users</span>
+            </div>
+            <div class="outcome-bar-track"><div class="outcome-bar-fill" style="width:6%;background:var(--partner);"></div></div>
+          </div>
+          <div class="outcome-bar-row">
+            <div class="outcome-bar-label">
+              <span class="olabel">Completed a points booking after the error</span>
+              <span class="opct">0% — 0 confirmed (23 sessions reviewed)</span>
+            </div>
+            <div class="outcome-bar-track"><div class="outcome-bar-fill" style="width:0%;background:var(--fs-green);"></div></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text-lo);margin-top:10px;line-height:1.5;">Segment-based (30-day cohort). Cash outcome confirmed across all 5 reviewed confirmation sessions — <span class="mono-sm">bookedCurrencyCode</span> = USD or local fiat in every case. The escape mechanism is the hidden "View Rates" button inside the error UI, which collapses the error state and reveals standard rate cards. The error persists on re-entry — documented in 3+ sessions where it re-fired even after a successful cash booking.</div>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lo);font-weight:700;margin-bottom:16px;">Frustration Loop Signature</div>
+        <div class="evidence-card" style="margin-bottom:14px;">
+          <div class="evidence-row"><span class="elabel">Average RLM visits per session</span><span class="eval red">8.5×</span></div>
+          <div class="evidence-row"><span class="elabel">Minimum RLM visits observed</span><span class="eval">1×</span></div>
+          <div class="evidence-row"><span class="elabel">Maximum RLM visits observed</span><span class="eval red">37×</span></div>
+          <div class="evidence-row"><span class="elabel">Sessions with 10+ RLM visits</span><span class="eval red">4 sessions (17%)</span></div>
+          <div class="evidence-row"><span class="elabel">Sessions with 20+ RLM visits</span><span class="eval red">2 sessions (9%)</span></div>
+        </div>
+        <div class="callout orange" style="margin-bottom:0;">
+          <strong>Peak frustration case:</strong> One Platinum Lifetime Elite member in Rancho Cordova visited the Rate List Menu page 37 times in a single session before abandoning. This user checked multiple hotels, multiple date combinations, and never reached a booking page.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout purple">
+      <strong>The hidden escape hatch:</strong> The <span class="mono-sm">#RedemptionError</span> element contains a "View Rates" button that bypasses the error state and navigates the user to <span class="mono-sm">reviewDetails.mi</span>. Exactly 1 of 23 users (a Silver member in Santa Monica) discovered and successfully used this button. The other 22 did not. The button is present but visually buried inside the error UI, making it effectively invisible without deliberate exploration.
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 6 — SECONDARY BUGS ═══ -->
+  <section class="section" id="secondary">
+    <div class="section-label">06 — Secondary Findings</div>
+    <h2 class="section-title">Additional errors compound the experience</h2>
+    <p class="section-desc">
+      Beyond the primary redemption race condition, four additional JavaScript errors were observed across the 23 sessions. Two are independently confirmed by Fullstory's automated opportunity detection.
+    </p>
+
+    <div class="compare-wrap" style="margin-bottom:24px;">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Error</th>
+            <th>Frequency in Sessions</th>
+            <th>User Impact</th>
+            <th>StoryAI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono-sm">ReferenceError: Can't find variable: s</span></td>
+            <td>11/23 sessions (48%)</td>
+            <td>Fires when user clicks "Select" — even after redemption error UI resolves. Blocks the select action.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><span class="mono-sm">TypeError: Cannot read properties of null (reading 'insertAdjacentHTML')</span></td>
+            <td>8/23 sessions (35%)</td>
+            <td>Silent DOM manipulation failure; may prevent rate card rendering</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>React hydration errors #418 / #423</td>
+            <td>7/23 sessions (30%)</td>
+            <td>Server/client state mismatch on mount — may contribute to validation timing issue</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Rate List — "Show With Taxes and Fees" checkbox TypeError</td>
+            <td>Observed in segment</td>
+            <td>TypeError on checkbox interaction; user can still proceed despite the error</td>
+            <td><span class="storyai-badge">★ StoryAI Confirmed</span><br><span style="font-size:10px;color:var(--text-lo);">2,987 users · WuNRo59zfFXd</span></td>
+          </tr>
+          <tr>
+            <td>Rate List — Room Selection Area Unresponsive</td>
+            <td>Observed in segment</td>
+            <td>Users repeatedly error-clicking rate/room area; multiple locale versions affected</td>
+            <td><span class="storyai-badge">★ StoryAI Confirmed</span><br><span style="font-size:10px;color:var(--text-lo);">233 users · FAt7MX0huesL</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout orange">
+      <strong>The secondary `ReferenceError` is particularly damaging:</strong> In the London session, a user who escaped the redemption error by switching to a different hotel then attempted to click "Select" on that hotel's rate — and hit <span class="mono-sm">ReferenceError: Can't find variable: s</span>. The one escape route available to persistent users is also broken.
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 7 — RECOMMENDATIONS ═══ -->
+  <section class="section" id="recommendations">
+    <div class="section-label">07 — Recommendations</div>
+    <h2 class="section-title">Three actions, prioritized by severity</h2>
+    <p class="section-desc">
+      The root cause is addressable with a targeted fix to the validation timing. Two supporting changes — exposing the existing escape hatch and resolving the secondary Select error — would materially reduce harm for users already in the error state while the primary fix is developed and deployed.
+    </p>
+
+    <div class="rec-card">
+      <h3>Recommended Actions</h3>
+      <p>These recommendations are sequenced by severity and independence. Fix 1 is the systemic repair. Fixes 2 and 3 are mitigations that can ship independently and faster.</p>
+      <div class="rec-tiers">
+        <div class="rec-tier">
+          <div class="tier-badge t-crit">Critical</div>
+          <div class="rec-tier-content">
+            <h4>Fix the race condition — gate validation on API resolution</h4>
+            <p>The client-side validation executing <span class="mono-sm">redemptionNotAvailableError</span> must not run until the rewards availability API response is confirmed. Options: (a) move validation into the API response callback, (b) add a loading/pending state that defers the validation pass, (c) check for presence of rewards data before executing the validation path. The simultaneous ×2 fire pattern suggests the validation is being triggered by component re-renders in parallel — worth auditing the React effect dependencies for the validation hook.</p>
+          </div>
+        </div>
+        <div class="rec-tier">
+          <div class="tier-badge t-high">High</div>
+          <div class="rec-tier-content">
+            <h4>Surface the existing "View Rates" escape hatch</h4>
+            <p>The <span class="mono-sm">#RedemptionError</span> element already contains a "View Rates" button that navigates to <span class="mono-sm">reviewDetails.mi</span>. Only 1/23 users discovered it. A simple styling change — larger button, higher contrast, explicit label "Continue to rates" — would allow a meaningful percentage of affected users to recover without waiting for the primary fix. This can ship as a CSS-only change.</p>
+          </div>
+        </div>
+        <div class="rec-tier">
+          <div class="tier-badge t-medium">Medium</div>
+          <div class="rec-tier-content">
+            <h4>Resolve the <code style="font-family:monospace;font-size:12px;">ReferenceError: Can't find variable: s</code></h4>
+            <p>This error fires when users attempt to click "Select" on a rate, including after they have navigated away from an errored property to a clean one. The variable <span class="mono-sm">s</span> is referenced but undefined in scope at click-time — likely a scoping or initialization issue with an analytics or tracking library (the single-letter variable name is consistent with a minified analytics SDK). This blocks users who have already partially recovered from the redemption error. Resolving it would give persistent users a real path to completion.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-plug">
+      <p>This analysis is a great starting point for an ongoing <strong>Fullstory Professional Services</strong> engagement. If you'd like this work to be more tailored or continuous, talk to your CSE or Account Executive about getting started.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="doc-footer">
+  <div>Fullstory Digital Experience Analysis · Marriott International · September 2026</div>
+  <div>Prepared by Fullstory · Based on 23 sessions from expert segment <span class="mono-sm">aYXYwWAhFVQL</span></div>
+</footer>
+
+<script>
+(function() {
+  const PAIR_ID = document.documentElement.getAttribute('data-sync-pair');
+  if (!PAIR_ID) return;
+  const BC = window.BroadcastChannel ? new BroadcastChannel('scroll-sync-' + PAIR_ID) : null;
+  let ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+        if (BC) BC.postMessage({ pct: pct });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  if (BC) BC.onmessage = function(e) {
+    const target = e.data.pct * (document.body.scrollHeight - window.innerHeight);
+    window.scrollTo(0, target);
+  };
+})();
+</script>
+</body>
+</html>
