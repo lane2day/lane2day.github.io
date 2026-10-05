@@ -4,10 +4,26 @@ Lane's personal GitHub Pages site. It indexes HTML deliverables that live in pro
 scattered across the laptop. **This repo holds symlinks only** — each source project stays
 the source of truth for its HTML and metadata.
 
-## The single most important rule
+## Hard constraints — non-negotiable
 
-**This site is public.** Anyone with a URL can open it. `robots.txt` plus a `noindex` tag
-keep it out of search engines, but that is obscurity, not access control.
+### 1. Allowed sources only
+
+**Every registered entry must come from one of these two roots, or a working tree branched off either:**
+
+- `~/Documents/GitHub/mn/users/lane2day/` — Lane's personal directory in the monorepo
+- `~/Documents/GitHub/mn/projects/solutions/` — SpecOps solutions directory
+
+Do not register HTML from any other location without Lane explicitly authorizing a new root.
+Before `pub add`, verify the resolved path starts with one of the above.
+
+### 2. The live site is public; the source repo must be private
+
+The deployed site at `lane2day.github.io` is accessible to anyone with a URL (GitHub Pages
+cannot enforce auth). The GitHub source repo at `github.com/lane2day/lane2day.github.io`
+**must remain private** — do not make it public, do not publish the repo URL.
+
+`robots.txt` and `noindex` tags keep the site out of search engines; obscure slugs are the
+secondary barrier. These are not substitutes for content-level review.
 
 Before registering or deploying anything, check it for:
 
@@ -51,8 +67,16 @@ node scripts/pub.mjs add <file.html|folder> [--slug name]
 node scripts/pub.mjs list [--json]              # entries + the metadata the index will show
 node scripts/pub.mjs remove <slug>
 node scripts/pub.mjs build                      # local preview: npx serve _site
-node scripts/pub.mjs deploy                     # build + secret scan + force-push to gh-pages
+node scripts/pub.mjs deploy                     # build + secret scan + deploy to Cloudflare Pages
 ```
+
+## Deploy target
+
+The site deploys to **Cloudflare Pages** (`lane2day-hub` project, `lane2day-hub.pages.dev`).
+`pub deploy` calls `wrangler pages deploy` using `wrangler.jsonc` at the repo root.
+Cloudflare Access gates the site — see Access setup in the Cloudflare Zero Trust dashboard.
+
+**GitHub Pages is no longer used.** Do not push to `gh-pages`.
 
 After `add`/`remove`, commit `registry/` on `main`. After editing a source file, just `deploy` —
 the symlink already points at it, so no registry change is needed.

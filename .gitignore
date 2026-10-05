@@ -2,3 +2,10 @@ _site/
 candidates.tsv
 .DS_Store
 .thumbs/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

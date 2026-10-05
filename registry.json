@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "accenture-pitch-leave-behind",
+      "slug": "accenture-pitch-leave-behind",
+      "kind": "deck",
+      "status": "published",
+      "format": "one-pager",
+      "audience": ["accenture"],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/accenture-pitch/leave-behind.html",
+          "type": "file",
+          "date": "2026-10-05"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "accenture-pitch",
+      "slug": "accenture-pitch",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": ["accenture"],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/accenture-pitch/deck.html",
+          "type": "file",
+          "date": "2026-10-05"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "cargo-20260426",
+      "slug": "cargo-20260426",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": ["cargo", "friction"],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/adv-friction-reports/cargo/20260426.html",
+          "type": "file",
+          "date": "2026-04-26"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "cargo-campaign-performance",
+      "slug": "cargo-campaign-performance",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": ["cargo"],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-playbooks/cargo-campaign-performance",
+          "type": "folder",
+          "date": "2026-04-27"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "cargo-ux-report",
+      "slug": "cargo-ux-report",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": ["cargo", "ux"],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/cargo-ux-report",
+          "type": "folder",
+          "date": "2026-09-08"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "copart-mcp-analysis",
+      "slug": "copart-mcp-analysis",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": ["copart"],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/copart-mcp-analysis",
+          "type": "folder",
+          "date": "2026-09-08"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "elpalaciodehierro-positioning",
+      "slug": "elpalaciodehierro-positioning",
+      "kind": "deck",
+      "status": "published",
+      "format": "one-pager",
+      "audience": ["el-palacio-de-hierro"],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/quantum-scripts/elpalaciodehierro/positioning.html",
+          "type": "file",
+          "date": "2026-05-12"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "field-playbooks-funnel-demos",
+      "slug": "field-playbooks-funnel-demos",
+      "kind": "prototype",
+      "status": "published",
+      "format": "prototype",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-playbooks/funnel-demos.html",
+          "type": "file",
+          "date": "2026-04-27"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "fs-vs-noibu",
+      "slug": "fs-vs-noibu",
+      "kind": "deck",
+      "status": "published",
+      "format": "report",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": ["competitive"],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/fs-vs-noibu",
+          "type": "folder",
+          "date": "2026-09-08"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "fullstory-gold-concept",
+      "slug": "fullstory-gold-concept",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/fullstory-gold-concept/index.html",
+          "type": "file",
+          "date": "2026-09-08"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "ometria-integration",
+      "slug": "ometria-integration",
+      "kind": "deck",
+      "status": "published",
+      "format": "report",
+      "audience": ["ometria"],
+      "title": null,
+      "description": null,
+      "tags": ["integration"],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/ometria-integration/index.html",
+          "type": "file",
+          "date": "2026-09-08"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "summary-profile-manager-fssummaryprofiles",
+      "slug": "summary-profile-manager-fssummaryprofiles",
+      "kind": "tool",
+      "status": "published",
+      "format": "tool",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/summary-profile-manager/FSSummaryProfiles.html",
+          "type": "file",
+          "date": "2026-03-23"
+        }
+      ],
+      "addedAt": "2026-10-05",
+      "updatedAt": "2026-10-05",
+      "notes": null
+    }
+  ]
+}
