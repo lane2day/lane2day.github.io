@@ -1,0 +1,17 @@
+{
+  "siteTitle": "Lane's published HTML",
+  "siteUrl": "https://lane2day.github.io/",
+  "public": true,
+  "excludeTitlePatterns": [
+    "\\[INTERNAL\\]"
+  ],
+  "branch": "gh-pages",
+  "remote": "origin",
+  "discoverRoots": [
+    "~/Documents/GitHub/mn/projects/solutions",
+    "~/Documents/GitHub/mn/users/lane2day"
+  ],
+  "discoverEmails": [
+    "lane@fullstory.com"
+  ]
+}
