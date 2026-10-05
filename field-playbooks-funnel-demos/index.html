@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funnel Visualization — Vertical Bar Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #081f1f;
+  --card:     #0d3333;
+  --card-2:   #0f3c3c;
+  --border:   #1a5050;
+  --green:    #07c799;
+  --red:      #ff5a35;
+  --orange:   #ffa12f;
+  --purple:   #9e36f1;
+  --text-hi:  #e8f8f5;
+  --text-md:  #8ec8bf;
+  --text-lo:  #3d7a76;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text-hi); padding: 48px 56px; line-height: 1.5; }
+h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
+.intro { font-size: 14px; color: var(--text-md); margin-bottom: 56px; max-width: 640px; }
+.demo-section { margin-bottom: 72px; }
+.demo-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; color: var(--text-lo); margin-bottom: 6px; }
+.demo-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+.demo-desc  { font-size: 13px; color: var(--text-md); margin-bottom: 24px; max-width: 640px; }
+.demo-box   { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 36px; }
+
+/* ═══════════════════════════════════════════════
+   FULL-SIZE VERTICAL BAR CHART
+═══════════════════════════════════════════════ */
+.vbar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  height: 260px;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+/* Gridlines */
+.vbar-chart::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 0;
+  background:
+    repeating-linear-gradient(
+      to top,
+      transparent 0px,
+      transparent calc(25% - 1px),
+      rgba(26,80,80,0.4) calc(25% - 1px),
+      rgba(26,80,80,0.4) 25%
+    );
+  pointer-events: none;
+}
+
+.vbar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  position: relative;
+}
+
+/* Connector arrow between bars */
+.vbar-col:not(:last-child)::after {
+  content: attr(data-drop);
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--red);
+  background: var(--bg);
+  border: 1px solid rgba(255,90,53,0.3);
+  border-radius: 3px;
+  padding: 2px 4px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.vbar-col[data-drop-type="pass"]::after {
+  color: var(--orange);
+  border-color: rgba(255,163,47,0.3);
+}
+
+.vbar-spacer { flex: 1; }
+
+.vbar-bar {
+  width: calc(100% - 16px);
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 10px;
+  align-items: center;
+}
+
+.vbar-bar.entry   { background: linear-gradient(180deg, rgba(7,199,153,0.55) 0%, rgba(7,199,153,0.25) 100%); border: 1px solid rgba(7,199,153,0.45); border-bottom: none; height: 100%; }
+.vbar-bar.wall1   { background: linear-gradient(180deg, rgba(255,90,53,0.6) 0%, rgba(255,90,53,0.28) 100%);  border: 1px solid rgba(255,90,53,0.45);  border-bottom: none; height: 89.6%; }
+.vbar-bar.survive { background: linear-gradient(180deg, rgba(255,163,47,0.6) 0%, rgba(255,163,47,0.25) 100%); border: 1px solid rgba(255,163,47,0.45); border-bottom: none; min-height: 32px; height: 14%; }
+.vbar-bar.wall2   { background: linear-gradient(180deg, rgba(255,90,53,0.6) 0%, rgba(255,90,53,0.28) 100%);  border: 1px solid rgba(255,90,53,0.45);  border-bottom: none; min-height: 24px; height: 9%; }
+.vbar-bar.convert { background: linear-gradient(180deg, rgba(7,199,153,0.55) 0%, rgba(7,199,153,0.22) 100%); border: 1px solid rgba(7,199,153,0.4); border-bottom: none; min-height: 16px; height: 4%; }
+
+.vbar-val  { font-size: 13px; font-weight: 800; letter-spacing: -0.3px; color: #fff; line-height: 1; }
+.vbar-pct  { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+.vbar-label {
+  text-align: center;
+  padding: 10px 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-lo);
+  line-height: 1.35;
+}
+.vbar-label strong {
+  display: block;
+  font-weight: 800;
+  color: var(--text-md);
+  font-size: 11px;
+}
+.vbar-divider { width: 1px; background: var(--border); align-self: stretch; flex-shrink: 0; opacity: 0.5; }
+
+/* ═══════════════════════════════════════════════
+   MINI BAR — fits inside a metric tile
+═══════════════════════════════════════════════ */
+.mini-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.mini-bar-col {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  min-width: 4px;
+}
+.mini-bar-col.entry   { background: rgba(7,199,153,0.6);   height: 100%; }
+.mini-bar-col.wall1   { background: rgba(255,90,53,0.65);  height: 89.6%; }
+.mini-bar-col.survive { background: rgba(255,163,47,0.65); height: 14%; min-height: 5px; }
+.mini-bar-col.wall2   { background: rgba(255,90,53,0.65);  height: 9%;  min-height: 4px; }
+.mini-bar-col.convert { background: rgba(7,199,153,0.6);   height: 4%;  min-height: 3px; }
+
+/* Metric tile */
+.metric-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.metric-tile-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.metric-tile-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-lo);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+.metric-tile-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge-red    { background: rgba(255,90,53,0.12);  border: 1px solid rgba(255,90,53,0.3);  color: #ff7a5a; }
+.badge-orange { background: rgba(255,163,47,0.12); border: 1px solid rgba(255,163,47,0.3); color: #ffc05e; }
+.badge-green  { background: rgba(7,199,153,0.12);  border: 1px solid rgba(7,199,153,0.3);  color: var(--green); }
+.metric-tile-num {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.metric-tile-sub {
+  font-size: 11px;
+  color: var(--text-lo);
+  margin-top: 2px;
+}
+.metric-tile-footer {
+  font-size: 11px;
+  color: var(--text-lo);
+  line-height: 1.4;
+}
+
+/* Inline mini bar variant — ultra compact, single bar fill */
+.sparkbar {
+  height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.sparkbar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+/* Tile grid */
+.tile-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* Combo tile: big stat + mini bar side-by-side */
+.combo-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  min-width: 0;
+}
+.combo-tile-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+.combo-tile-stat { flex: 1; }
+.combo-tile-label { font-size: 10px; font-weight: 700; color: var(--text-lo); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px; }
+.combo-tile-num   { font-size: 40px; font-weight: 800; letter-spacing: -1.8px; line-height: 1; }
+.combo-tile-sub   { font-size: 11px; color: var(--text-lo); margin-top: 4px; }
+.combo-tile-chart { width: 80px; flex-shrink: 0; }
+
+/* Wide mini bar (for the combo tile) */
+.mini-bar-wide {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 56px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.mini-bar-wide .mbc {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  min-width: 6px;
+}
+.mbc.entry   { background: rgba(7,199,153,0.55);  height: 100%; }
+.mbc.wall1   { background: rgba(255,90,53,0.65);  height: 89.6%; }
+.mbc.survive { background: rgba(255,163,47,0.6);  height: 14%; min-height: 6px; }
+.mbc.wall2   { background: rgba(255,90,53,0.65);  height: 9%;  min-height: 5px; }
+.mbc.convert { background: rgba(7,199,153,0.55);  height: 4%;  min-height: 4px; }
+.mini-bar-wide-labels {
+  display: flex;
+  gap: 3px;
+  margin-top: 5px;
+}
+.mini-bar-wide-labels span {
+  flex: 1;
+  font-size: 7px;
+  color: var(--text-lo);
+  font-weight: 700;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<h1>Vertical Bar Chart — Full &amp; Mini</h1>
+<p class="intro">Full-size bar chart for the funnel section, plus mini variants that fit inside metric tiles. Same data throughout.</p>
+
+
+<!-- ═══════════ FULL SIZE ═══════════ -->
+<div class="demo-section">
+  <div class="demo-label">Full Size</div>
+  <div class="demo-title">Purchase Funnel — Vertical Bar Chart</div>
+  <div class="demo-desc">Drop indicators appear between columns. Proportional heights make the Wall 1 cliff immediately obvious.</div>
+  <div class="demo-box">
+    <div class="vbar-chart">
+      <!-- Entry -->
+      <div class="vbar-col" data-drop="−89.6%" data-drop-type="loss">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar entry">
+          <div class="vbar-val">12,600</div>
+          <div class="vbar-pct">users</div>
+        </div>
+      </div>
+      <!-- Wall 1 -->
+      <div class="vbar-col" data-drop="1.2%" data-drop-type="pass">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar wall1">
+          <div class="vbar-val">11,290</div>
+          <div class="vbar-pct">blocked</div>
+        </div>
+      </div>
+      <!-- Survivors -->
+      <div class="vbar-col" data-drop="−69%" data-drop-type="loss">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar survive">
+          <div class="vbar-val">~154</div>
+          <div class="vbar-pct">1.2%</div>
+        </div>
+      </div>
+      <!-- Wall 2 -->
+      <div class="vbar-col" data-drop="&lt;1%" data-drop-type="pass">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar wall2">
+          <div class="vbar-val">~106</div>
+          <div class="vbar-pct">blocked</div>
+        </div>
+      </div>
+      <!-- Convert -->
+      <div class="vbar-col">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar convert">
+          <div class="vbar-val">&lt;50</div>
+        </div>
+      </div>
+    </div>
+    <!-- X labels -->
+    <div style="display:flex;gap:0;margin-top:0;border-top:none;">
+      <div class="vbar-label" style="flex:1"><strong>Entry</strong>Funnel Start</div>
+      <div class="vbar-label" style="flex:1;color:var(--red);"><strong style="color:var(--red);">Wall 1</strong>Cart Error</div>
+      <div class="vbar-label" style="flex:1;color:var(--orange);"><strong style="color:var(--orange);">Survivors</strong>~1.2%</div>
+      <div class="vbar-label" style="flex:1;color:var(--red);"><strong style="color:var(--red);">Wall 2</strong>Payment API</div>
+      <div class="vbar-label" style="flex:1;color:var(--green);"><strong style="color:var(--green);">Converted</strong>&lt;1%</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════ MINI — inside metric tiles ═══════════ -->
+<div class="demo-section">
+  <div class="demo-label">Mini — Metric Tile Variants</div>
+  <div class="demo-title">Mini Bar Inside Stat Tiles</div>
+  <div class="demo-desc">Three sizes and layouts. The mini bar gives funnel context without dominating the tile.</div>
+
+  <!-- Row 1: Stat + sparkline bar beneath -->
+  <div style="margin-bottom:12px;font-size:11px;color:var(--text-lo);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">Variant 1 — Stat above, mini bars below</div>
+  <div class="tile-row" style="margin-bottom:32px;">
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Funnel Entrants</div>
+        <div class="metric-tile-badge badge-green">30d</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--green);">12,600</div>
+      <div class="metric-tile-sub">users entered</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">Full funnel — entry to conversion</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;border-top:2px solid var(--red);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Cart Error Rate</div>
+        <div class="metric-tile-badge badge-red">Critical</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--red);">89.6%</div>
+      <div class="metric-tile-sub">hit "car not available"</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">7,113 of 7,941 PDP sessions</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;border-top:2px solid var(--orange);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Pass-through</div>
+        <div class="metric-tile-badge badge-orange">Wall 1</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--orange);">~1.2%</div>
+      <div class="metric-tile-sub">reach checkout review</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">~154 of 12,600 entrants</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;border-top:2px solid var(--red);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Payment Failure</div>
+        <div class="metric-tile-badge badge-red">Critical</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--red);">69%</div>
+      <div class="metric-tile-sub">approveFunds fails</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">49 of ~71 checkout sessions</div>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Combo tile — big stat left, mini chart right -->
+  <div style="margin-bottom:12px;font-size:11px;color:var(--text-lo);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">Variant 2 — Stat left, mini chart right</div>
+  <div class="tile-row" style="margin-bottom:32px;">
+
+    <div class="combo-tile" style="flex:1;">
+      <div class="combo-tile-inner">
+        <div class="combo-tile-stat">
+          <div class="combo-tile-label">Funnel Entry → Conversion</div>
+          <div class="combo-tile-num" style="color:var(--green);">12,600</div>
+          <div class="combo-tile-sub">users · 30-day window</div>
+        </div>
+        <div class="combo-tile-chart">
+          <div class="mini-bar-wide">
+            <div class="mbc entry"></div>
+            <div class="mbc wall1"></div>
+            <div class="mbc survive"></div>
+            <div class="mbc wall2"></div>
+            <div class="mbc convert"></div>
+          </div>
+          <div class="mini-bar-wide-labels">
+            <span>Entry</span><span>Wall1</span><span>Pass</span><span>Wall2</span><span>Conv</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="combo-tile" style="flex:1;border-top:2px solid var(--red);">
+      <div class="combo-tile-inner">
+        <div class="combo-tile-stat">
+          <div class="combo-tile-label">Cart Error — Wall 1</div>
+          <div class="combo-tile-num" style="color:var(--red);">89.6%</div>
+          <div class="combo-tile-sub">of PDP sessions blocked</div>
+        </div>
+        <div class="combo-tile-chart">
+          <div class="mini-bar-wide">
+            <div class="mbc entry"></div>
+            <div class="mbc wall1"></div>
+            <div class="mbc survive"></div>
+            <div class="mbc wall2"></div>
+            <div class="mbc convert"></div>
+          </div>
+          <div class="mini-bar-wide-labels">
+            <span>Entry</span><span>Wall1</span><span>Pass</span><span>Wall2</span><span>Conv</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="combo-tile" style="flex:1;border-top:2px solid var(--red);">
+      <div class="combo-tile-inner">
+        <div class="combo-tile-stat">
+          <div class="combo-tile-label">Payment API — Wall 2</div>
+          <div class="combo-tile-num" style="color:var(--red);">69%</div>
+          <div class="combo-tile-sub">fail at final submit</div>
+        </div>
+        <div class="combo-tile-chart">
+          <div class="mini-bar-wide">
+            <div class="mbc entry"></div>
+            <div class="mbc wall1"></div>
+            <div class="mbc survive"></div>
+            <div class="mbc wall2"></div>
+            <div class="mbc convert"></div>
+          </div>
+          <div class="mini-bar-wide-labels">
+            <span>Entry</span><span>Wall1</span><span>Pass</span><span>Wall2</span><span>Conv</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row 3: Sparkbar under a stat — pure inline -->
+  <div style="margin-bottom:12px;font-size:11px;color:var(--text-lo);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">Variant 3 — Single fill sparkbar (shows "where you are" in the funnel)</div>
+  <div class="tile-row">
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Step 1 — Entry</div>
+        <div class="metric-tile-badge badge-green">100%</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--green);">12,600</div>
+      <div class="sparkbar" style="margin-top:12px;"><div class="sparkbar-fill" style="width:100%;background:var(--green);"></div></div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Step 2 — Cart Error</div>
+        <div class="metric-tile-badge badge-red">Wall 1</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--red);">89.6%</div>
+      <div class="sparkbar" style="margin-top:12px;"><div class="sparkbar-fill" style="width:89.6%;background:var(--red);"></div></div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Step 3 — Checkout</div>
+        <div class="metric-tile-badge badge-orange">~1.2%</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--orange);">~154</div>
+      <div class="sparkbar" style="margin-top:12px;"><div class="sparkbar-fill" style="width:1.2%;min-width:6px;background:var(--orange);"></div></div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Step 4 — Payment</div>
+        <div class="metric-tile-badge badge-red">Wall 2</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--red);">69%</div>
+      <div class="sparkbar" style="margin-top:12px;"><div class="sparkbar-fill" style="width:69%;background:var(--red);"></div></div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Step 5 — Booked</div>
+        <div class="metric-tile-badge badge-green">&lt;1%</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--green);">&lt;50</div>
+      <div class="sparkbar" style="margin-top:12px;"><div class="sparkbar-fill" style="width:0.4%;min-width:4px;background:var(--green);"></div></div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fullstory — CarGo Digital Experience: UX & Purchase Funnel Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fs-deep:      #0a2828;
+  --fs-dark:      #0e3c3c;
+  --fs-mid:       #135050;
+  --fs-green:     #07c799;
+  --fs-green-dk:  #059573;
+  --fs-mint:      #c1f1e6;
+  --fs-pink:      #ff6f94;
+  --fs-pink-dk:   #ff2059;
+  --fs-orange:    #ffa12f;
+  --fs-purple:    #9e36f1;
+  --fs-purple-lt: #e9ccff;
+  --bg:           #081f1f;
+  --card:         #0d3333;
+  --card-2:       #0f3c3c;
+  --border:       #1a5050;
+  --border-lt:    #1e5c5c;
+  --text-hi:      #e8f8f5;
+  --text-md:      #8ec8bf;
+  --text-lo:      #3d7a76;
+  --issue:        #ff5a35;
+  --issue-dk:     #d93f1a;
+  --issue-lt:     #fff0eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text-hi); line-height: 1.6; font-size: 15px; }
+
+/* Topbar */
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(8,31,31,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 56px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.topbar-logos { display: flex; align-items: center; gap: 14px; }
+.topbar-logo-fs img { height: 22px; filter: brightness(0) invert(1); opacity: 0.9; }
+.topbar-divider { width: 1px; height: 20px; background: var(--border-lt); }
+.topbar-badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; background: rgba(7,199,153,0.12); border: 1px solid rgba(7,199,153,0.25); color: var(--fs-green); }
+.topbar-nav { display: flex; align-items: center; gap: 4px; }
+.topbar-nav a { color: var(--text-md); text-decoration: none; font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 6px; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.topbar-nav a:hover { background: rgba(7,199,153,0.1); color: var(--fs-green); }
+
+/* Hero */
+.hero { background: linear-gradient(160deg, #081f1f 0%, #0b2e2e 45%, #0a2525 100%); border-bottom: 1px solid var(--border); padding: 88px 56px 72px; position: relative; overflow: hidden; }
+.hero-glow-1 { position: absolute; top: -180px; right: -120px; width: 640px; height: 640px; background: radial-gradient(circle, rgba(7,199,153,0.07) 0%, transparent 65%); pointer-events: none; }
+.hero-glow-2 { position: absolute; bottom: -200px; left: -80px; width: 560px; height: 560px; background: radial-gradient(circle, rgba(255,90,53,0.05) 0%, transparent 65%); pointer-events: none; }
+.hero-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin-bottom: 28px; color: var(--fs-green); }
+.hero-badge-row { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+.hero-badge-row img { height: 34px; filter: brightness(0) invert(1); }
+.hero-report-badge { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-lo); padding: 5px 12px; border: 1px solid var(--border-lt); border-radius: 6px; }
+.hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -1.8px; line-height: 1.1; max-width: 860px; margin-bottom: 22px; background: linear-gradient(130deg, #e8f8f5 0%, #a8d8cf 60%, #07c799 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-sub { font-size: 19px; color: var(--text-md); max-width: 700px; font-weight: 400; line-height: 1.65; }
+.hero-tags { display: flex; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
+.hero-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.hero-tag.green  { background: rgba(7,199,153,0.18); border: 1px solid rgba(7,199,153,0.5);  color: #0ef5be; }
+.hero-tag.red    { background: rgba(255,90,53,0.18);  border: 1px solid rgba(255,90,53,0.5);  color: #ff7a5a; }
+.hero-tag.orange { background: rgba(255,163,47,0.18); border: 1px solid rgba(255,163,47,0.5); color: #ffc05e; }
+.hero-tag.purple { background: rgba(158,54,241,0.18); border: 1px solid rgba(158,54,241,0.5); color: #c06dff; }
+
+/* Executive Summary */
+.exec-summary { background: linear-gradient(135deg, rgba(7,199,153,0.04) 0%, rgba(255,90,53,0.03) 100%); border-bottom: 1px solid var(--border); padding: 64px 56px; }
+.exec-inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 340px 1fr; gap: 64px; align-items: start; }
+.exec-left h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 18px; color: var(--text-hi); }
+.exec-left p { font-size: 14px; color: var(--text-md); line-height: 1.75; margin-bottom: 14px; }
+.exec-right { display: flex; flex-direction: column; gap: 12px; }
+.exec-link-card { display: flex; align-items: center; gap: 18px; padding: 18px 22px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
+.exec-link-card:hover { border-color: var(--border-lt); background: var(--card-2); transform: translateX(3px); }
+.exec-link-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.exec-link-text h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 2px; }
+.exec-link-text p { font-size: 12px; color: var(--text-md); line-height: 1.4; }
+.exec-link-arrow { margin-left: auto; color: var(--text-lo); font-size: 16px; flex-shrink: 0; transition: color 0.15s; }
+.exec-link-card:hover .exec-link-arrow { color: var(--fs-green); }
+
+/* Layout */
+.page-content { max-width: 1200px; margin: 0 auto; padding: 72px 56px; }
+.section { margin-bottom: 88px; }
+.section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; margin-bottom: 10px; }
+.section-title { font-size: 30px; font-weight: 800; letter-spacing: -0.9px; margin-bottom: 10px; color: var(--text-hi); }
+.section-desc { color: var(--text-md); font-size: 16px; max-width: 720px; line-height: 1.7; margin-bottom: 40px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+/* Callout */
+.callout { background: rgba(7,199,153,0.04); border: 1px solid rgba(7,199,153,0.14); border-left: 3px solid var(--fs-green); border-radius: 8px; padding: 15px 20px; font-size: 13px; color: var(--text-md); line-height: 1.65; margin-bottom: 28px; }
+.callout strong { color: var(--fs-green); }
+.callout.red { background: rgba(255,90,53,0.04); border-color: rgba(255,90,53,0.14); border-left-color: var(--issue); }
+.callout.red strong { color: var(--issue); }
+.callout.orange { background: rgba(255,163,47,0.04); border-color: rgba(255,163,47,0.14); border-left-color: var(--fs-orange); }
+.callout.orange strong { color: var(--fs-orange); }
+
+/* Problem Grid */
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+.problem-cell { background: var(--card); padding: 38px; }
+.problem-cell:first-child { border-right: 1px solid var(--border); }
+.problem-cell-label { font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 16px; }
+.problem-cell-label.red   { color: var(--issue); }
+.problem-cell-label.green { color: var(--fs-green); }
+.problem-cell h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.4px; }
+.problem-cell p { color: var(--text-md); font-size: 14px; line-height: 1.7; }
+.signal-list { list-style: none; margin-top: 18px; display: flex; flex-direction: column; gap: 9px; }
+.signal-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-md); line-height: 1.5; }
+.signal-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.signal-list.issues li::before { background: var(--issue); opacity: 0.7; }
+.signal-list.fixes li::before { background: var(--fs-green); }
+
+/* Feature Table + Badges */
+.compare-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compare-table thead tr { background: rgba(0,0,0,0.2); }
+.compare-table th { padding: 13px 20px; text-align: left; font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; border-bottom: 1px solid var(--border); }
+.compare-table th.col-sev { color: var(--issue); }
+.compare-table th.col-impact { color: var(--fs-green); }
+.compare-table td { padding: 13px 20px; border-bottom: 1px solid rgba(26,80,80,0.4); vertical-align: top; color: var(--text-md); line-height: 1.5; }
+.compare-table td:first-child { color: var(--text-hi); font-weight: 600; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: rgba(255,255,255,0.015); }
+.compare-table .category-row td { background: rgba(0,0,0,0.18); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; padding: 8px 20px; border-bottom: 1px solid var(--border); }
+.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.b-crit   { background: rgba(255,90,53,0.18);  border: 1px solid rgba(255,90,53,0.5);  color: #ff7a5a; }
+.b-high   { background: rgba(255,163,47,0.15); border: 1px solid rgba(255,163,47,0.4); color: #ffc05e; }
+.b-med    { background: rgba(158,54,241,0.15); border: 1px solid rgba(158,54,241,0.4); color: #c06dff; }
+.b-yes    { background: rgba(7,199,153,0.15);  border: 1px solid rgba(7,199,153,0.4);  color: #0ef5be; }
+
+/* Strength Cards */
+.strength-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.strength-card-header { padding: 20px 26px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.strength-card-header.issue { border-top: 3px solid var(--issue); }
+.strength-card-header.fix   { border-top: 3px solid var(--fs-green); }
+.strength-card-header h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-hi); }
+.strength-card-body { padding: 22px 26px; display: flex; flex-direction: column; gap: 14px; }
+.strength-item { display: flex; align-items: flex-start; gap: 12px; }
+.strength-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.si-green  { background: rgba(7,199,153,0.1); }
+.si-red    { background: rgba(255,90,53,0.1); }
+.si-orange { background: rgba(255,163,47,0.1); }
+.si-purple { background: rgba(158,54,241,0.1); }
+.strength-text h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 3px; }
+.strength-text p  { font-size: 12px; color: var(--text-md); line-height: 1.6; }
+
+/* Detail Items */
+.detail-list { display: flex; flex-direction: column; gap: 10px; }
+.detail-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: rgba(255,255,255,0.02); border-radius: 8px; border-left: 2px solid transparent; }
+.detail-item.issue { border-left-color: var(--issue); }
+.detail-item.fix   { border-left-color: var(--fs-green); }
+.detail-item.note  { border-left-color: var(--fs-orange); }
+.detail-item-icon { font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+.detail-item-text { font-size: 12px; color: var(--text-md); line-height: 1.55; }
+.detail-item-text strong { color: var(--text-hi); font-weight: 700; display: block; margin-bottom: 2px; font-size: 12px; }
+
+/* Funnel Steps */
+.funnel-wrap { display: flex; flex-direction: column; gap: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+.funnel-step { background: var(--card); padding: 22px 28px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; }
+.funnel-step:last-child { border-bottom: none; }
+.funnel-step.wall { border-left: 4px solid var(--issue); background: rgba(255,90,53,0.04); }
+.funnel-step.success { border-left: 4px solid var(--fs-green); background: rgba(7,199,153,0.03); }
+.funnel-step-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--text-lo); margin-bottom: 4px; }
+.funnel-step-title { font-size: 16px; font-weight: 700; color: var(--text-hi); margin-bottom: 4px; }
+.funnel-step-desc { font-size: 12px; color: var(--text-md); line-height: 1.55; }
+.funnel-step-stat { text-align: right; flex-shrink: 0; }
+.funnel-stat-num { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.funnel-stat-num.loss { color: var(--issue); }
+.funnel-stat-num.warn { color: var(--fs-orange); }
+.funnel-stat-num.ok   { color: var(--fs-green); }
+.funnel-stat-label { font-size: 11px; color: var(--text-lo); margin-top: 3px; font-weight: 600; }
+
+/* Session Evidence Cards */
+.session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.session-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.session-card-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.session-card-header.availability { border-top: 3px solid var(--fs-orange); }
+.session-card-header.payment { border-top: 3px solid var(--issue); }
+.session-card-title { font-size: 14px; font-weight: 700; color: var(--text-hi); margin-bottom: 3px; }
+.session-card-meta { font-size: 11px; color: var(--text-lo); }
+.session-card-badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+.scb-abandoned { background: rgba(255,90,53,0.12); border: 1px solid rgba(255,90,53,0.3); color: #ff7a5a; }
+.scb-silent { background: rgba(255,163,47,0.12); border: 1px solid rgba(255,163,47,0.3); color: #ffc05e; }
+.session-card-body { padding: 18px 22px; display: flex; flex-direction: column; gap: 10px; }
+.session-finding { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-md); line-height: 1.6; }
+.session-finding::before { content: '→'; color: var(--text-lo); flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+.session-finding.rage::before { content: '⚡'; }
+.session-finding.abandon::before { content: '✗'; color: var(--issue); }
+.session-finding.silent::before { content: '⚠'; color: var(--fs-orange); }
+
+/* Stage Overview Grid */
+.stage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.stage-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.stage-card-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--text-lo); margin-bottom: 8px; }
+.stage-card-title { font-size: 16px; font-weight: 700; color: var(--text-hi); margin-bottom: 14px; }
+.stage-issue { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-md); margin-bottom: 8px; line-height: 1.5; }
+.stage-issue .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.dot-crit { background: var(--issue); }
+.dot-high { background: var(--fs-orange); }
+.dot-med  { background: var(--fs-purple); }
+.stage-issue .count { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--text-lo); flex-shrink: 0; margin-left: auto; padding-left: 8px; white-space: nowrap; }
+
+/* Recommendation */
+.rec-card { background: linear-gradient(135deg, rgba(7,199,153,0.06) 0%, rgba(255,90,53,0.03) 100%); border: 1px solid rgba(7,199,153,0.18); border-radius: 18px; padding: 44px; }
+.rec-card > h3 { font-size: 24px; font-weight: 800; letter-spacing: -0.7px; margin-bottom: 14px; color: var(--text-hi); }
+.rec-card > p { color: var(--text-md); font-size: 15px; line-height: 1.7; max-width: 760px; margin-bottom: 0; }
+.rec-tiers { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+.rec-tier { display: flex; gap: 20px; align-items: flex-start; padding: 20px 24px; background: rgba(0,0,0,0.22); border-radius: 12px; border: 1px solid var(--border); }
+.tier-badge { flex-shrink: 0; padding: 4px 11px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+.t-p1   { background: rgba(255,90,53,0.15);  color: var(--issue); }
+.t-p2   { background: rgba(255,163,47,0.12); color: var(--fs-orange); }
+.t-p3   { background: rgba(158,54,241,0.12); color: #c06dff; }
+.t-p4   { background: rgba(7,199,153,0.12);  color: var(--fs-green); }
+.rec-tier-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.2px; color: var(--text-hi); }
+.rec-tier-content p { font-size: 13px; color: var(--text-md); line-height: 1.6; }
+
+/* Reference Cards */
+.ref-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
+.ref-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; text-decoration: none; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.15s, transform 0.1s; }
+.ref-card:hover { border-color: var(--border-lt); transform: translateY(-2px); }
+.ref-card-top { display: flex; align-items: center; gap: 10px; }
+.ref-card-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.ref-card-top h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.2px; }
+.ref-card p { font-size: 12px; color: var(--text-md); line-height: 1.6; }
+.ref-card-link { font-size: 11px; color: var(--fs-green); font-weight: 600; margin-top: auto; }
+
+/* Internal link */
+.internal-link { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-lo); text-decoration: none; border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; transition: color 0.15s, border-color 0.15s; }
+.internal-link:hover { color: var(--fs-orange); border-color: rgba(255,163,47,0.3); }
+
+/* Footer */
+.doc-footer { border-top: 1px solid var(--border); padding: 30px 56px; display: flex; justify-content: space-between; align-items: center; color: var(--text-lo); font-size: 12px; gap: 24px; flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 960px) {
+  .topbar { padding: 12px 20px; }
+  .topbar-nav { display: none; }
+  .hero { padding: 56px 20px 48px; }
+  .hero h1 { font-size: 32px; }
+  .exec-inner { grid-template-columns: 1fr; gap: 32px; }
+  .exec-summary { padding: 40px 20px; }
+  .page-content { padding: 48px 20px; }
+  .two-col, .three-col, .session-grid, .stage-grid { grid-template-columns: 1fr; }
+  .problem-grid { grid-template-columns: 1fr; }
+  .problem-cell:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+  .doc-footer { flex-direction: column; text-align: center; }
+}
+
+/* Evidence / Session Links */
+.session-link { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--fs-green); font-weight: 700; text-decoration: none; margin-top: 12px; padding: 6px 14px; border: 1px solid rgba(7,199,153,0.25); border-radius: 6px; background: rgba(7,199,153,0.04); transition: background 0.15s, border-color 0.15s; }
+.session-link:hover { background: rgba(7,199,153,0.12); border-color: rgba(7,199,153,0.4); }
+.evidence-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.evidence-chips.bordered { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(26,80,80,0.35); }
+.evidence-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-lo); font-weight: 600; text-decoration: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 9px; letter-spacing: 0.3px; transition: color 0.12s, border-color 0.12s; }
+.evidence-chip:hover { color: var(--fs-green); border-color: rgba(7,199,153,0.3); }
+
+/* ── Stats Strip ── */
+.stats-strip { background: var(--fs-deep); border-bottom: 1px solid var(--border); padding: 0 56px; display: flex; }
+.stat-block { flex: 1; padding: 32px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative; }
+.stat-block + .stat-block::before { content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 1px; background: var(--border); }
+.stat-num { font-size: 52px; font-weight: 800; letter-spacing: -2.5px; line-height: 1; }
+.stat-num.s-green  { color: var(--fs-green); }
+.stat-num.s-red    { color: var(--issue); }
+.stat-num.s-orange { color: var(--fs-orange); }
+.stat-num.s-purple { color: #c06dff; }
+.stat-label { font-size: 12px; color: var(--text-lo); font-weight: 600; letter-spacing: 0.2px; text-align: center; max-width: 160px; line-height: 1.4; }
+.stat-sublabel { font-size: 10px; color: var(--text-lo); opacity: 0.6; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+
+/* ── Funnel Bar ── */
+.funnel-bar-wrap { margin-bottom: 8px; }
+.funnel-bar-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.funnel-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.funnel-bar-fill.ok   { background: var(--fs-green); }
+.funnel-bar-fill.loss { background: var(--issue); }
+.funnel-bar-fill.warn { background: var(--fs-orange); }
+
+/* ── Funnel step enhanced ── */
+.funnel-step-stat .funnel-stat-pct { font-size: 11px; color: var(--text-lo); margin-top: 4px; font-weight: 600; }
+.funnel-delta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-lo); margin-top: 3px; }
+.funnel-delta .arrow { font-size: 14px; }
+.funnel-delta.down { color: rgba(255,90,53,0.7); }
+.funnel-delta.up   { color: rgba(7,199,153,0.7); }
+
+/* ── Stage grid count bar ── */
+.stage-count-bar { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; margin-left: 8px; }
+.stage-bar-track { width: 52px; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.stage-bar-fill { height: 100%; border-radius: 2px; }
+.stage-bar-fill.crit   { background: var(--issue); }
+.stage-bar-fill.high   { background: var(--fs-orange); }
+.stage-bar-fill.med    { background: var(--fs-purple); }
+
+/* ── Session finding enhanced ── */
+.session-finding { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-md); line-height: 1.6; padding: 5px 8px; border-radius: 6px; }
+.session-finding::before { content: '→'; color: var(--text-lo); flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+.session-finding.rage  { background: rgba(255,90,53,0.05); }
+.session-finding.rage::before { content: '⚡'; color: var(--issue); }
+.session-finding.abandon { background: rgba(255,90,53,0.07); }
+.session-finding.abandon::before { content: '✗'; color: var(--issue); }
+.session-finding.silent { background: rgba(255,163,47,0.05); }
+.session-finding.silent::before { content: '⚠'; color: var(--fs-orange); }
+
+/* ── Section number accent ── */
+.section-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: rgba(7,199,153,0.1); border: 1px solid rgba(7,199,153,0.2); font-size: 12px; font-weight: 800; color: var(--fs-green); margin-right: 10px; vertical-align: middle; flex-shrink: 0; }
+.section-header { display: flex; align-items: baseline; gap: 4px; margin-bottom: 10px; }
+.section-header .section-label { margin-bottom: 0; }
+
+/* ── Two Walls: impact pills ── */
+.wall-impact { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 14px; }
+.wall-impact.red { background: rgba(255,90,53,0.12); border: 1px solid rgba(255,90,53,0.3); color: #ff7a5a; }
+
+/* ── Vertical Bar Chart (funnel) ── */
+.vbar-chart {
+  display: flex;
+  align-items: flex-end;
+  height: 240px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.vbar-chart::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to top,
+    transparent 0px,
+    transparent calc(25% - 1px),
+    rgba(26,80,80,0.35) calc(25% - 1px),
+    rgba(26,80,80,0.35) 25%
+  );
+  pointer-events: none;
+}
+.vbar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+.vbar-col:not(:last-child)::after {
+  content: attr(data-drop);
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--issue);
+  background: var(--bg);
+  border: 1px solid rgba(255,90,53,0.3);
+  border-radius: 3px;
+  padding: 2px 4px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.vbar-col[data-drop-type="pass"]::after {
+  color: var(--fs-orange);
+  border-color: rgba(255,163,47,0.3);
+}
+.vbar-spacer { flex: 1; }
+.vbar-bar {
+  width: calc(100% - 14px);
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 10px;
+  align-items: center;
+  overflow: hidden;
+}
+.vbar-bar.entry   { background: linear-gradient(180deg, rgba(7,199,153,0.55)  0%, rgba(7,199,153,0.22) 100%); border: 1px solid rgba(7,199,153,0.4);  border-bottom: none; height: 100%; }
+.vbar-bar.wall1   { background: linear-gradient(180deg, rgba(255,90,53,0.62)  0%, rgba(255,90,53,0.26) 100%); border: 1px solid rgba(255,90,53,0.4);   border-bottom: none; height: 89.6%; }
+.vbar-bar.survive { background: linear-gradient(180deg, rgba(255,163,47,0.6)  0%, rgba(255,163,47,0.22) 100%); border: 1px solid rgba(255,163,47,0.4); border-bottom: none; min-height: 32px; height: 14%; }
+.vbar-bar.wall2   { background: linear-gradient(180deg, rgba(255,90,53,0.62)  0%, rgba(255,90,53,0.26) 100%); border: 1px solid rgba(255,90,53,0.4);   border-bottom: none; min-height: 24px; height: 9%; }
+.vbar-bar.convert { background: linear-gradient(180deg, rgba(7,199,153,0.55)  0%, rgba(7,199,153,0.2) 100%);  border: 1px solid rgba(7,199,153,0.38); border-bottom: none; min-height: 16px; height: 4%; }
+.vbar-val  { font-size: 13px; font-weight: 800; letter-spacing: -0.3px; color: #fff; line-height: 1; }
+.vbar-pct  { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.55); margin-top: 2px; }
+.vbar-label { text-align: center; padding: 10px 4px 0; font-size: 11px; font-weight: 600; color: var(--text-lo); line-height: 1.35; }
+.vbar-label strong { display: block; font-weight: 800; color: var(--text-md); font-size: 11px; }
+.vbar-labels { display: flex; margin-top: 0; }
+
+/* ── Metric tiles (funnel KPI row) ── */
+.metric-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.metric-tile-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.metric-tile-label { font-size: 11px; font-weight: 700; color: var(--text-lo); text-transform: uppercase; letter-spacing: 1px; line-height: 1.3; }
+.metric-tile-num { font-size: 34px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; }
+.metric-tile-sub { font-size: 11px; color: var(--text-lo); margin-top: 2px; }
+.metric-tile-footer { font-size: 11px; color: var(--text-lo); line-height: 1.4; }
+.metric-tile-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+.badge-red    { background: rgba(255,90,53,0.12);  border: 1px solid rgba(255,90,53,0.3);  color: #ff7a5a; }
+.badge-orange { background: rgba(255,163,47,0.12); border: 1px solid rgba(255,163,47,0.3); color: #ffc05e; }
+.badge-green  { background: rgba(7,199,153,0.12);  border: 1px solid rgba(7,199,153,0.3);  color: var(--fs-green); }
+.tile-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* ── Mini bar (inside metric tile) ── */
+.mini-bar { display: flex; align-items: flex-end; gap: 2px; height: 36px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.mini-bar-col { flex: 1; border-radius: 2px 2px 0 0; min-width: 4px; }
+.mini-bar-col.entry   { background: rgba(7,199,153,0.6);   height: 100%; }
+.mini-bar-col.wall1   { background: rgba(255,90,53,0.65);  height: 89.6%; }
+.mini-bar-col.survive { background: rgba(255,163,47,0.65); height: 14%;   min-height: 5px; }
+.mini-bar-col.wall2   { background: rgba(255,90,53,0.65);  height: 9%;    min-height: 4px; }
+.mini-bar-col.convert { background: rgba(7,199,153,0.6);   height: 4%;    min-height: 3px; }
+
+@media (max-width: 960px) {
+  .stats-strip { padding: 0 20px; flex-wrap: wrap; }
+  .stat-block { padding: 20px 16px; min-width: 50%; }
+  .stat-num { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logos">
+    <div class="topbar-logo-fs">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" />
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-badge">CarGo UX Report</div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#funnel-overview">Funnel Overview</a>
+    <a href="#two-walls">The Two Walls</a>
+    <a href="#session-evidence">Session Evidence</a>
+    <a href="#priority-matrix">Priority Matrix</a>
+    <a href="#recommendations">Recommendations</a>
+  </nav>
+</div>
+
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-eyebrow">Usability Analysis &mdash; April 2026</div>
+  <div class="hero-badge-row">
+    <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" />
+    <div class="hero-report-badge">UX &amp; Purchase Funnel Report</div>
+  </div>
+  <h1>Where CarGo<br>Loses Customers</h1>
+  <p class="hero-sub">
+    Thirty days of behavioral data across 12,600 users in the purchase funnel reveals two structural failures that together collapse conversion to near zero. This report covers the full digital experience — from discovery through booking completion and the host onboarding flow — with session-level evidence for the highest-impact issues.
+  </p>
+  <div class="hero-tags">
+    <span class="hero-tag red">89.6% hit cart error</span>
+    <span class="hero-tag red">69% payment API failure</span>
+    <span class="hero-tag orange">~1.2% funnel pass-through</span>
+    <span class="hero-tag green">Fullstory MCP · 30d window</span>
+  </div>
+</section>
+
+
+<!-- EXECUTIVE SUMMARY -->
+<section class="exec-summary" id="executive-summary">
+  <div class="exec-inner">
+    <div class="exec-left">
+      <div class="section-label">TL;DR</div>
+      <h2>Two walls are shutting down the purchase funnel</h2>
+      <p>Of 12,600 users who entered the purchase funnel, 89.6% hit a hard stop at the car detail page before ever reaching checkout. The "car is not available" error surfaces immediately on every attempt to book specific vehicles — but the inventory system offers no explanation, no alternative cars, and no path forward. Users rage click, then leave.</p>
+      <p>For the roughly 1.2% who make it through to checkout review, a second wall appears: the <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">/v2/payments/approveFunds</code> endpoint fails for 69% of them. Two of three session recordings show the failure is completely silent — no error state rendered, leaving users clicking a non-responsive submit button until they abandon.</p>
+      <p>Beyond the purchase funnel, frustration signals appear at every stage: rage clicks on non-interactive elements, city inventory API failures across 10+ markets, a 404 routing issue hitting 19,511 users, and broken UI patterns in checkout navigation.</p>
+    </div>
+    <div class="exec-right">
+      <a href="#funnel-overview" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">🗺️</div>
+        <div class="exec-link-text">
+          <h4>Full Funnel Overview</h4>
+          <p>All six stages from discovery to host onboarding, with top signals per stage.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#two-walls" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,90,53,0.1);">🧱</div>
+        <div class="exec-link-text">
+          <h4>The Two Walls</h4>
+          <p>Deep dive on the cart error and payment failure draining the purchase funnel.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#session-evidence" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">🎬</div>
+        <div class="exec-link-text">
+          <h4>Session Evidence</h4>
+          <p>What users actually see and do at each failure point, from session recordings.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#priority-matrix" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(158,54,241,0.1);">📊</div>
+        <div class="exec-link-text">
+          <h4>Priority Matrix</h4>
+          <p>All identified issues ranked by severity and estimated user impact.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#recommendations" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">✅</div>
+        <div class="exec-link-text">
+          <h4>Recommendations</h4>
+          <p>Prioritized fixes ordered by conversion impact and implementation effort.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-content">
+
+<!-- SECTION 1: FULL FUNNEL OVERVIEW -->
+<section class="section" id="funnel-overview">
+  <div class="section-label">Section 01</div>
+  <div class="section-title">Full Funnel Overview</div>
+  <p class="section-desc">Top friction signals at each stage of the CarGo digital experience, from first visit through host onboarding. Dot color indicates severity: critical, high, or medium.</p>
+
+  <div class="stage-grid">
+
+    <div class="stage-card">
+      <div class="stage-card-label">Stage 01</div>
+      <div class="stage-card-title">Discovery &amp; Search</div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>City inventory API failures on 10+ markets (300–357 users/city)</span>
+        <span class="count">~3,500+</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Rage clicks on Pickup Location field — unresponsive or confusing UX</span>
+        <span class="count">1,343</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Search page refreshes — users retrying after no results</span>
+        <span class="count">1,494</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-med"></div>
+        <span>"No Cars Found" modal after location search — no alternatives shown</span>
+        <span class="count">31</span>
+      </div>
+    </div>
+
+    <div class="stage-card">
+      <div class="stage-card-label">Stage 02</div>
+      <div class="stage-card-title">Car Selection (Search Results)</div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>Rage clicks on Car Title Link — navigation not working as expected</span>
+        <span class="count">2,097</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>Rage clicks on Car Image — click target or navigation broken</span>
+        <span class="count">1,616</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Rage clicks on Car Price / Total Price — no pricing detail available</span>
+        <span class="count">684–1,322</span>
+      </div>
+    </div>
+
+    <div class="stage-card">
+      <div class="stage-card-label">Stage 03</div>
+      <div class="stage-card-title">Car Detail Page (PDP)</div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>"Can't add to Cart — car not available" — instant hard stop</span>
+        <span class="count">7,113</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Rage clicks on Change Dates — workaround attempt, also fails</span>
+        <span class="count">150</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-med"></div>
+        <span>Share button dead clicks — SVG line element intercepting clicks</span>
+        <span class="count">1,188</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-med"></div>
+        <span>iOS: Add to Cart button error clicks in SwiftUI CarSelectionView</span>
+        <span class="count">~50</span>
+      </div>
+    </div>
+
+    <div class="stage-card">
+      <div class="stage-card-label">Stage 04</div>
+      <div class="stage-card-title">Checkout Flow</div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span><code style="font-family:monospace;font-size:11px;">/v2/payments/approveFunds</code> network failure at payment confirm</span>
+        <span class="count">49 (69%)</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>Transaction Denied console errors — payment processing failure</span>
+        <span class="count">34 (54.8%)</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Rage clicks on checkout step labels (Billing, Payment) — not navigable</span>
+        <span class="count">441–464</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Rage clicks on Edit Ride / Edit Billing in review — unresponsive</span>
+        <span class="count">289–320</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Error clicks on Confirm &amp; Submit — booking fails at final step</span>
+        <span class="count">60–68</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-med"></div>
+        <span>Insufficient Funds errors surfacing during payment</span>
+        <span class="count">15</span>
+      </div>
+    </div>
+
+    <div class="stage-card">
+      <div class="stage-card-label">Stage 05</div>
+      <div class="stage-card-title">Host Experience</div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>Error clicks on "Finalize Lineup" — host-side booking action fails</span>
+        <span class="count">581 (7.3%)</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>Error clicks on "Purchase Complete" — post-booking confirmation fails</span>
+        <span class="count">70</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-med"></div>
+        <span>Host Profile Page refreshes — load failures or unexpected state</span>
+        <span class="count">11</span>
+      </div>
+    </div>
+
+    <div class="stage-card">
+      <div class="stage-card-label">Cross-Cutting</div>
+      <div class="stage-card-title">Platform-Wide Issues</div>
+      <div class="stage-issue">
+        <div class="dot dot-crit"></div>
+        <span>404 page hit by 19,511 users — 87% immediately refresh (broken routing)</span>
+        <span class="count">19,511</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>503 errors on <code style="font-family:monospace;font-size:11px;">/api/collect</code> during cart attempts</span>
+        <span class="count">977</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-high"></div>
+        <span>JSON syntax error (HTML returned instead of JSON) on cart add</span>
+        <span class="count">229</span>
+      </div>
+      <div class="stage-issue">
+        <div class="dot dot-med"></div>
+        <span>Usetiful in-app guide load failures — onboarding tool broken</span>
+        <span class="count">1,405</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECTION 2: THE TWO WALLS -->
+<section class="section" id="two-walls">
+  <div class="section-label">Section 02</div>
+  <div class="section-title">The Two Walls</div>
+  <p class="section-desc">The purchase funnel collapses in two distinct places. Understanding each failure separately is critical — they require different fixes and affect different teams.</p>
+
+  <div class="callout red" style="margin-bottom:40px;">
+    <strong>Funnel Math:</strong> 12,600 users entered the purchase funnel in the last 30 days. ~154 reached checkout review (~1.2% pass-through). The car availability failure alone accounts for the vast majority of this dropout.
+    <div class="evidence-chips" style="margin-top:12px;">
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Purchase Funnel</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/ytEwKbV4XEIq?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Checkout Review → Success</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/YiVDRnS8mILQ?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ PDP → Checkout Start</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/lEq7gSuWYm6s?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Car Booking Full Funnel</a>
+    </div>
+  </div>
+
+  <!-- Funnel Vertical Bar Chart -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;margin-bottom:24px;">
+    <div class="vbar-chart">
+      <!-- Entry -->
+      <div class="vbar-col" data-drop="−89.6%" data-drop-type="loss">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar entry">
+          <div class="vbar-val">12,600</div>
+          <div class="vbar-pct">users</div>
+        </div>
+      </div>
+      <!-- Wall 1 -->
+      <div class="vbar-col" data-drop="1.2%" data-drop-type="pass">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar wall1">
+          <div class="vbar-val">11,290</div>
+          <div class="vbar-pct">blocked</div>
+        </div>
+      </div>
+      <!-- Survivors -->
+      <div class="vbar-col" data-drop="−69%" data-drop-type="loss">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar survive">
+          <div class="vbar-val">~154</div>
+          <div class="vbar-pct">1.2%</div>
+        </div>
+      </div>
+      <!-- Wall 2 -->
+      <div class="vbar-col" data-drop="&lt;1%" data-drop-type="pass">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar wall2">
+          <div class="vbar-val">~106</div>
+          <div class="vbar-pct">blocked</div>
+        </div>
+      </div>
+      <!-- Convert -->
+      <div class="vbar-col">
+        <div class="vbar-spacer"></div>
+        <div class="vbar-bar convert">
+          <div class="vbar-val">&lt;50</div>
+        </div>
+      </div>
+    </div>
+    <div class="vbar-labels">
+      <div class="vbar-label" style="flex:1"><strong>Entry</strong>Funnel Start</div>
+      <div class="vbar-label" style="flex:1;color:var(--issue);"><strong style="color:var(--issue);">Wall 1</strong>Cart Error</div>
+      <div class="vbar-label" style="flex:1;color:var(--fs-orange);"><strong style="color:var(--fs-orange);">Survivors</strong>~1.2%</div>
+      <div class="vbar-label" style="flex:1;color:var(--issue);"><strong style="color:var(--issue);">Wall 2</strong>Payment API</div>
+      <div class="vbar-label" style="flex:1;color:var(--fs-green);"><strong style="color:var(--fs-green);">Converted</strong>&lt;1%</div>
+    </div>
+  </div>
+
+  <!-- Funnel KPI Tiles -->
+  <div class="tile-row" style="margin-bottom:48px;">
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Funnel Entrants</div>
+        <div class="metric-tile-badge badge-green">30d</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--fs-green);">12,600</div>
+      <div class="metric-tile-sub">users entered</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">Entry to conversion — full funnel</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;border-top:2px solid var(--issue);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Cart Error Rate</div>
+        <div class="metric-tile-badge badge-red">Wall 1</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--issue);">89.6%</div>
+      <div class="metric-tile-sub">hit "car not available"</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">7,113 of 7,941 PDP sessions</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;border-top:2px solid var(--fs-orange);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Pass-Through</div>
+        <div class="metric-tile-badge badge-orange">Survivors</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--fs-orange);">~1.2%</div>
+      <div class="metric-tile-sub">reach checkout review</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">~154 of 12,600 entrants</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;border-top:2px solid var(--issue);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Payment Failure</div>
+        <div class="metric-tile-badge badge-red">Wall 2</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--issue);">69%</div>
+      <div class="metric-tile-sub">approveFunds fails</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">49 of ~71 checkout sessions</div>
+    </div>
+
+    <div class="metric-tile" style="flex:1;min-width:160px;">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">Converted</div>
+        <div class="metric-tile-badge badge-green">&lt;1%</div>
+      </div>
+      <div class="metric-tile-num" style="color:var(--fs-green);">&lt;50</div>
+      <div class="metric-tile-sub">bookings completed</div>
+      <div class="mini-bar">
+        <div class="mini-bar-col entry"></div>
+        <div class="mini-bar-col wall1"></div>
+        <div class="mini-bar-col survive"></div>
+        <div class="mini-bar-col wall2"></div>
+        <div class="mini-bar-col convert"></div>
+      </div>
+      <div class="metric-tile-footer">Of 12,600 funnel entrants</div>
+    </div>
+
+  </div>
+
+  <!-- Wall 1 Detail -->
+  <div class="two-col" style="margin-bottom:40px;">
+    <div class="strength-card">
+      <div class="strength-card-header issue">
+        <h3>Wall 1 — Car Availability Failure</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-red">🚗</div>
+          <div class="strength-text">
+            <h4>7,113 users blocked (89.6% of funnel)</h4>
+            <p>The inventory system surfaces cars that are not actually bookable. When a user clicks Add to Cart, the API returns an availability error immediately — there's no loading state, no partial success, just an instant failure message.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">📍</div>
+          <div class="strength-text">
+            <h4>10+ city markets also returning network errors</h4>
+            <p>The <code style="font-family:monospace;font-size:11px;">/v2/cars/getAllCarsInOrgInCity</code> endpoint is failing for Oklahoma City, Indianapolis, Charlotte, Austin, New York, Madison, Albuquerque, Savannah, St. Louis, Lansing, and others — 300–357 users per city.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-orange">🤷</div>
+          <div class="strength-text">
+            <h4>Zero recovery UX at the failure point</h4>
+            <p>The error gives no reason (date conflict? car condition? already booked?), no alternative car suggestions, no "check back" guidance. Users have nothing to do except leave.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header issue">
+        <h3>Wall 2 — Payment Processing Failure</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-red">💳</div>
+          <div class="strength-text">
+            <h4>69% payment API failure at final confirm</h4>
+            <p><code style="font-family:monospace;font-size:11px;">POST /v2/payments/approveFunds</code> fails at the network level for 49 of ~71 users who reach checkout review. This is not a user payment method issue — it's an API reliability problem.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🔇</div>
+          <div class="strength-text">
+            <h4>Silent failures are the norm</h4>
+            <p>Session recordings show that 2 of 3 sampled payment failures produced no visible error state. The submit button appears to do nothing. Users rage click, wait, then abandon — with no idea what went wrong or how to fix it.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-orange">🔁</div>
+          <div class="strength-text">
+            <h4>No retry or recovery path offered</h4>
+            <p>Not one recorded session shows a user successfully editing their payment method or retrying with a different card after failure. There is no prompt to do so — the UI offers no guidance after the API fails.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional checkout friction -->
+  <div class="callout orange">
+    <strong>Additional checkout friction:</strong> Even among users who don't hit the payment API failure, checkout has structural UX problems — checkout progress step labels (Billing, Payment) look interactive but aren't clickable, rage-clicked by 441–464 users. The Edit Ride and Edit Billing buttons in the review step are also rage-clicked by 289–320 users, suggesting the edit flow is not working reliably.
+  </div>
+</section>
+
+
+<!-- SECTION 3: SESSION EVIDENCE -->
+<section class="section" id="session-evidence">
+  <div class="section-label">Section 03</div>
+  <div class="section-title">Session Evidence</div>
+  <p class="section-desc">Five session recordings sampled from the two failure groups. These are real user sessions — each shows what a person saw and did at the moment of failure.</p>
+
+  <div class="callout" style="margin-bottom:32px;">
+    <strong>Methodology:</strong> Sessions retrieved via Fullstory MCP using the ConsoleErrorsByText and NetworkErrorByPath signal groups from the 30-day purchase funnel scope. 5 of 5 sampled sessions ended in abandonment.
+    <div class="evidence-chips" style="margin-top:12px;">
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Purchase Funnel</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/ytEwKbV4XEIq?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Checkout Review → Success</a>
+      
+      
+      
+    </div>
+  </div>
+
+  <!-- Car Availability Sessions -->
+  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--fs-orange);margin-bottom:16px;"># Cart Availability Failures</div>
+  <div class="session-grid" style="margin-bottom:40px;">
+
+    <div class="session-card">
+      <div class="session-card-header availability">
+        <div>
+          <div class="session-card-title">2024 Toyota Camry</div>
+          <div class="session-card-meta">Car Detail Page · Selected dates · Attempted Add to Cart</div>
+        </div>
+        <div class="session-card-badge scb-abandoned">Abandoned</div>
+      </div>
+      <div class="session-card-body">
+        <div class="session-finding">User set rental dates and clicked Add to Cart.</div>
+        <div class="session-finding">Error appeared instantaneously — no loading state, no latency. Synchronous failure.</div>
+        <div class="session-finding rage">Rage clicked Add to Cart 3 additional times in rapid succession.</div>
+        <div class="session-finding">Scrolled back up the listing — searching for availability explanation. Found none.</div>
+        <div class="session-finding">Navigated back to search results. Did not click another car.</div>
+        <div class="session-finding abandon">Session ends. No workaround attempted. Full abandonment.</div>
+        <a href="https://app.fullstory.com/ui/18PNWR/session/3515707492497354698:7444742086037988510" target="_blank" class="session-link">↗ View in Fullstory</a>
+      </div>
+    </div>
+
+    <div class="session-card">
+      <div class="session-card-header availability">
+        <div>
+          <div class="session-card-title">2023 Tesla Model 3</div>
+          <div class="session-card-meta">Car Detail Page · Selected dates · Attempted Add to Cart</div>
+        </div>
+        <div class="session-card-badge scb-abandoned">Hard Abandoned</div>
+      </div>
+      <div class="session-card-body">
+        <div class="session-finding">User browsed to Tesla Model 3 detail page. Viewed photos and specs.</div>
+        <div class="session-finding">Clicked Add to Cart. Error fired within ~1–2 seconds.</div>
+        <div class="session-finding rage">Rage clicked Add to Cart 3 more times.</div>
+        <div class="session-finding">No navigation to search results. No help or support click.</div>
+        <div class="session-finding abandon">Hard abandoned on the detail page — did not navigate anywhere after the rage clicks. Session ends on the error state.</div>
+        <div class="session-finding silent">No "try similar cars" prompt surfaced. No date adjustment attempted.</div>
+        <a href="https://app.fullstory.com/ui/18PNWR/session/808543381321307993:4911035493475936825" target="_blank" class="session-link">↗ View in Fullstory</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Payment Failure Sessions -->
+  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--issue);margin-bottom:16px;"># Payment Processing Failures</div>
+  <div class="session-grid">
+
+    <div class="session-card">
+      <div class="session-card-header payment">
+        <div>
+          <div class="session-card-title">Checkout Review → Payment Submit</div>
+          <div class="session-card-meta">Completed all checkout steps · Clicked Confirm &amp; Pay</div>
+        </div>
+        <div class="session-card-badge scb-abandoned">Error Shown</div>
+      </div>
+      <div class="session-card-body">
+        <div class="session-finding">User navigated through trip details, driver info, and billing successfully.</div>
+        <div class="session-finding">Reached checkout review. Clicked the final Confirm &amp; Pay button.</div>
+        <div class="session-finding abort">POST /v2/payments/approveFunds failed at network level.</div>
+        <div class="session-finding">Generic payment failure message appeared on screen.</div>
+        <div class="session-finding rage">Rage clicked submit button multiple times in rapid succession.</div>
+        <div class="session-finding">Did not navigate to edit payment details. No card change attempted.</div>
+        <div class="session-finding abandon">Session ends in abandonment. Booking not completed.</div>
+        <a href="https://app.fullstory.com/ui/18PNWR/session/8180835257996781121:3840492203496302986" target="_blank" class="session-link">↗ View in Fullstory</a>
+      </div>
+    </div>
+
+    <div class="session-card">
+      <div class="session-card-header payment">
+        <div>
+          <div class="session-card-title">Checkout Review → Payment Submit</div>
+          <div class="session-card-meta">Completed all checkout steps · Clicked Confirm &amp; Pay</div>
+        </div>
+        <div class="session-card-badge scb-silent">Silent Failure</div>
+      </div>
+      <div class="session-card-body">
+        <div class="session-finding">User completed full checkout form. Card details pre-populated.</div>
+        <div class="session-finding">Clicked submit. Payment API request failed at network level (not HTTP 4xx/5xx — connection failure).</div>
+        <div class="session-finding silent">No visible error state rendered. UI appeared to stall. User received zero feedback.</div>
+        <div class="session-finding rage">Rage clicked submit button at least twice more — believed app was unresponsive.</div>
+        <div class="session-finding">No edit of payment info. No retry with different method.</div>
+        <div class="session-finding abandon">Session ends. No confirmation page reached. Booking lost.</div>
+        <a href="https://app.fullstory.com/ui/18PNWR/session/1467644205489944836:4405438448362114963" target="_blank" class="session-link">↗ View in Fullstory</a>
+      </div>
+    </div>
+
+    <div class="session-card">
+      <div class="session-card-header payment">
+        <div>
+          <div class="session-card-title">Checkout Review → Payment Submit</div>
+          <div class="session-card-meta">Completed all checkout steps · Clicked Confirm &amp; Pay</div>
+        </div>
+        <div class="session-card-badge scb-silent">Silent Failure</div>
+      </div>
+      <div class="session-card-body">
+        <div class="session-finding">User reached final payment step. Tapped submit/confirm.</div>
+        <div class="session-finding">POST /v2/payments/approveFunds network error on first submit attempt.</div>
+        <div class="session-finding silent">No error state shown to user — UI did not surface failure. Button appeared to do nothing.</div>
+        <div class="session-finding rage">Rage clicks on submit button. User clearly frustrated by non-response.</div>
+        <div class="session-finding">No navigation to edit payment screen. No card change.</div>
+        <div class="session-finding abandon">Session ends without order confirmation. Booking not completed.</div>
+        <a href="https://app.fullstory.com/ui/18PNWR/session/693759049271876455:6108249543224906370" target="_blank" class="session-link">↗ View in Fullstory</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECTION 4: PRIORITY MATRIX -->
+<section class="section" id="priority-matrix">
+  <div class="section-label">Section 04</div>
+  <div class="section-title">Issue Priority Matrix</div>
+  <p class="section-desc">All identified issues ranked by severity. Users affected reflects the 30-day window. Funnel impact is the estimated effect on booking conversion.</p>
+
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Issue</th>
+          <th class="col-sev">Severity</th>
+          <th>Users Affected</th>
+          <th>Funnel Stage</th>
+          <th class="col-impact">Conversion Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="category-row"><td colspan="5">Critical — Direct Conversion Blockers</td></tr>
+        <tr>
+          <td>"Car not available" error on Add to Cart
+            <div class="evidence-chips" style="margin-top:5px;">
+              
+              <a href="https://app.fullstory.com/ui/18PNWR/session/3515707492497354698:7444742086037988510" target="_blank" class="evidence-chip">↗ Session</a>
+            </div>
+          </td>
+          <td><span class="badge b-crit">Critical</span></td>
+          <td>7,113 (89.6%)</td>
+          <td>Car Detail Page</td>
+          <td>Blocks 90% of funnel</td>
+        </tr>
+        <tr>
+          <td>/v2/payments/approveFunds network failure
+            <div class="evidence-chips" style="margin-top:5px;">
+              <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/ytEwKbV4XEIq?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Checkout Funnel</a>
+              <a href="https://app.fullstory.com/ui/18PNWR/session/8180835257996781121:3840492203496302986" target="_blank" class="evidence-chip">↗ Session 1</a>
+              <a href="https://app.fullstory.com/ui/18PNWR/session/1467644205489944836:4405438448362114963" target="_blank" class="evidence-chip">↗ Session 2</a>
+              <a href="https://app.fullstory.com/ui/18PNWR/session/693759049271876455:6108249543224906370" target="_blank" class="evidence-chip">↗ Session 3</a>
+            </div>
+          </td>
+          <td><span class="badge b-crit">Critical</span></td>
+          <td>49 of ~71 (69%)</td>
+          <td>Checkout Review</td>
+          <td>Blocks final conversion</td>
+        </tr>
+        <tr>
+          <td>Silent payment failure — no error shown to user</td>
+          <td><span class="badge b-crit">Critical</span></td>
+          <td>2 of 3 sessions</td>
+          <td>Checkout Review</td>
+          <td>Zero recovery possible</td>
+        </tr>
+        <tr>
+          <td>City inventory API failures (10+ markets)</td>
+          <td><span class="badge b-crit">Critical</span></td>
+          <td>~3,500+ total</td>
+          <td>Discovery / Search</td>
+          <td>Dead-ends entire cities</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="5">High — Significant Friction &amp; Drop-off</td></tr>
+        <tr>
+          <td>Rage clicks on Car Title Link (not navigating)
+            <div class="evidence-chips" style="margin-top:5px;">
+              <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/UTZceTMWQ7rN?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Search → Selection Funnel</a>
+              <a href="https://app.fullstory.com/ui/18PNWR/session/8455625215122809282:4936313550518442227" target="_blank" class="evidence-chip">↗ Session</a>
+            </div>
+          </td>
+          <td><span class="badge b-high">High</span></td>
+          <td>2,097 (52%)</td>
+          <td>Search Results</td>
+          <td>Pre-funnel dropout</td>
+        </tr>
+        <tr>
+          <td>Rage clicks on Car Image (not navigating)
+            <div class="evidence-chips" style="margin-top:5px;">
+              
+              <a href="https://app.fullstory.com/ui/18PNWR/session/8853501202892318664:884264192765049115" target="_blank" class="evidence-chip">↗ Session</a>
+            </div>
+          </td>
+          <td><span class="badge b-high">High</span></td>
+          <td>1,616 (40%)</td>
+          <td>Search Results</td>
+          <td>Pre-funnel dropout</td>
+        </tr>
+        <tr>
+          <td>Rage clicks on Pickup Location field</td>
+          <td><span class="badge b-high">High</span></td>
+          <td>1,343 (33%)</td>
+          <td>Search / PDP</td>
+          <td>Discovery dropout</td>
+        </tr>
+        <tr>
+          <td>404 page with 87% refresh rate — routing broken</td>
+          <td><span class="badge b-high">High</span></td>
+          <td>19,511</td>
+          <td>Cross-cutting</td>
+          <td>Lost entry traffic</td>
+        </tr>
+        <tr>
+          <td>Error clicks on "Finalize Lineup" (host)</td>
+          <td><span class="badge b-high">High</span></td>
+          <td>581 (7.3%)</td>
+          <td>Host Experience</td>
+          <td>Host-side booking fails</td>
+        </tr>
+        <tr>
+          <td>Error clicks on Confirm &amp; Submit button</td>
+          <td><span class="badge b-high">High</span></td>
+          <td>60–68</td>
+          <td>Checkout</td>
+          <td>Last-step conversion loss</td>
+        </tr>
+        <tr>
+          <td>503 errors on /api/collect during cart adds
+            <div class="evidence-chips" style="margin-top:5px;">
+              
+              <a href="https://app.fullstory.com/ui/18PNWR/session/6609635046885389761:2319055388606010132" target="_blank" class="evidence-chip">↗ Session</a>
+            </div>
+          </td>
+          <td><span class="badge b-high">High</span></td>
+          <td>977 (13.7%)</td>
+          <td>Cart</td>
+          <td>Cart add failure</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="5">Medium — UX Friction Without Hard Block</td></tr>
+        <tr>
+          <td>Checkout step labels not clickable/navigable</td>
+          <td><span class="badge b-med">Medium</span></td>
+          <td>441–464</td>
+          <td>Checkout</td>
+          <td>Increased abandonment</td>
+        </tr>
+        <tr>
+          <td>Edit Ride / Edit Billing buttons unresponsive</td>
+          <td><span class="badge b-med">Medium</span></td>
+          <td>289–320</td>
+          <td>Checkout Review</td>
+          <td>Abandonment at review</td>
+        </tr>
+        <tr>
+          <td>Rage clicks on Total / Car Price (no breakdown)</td>
+          <td><span class="badge b-med">Medium</span></td>
+          <td>684–1,322</td>
+          <td>Search / PDP</td>
+          <td>Trust / hesitation</td>
+        </tr>
+        <tr>
+          <td>Share button dead clicks (SVG element issue)</td>
+          <td><span class="badge b-med">Medium</span></td>
+          <td>1,188</td>
+          <td>Car Detail Page</td>
+          <td>Referral loss</td>
+        </tr>
+        <tr>
+          <td>Usetiful guide loading failures</td>
+          <td><span class="badge b-med">Medium</span></td>
+          <td>1,405</td>
+          <td>Cross-cutting</td>
+          <td>Onboarding/guidance loss</td>
+        </tr>
+        <tr>
+          <td>iOS Add to Cart error/dead clicks</td>
+          <td><span class="badge b-med">Medium</span></td>
+          <td>~50</td>
+          <td>iOS App</td>
+          <td>Mobile conversion loss</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- SECTION 5: RECOMMENDATIONS -->
+<section class="section" id="recommendations">
+  <div class="rec-card">
+    <div class="section-label" style="margin-bottom:10px;">Section 05</div>
+    <h3>Recommendations</h3>
+    <p>Five prioritized fixes ordered by conversion impact. The first two address structural failures — everything downstream improves only after these are resolved.</p>
+
+    <div class="rec-tiers">
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1 · Critical</div>
+        <div class="rec-tier-content">
+          <h4>Fix car availability — filter unbookable inventory from search results</h4>
+          <p>The root cause is that the inventory system surfaces cars that fail the availability check. Either pre-filter results to only show bookable cars, or surface availability status inline on the search card so users never reach the PDP for an unavailable car. This single fix unblocks 89.6% of the purchase funnel. Also investigate and resolve the 10+ city markets returning API errors on <code style="font-family:monospace;font-size:11px;">/v2/cars/getAllCarsInOrgInCity</code>.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1 · Critical</div>
+        <div class="rec-tier-content">
+          <h4>Fix /v2/payments/approveFunds reliability and surface errors explicitly</h4>
+          <p>The payment API is failing for 69% of users at the final step. Investigate and resolve the network-level failures. In parallel, ensure every failure path renders an explicit, actionable error state — "Your payment couldn't be processed. Please check your card details or try a different method." Session evidence shows the current implementation silently fails for the majority of users, leaving them with no information and no recovery path.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2 · High</div>
+        <div class="rec-tier-content">
+          <h4>Add post-availability-error recovery UX on the car detail page</h4>
+          <p>When a car is unavailable, show why (date conflict, already booked, condition) and surface 3–5 similar available vehicles inline. Session recordings show users scrolling back up the listing looking for an explanation — a recovery surface here would recapture a meaningful portion of these abandonments rather than sending them back to a cold search page.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2 · High</div>
+        <div class="rec-tier-content">
+          <h4>Fix routing and resolve the 404 page refresh loop</h4>
+          <p>19,511 users are landing on the 404 page with an 87% immediate refresh rate — indicating broken inbound links, expired deep links, or a routing regression. Audit inbound link sources, add redirect logic for common broken paths, and improve the 404 page itself with search and navigation options so users who do land there have a recovery path.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p3">P3 · Medium</div>
+        <div class="rec-tier-content">
+          <h4>Fix checkout navigation UX and car image/title click targets</h4>
+          <p>Make checkout progress step labels (Billing, Payment) clickable for backward navigation — 441–464 users are rage clicking these expecting navigation that doesn't exist. Fix the car image and title link click targets on search results — 52% of funnel users rage click these, indicating the navigation from search results to the car detail page has a hit-target or routing problem. Also fix the share button SVG element click interception on the PDP.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page-content -->
+
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <div>
+    <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory"
+         style="height:16px; filter:brightness(0) invert(1); opacity:0.4; vertical-align:middle;" />
+    &nbsp; Usability Analysis — CarGo Digital Experience &amp; Purchase Funnel
+  </div>
+  <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+    <span>Fullstory MCP · 30-day window · April 2026</span>
+    <a href="field-guide/" class="internal-link">Field Guide (Internal) →</a>
+  </div>
+</footer>
+
+</body>
+</html>

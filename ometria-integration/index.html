@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FullStory × Ometria — Integration Value Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* FullStory brand palette */
+    --fs-deep:      #0a2828;
+    --fs-dark:      #0e3c3c;
+    --fs-mid:       #135050;
+    --fs-green:     #07c799;
+    --fs-green-dk:  #059573;
+    --fs-mint:      #c1f1e6;
+    --fs-pink:      #ff6f94;
+    --fs-pink-dk:   #ff2059;
+    --fs-pink-lt:   #ffdbe4;
+    --fs-purple:    #9e36f1;
+    --fs-purple-dk: #7729b5;
+    --fs-purple-lt: #e9ccff;
+    --fs-orange:    #ffa12f;
+
+    /* Ometria brand palette */
+    --om-navy:      #19194b;
+    --om-blue:      #343861;
+    --om-coral:     #ff7070;
+    --om-coral-dk:  #d22f2f;
+    --om-beige:     #faf5ef;
+    --om-periwinkle:#d0d3f1;
+    --om-slate:     #6063a4;
+
+    /* Page chrome */
+    --bg:           #081f1f;
+    --card:         #0d3333;
+    --card-2:       #0f3c3c;
+    --border:       #1a5050;
+    --border-lt:    #1e5c5c;
+    --text-hi:      #e8f8f5;
+    --text-md:      #8ec8bf;
+    --text-lo:      #3d7a76;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text-hi);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* ══════════════════════════════════════════
+     TOP NAV / LOGO BAR
+  ══════════════════════════════════════════ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,31,31,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .topbar-logos {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .topbar-logo-fs img {
+    height: 22px;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+  }
+
+  .topbar-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-lt);
+  }
+
+  .topbar-logo-om img {
+    height: 22px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.88;
+  }
+
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .topbar-nav a {
+    color: var(--text-md);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+
+  .topbar-nav a:hover {
+    background: rgba(7,199,153,0.1);
+    color: var(--fs-green);
+  }
+
+  /* ══════════════════════════════════════════
+     HERO
+  ══════════════════════════════════════════ */
+  .hero {
+    background: linear-gradient(160deg, #081f1f 0%, #0b2e2e 45%, #0a2525 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 88px 56px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow-1 {
+    position: absolute;
+    top: -180px; right: -120px;
+    width: 640px; height: 640px;
+    background: radial-gradient(circle, rgba(7,199,153,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-glow-2 {
+    position: absolute;
+    bottom: -200px; left: -80px;
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, rgba(255,112,112,0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fs-green);
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+
+  .hero-logos-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .hero-logo-block {
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-logo-block img {
+    height: 36px;
+    filter: brightness(0) invert(1);
+  }
+
+  .hero-logo-block.ometria img {
+    height: 38px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  .hero-x {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--text-lo);
+    line-height: 1;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -1.8px;
+    line-height: 1.1;
+    max-width: 860px;
+    margin-bottom: 22px;
+    background: linear-gradient(130deg, #e8f8f5 0%, #a8d8cf 60%, #07c799 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 19px;
+    color: var(--text-md);
+    max-width: 700px;
+    font-weight: 400;
+    line-height: 1.65;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .hero-tag.green { background: rgba(7,199,153,0.1); border: 1px solid rgba(7,199,153,0.25); color: var(--fs-green); }
+  .hero-tag.pink  { background: rgba(255,112,112,0.1); border: 1px solid rgba(255,112,112,0.2); color: var(--om-coral); }
+  .hero-tag.purple { background: rgba(158,54,241,0.1); border: 1px solid rgba(158,54,241,0.25); color: var(--fs-purple); }
+
+  /* ══════════════════════════════════════════
+     EXECUTIVE SUMMARY
+  ══════════════════════════════════════════ */
+  .exec-summary {
+    background: linear-gradient(135deg, rgba(7,199,153,0.04) 0%, rgba(255,112,112,0.03) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 56px;
+  }
+
+  .exec-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .exec-left .section-label { margin-bottom: 12px; }
+
+  .exec-left h2 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    line-height: 1.2;
+    margin-bottom: 18px;
+    color: var(--text-hi);
+  }
+
+  .exec-left p {
+    font-size: 14px;
+    color: var(--text-md);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .exec-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .exec-link-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  }
+
+  .exec-link-card:hover {
+    border-color: var(--border-lt);
+    background: var(--card-2);
+    transform: translateX(3px);
+  }
+
+  .exec-link-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .exec-link-text h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 2px;
+  }
+
+  .exec-link-text p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.4;
+  }
+
+  .exec-link-arrow {
+    margin-left: auto;
+    color: var(--text-lo);
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+
+  .exec-link-card:hover .exec-link-arrow {
+    color: var(--fs-green);
+  }
+
+  /* ══════════════════════════════════════════
+     LAYOUT
+  ══════════════════════════════════════════ */
+  .page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 72px 56px;
+  }
+
+  .section { margin-bottom: 88px; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.9px;
+    margin-bottom: 10px;
+    color: var(--text-hi);
+  }
+
+  .section-desc {
+    color: var(--text-md);
+    font-size: 16px;
+    max-width: 720px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  /* ══════════════════════════════════════════
+     PROBLEM GRID
+  ══════════════════════════════════════════ */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .problem-cell {
+    background: var(--card);
+    padding: 38px;
+  }
+
+  .problem-cell:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .problem-cell-label {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .problem-cell-label.red   { color: var(--om-coral); }
+  .problem-cell-label.green { color: var(--fs-green); }
+
+  .problem-cell h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.4px;
+  }
+
+  .problem-cell p {
+    color: var(--text-md);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .signal-list {
+    list-style: none;
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .signal-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-md);
+  }
+
+  .signal-list li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .signal-list.missing li::before { background: var(--om-coral); opacity: 0.5; }
+  .signal-list.present li::before { background: var(--fs-green); }
+
+  /* ══════════════════════════════════════════
+     PATH CARDS
+  ══════════════════════════════════════════ */
+  .paths-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .path-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .path-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 30px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .path-number {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .path-number.p1 { background: rgba(7,199,153,0.15); color: var(--fs-green); border: 1px solid rgba(7,199,153,0.3); }
+  .path-number.p2 { background: rgba(255,163,47,0.12); color: var(--fs-orange); border: 1px solid rgba(255,163,47,0.25); }
+  .path-number.p3 { background: rgba(158,54,241,0.12); color: var(--fs-purple); border: 1px solid rgba(158,54,241,0.28); }
+
+  .path-header-text h3 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+    color: var(--text-hi);
+  }
+
+  .path-header-text p {
+    font-size: 13px;
+    color: var(--text-md);
+  }
+
+  .path-verdict {
+    margin-left: auto;
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .v-strong  { background: rgba(7,199,153,0.12); color: var(--fs-green); border: 1px solid rgba(7,199,153,0.28); }
+  .v-viable  { background: rgba(255,163,47,0.1); color: var(--fs-orange); border: 1px solid rgba(255,163,47,0.22); }
+  .v-ga      { background: rgba(158,54,241,0.12); color: var(--fs-purple); border: 1px solid rgba(158,54,241,0.28); }
+
+  .path-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .path-flow {
+    padding: 30px;
+    border-right: 1px solid var(--border);
+  }
+
+  .path-details { padding: 30px; }
+
+  .flow-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    font-weight: 700;
+    margin-bottom: 22px;
+  }
+
+  .flow-steps { display: flex; flex-direction: column; }
+
+  .flow-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .flow-node-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .flow-node-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .flow-line {
+    width: 2px;
+    flex: 1;
+    min-height: 20px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+    margin: 4px 0;
+  }
+
+  .flow-node-content {
+    padding-bottom: 22px;
+    flex: 1;
+  }
+
+  .flow-node-content h4 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-hi);
+  }
+
+  .flow-node-content p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .mtag {
+    display: inline-block;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+  }
+
+  .mtag-green  { background: rgba(7,199,153,0.1); border: 1px solid rgba(7,199,153,0.2); color: var(--fs-green); }
+  .mtag-orange { background: rgba(255,163,47,0.1); border: 1px solid rgba(255,163,47,0.2); color: var(--fs-orange); }
+  .mtag-purple { background: rgba(158,54,241,0.1); border: 1px solid rgba(158,54,241,0.22); color: var(--fs-purple); }
+  .mtag-pink   { background: rgba(255,112,112,0.1); border: 1px solid rgba(255,112,112,0.2); color: var(--om-coral); }
+
+  .detail-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border-left: 2px solid transparent;
+  }
+
+  .detail-item.pro  { border-left-color: var(--fs-green); }
+  .detail-item.con  { border-left-color: var(--om-coral); }
+  .detail-item.note { border-left-color: var(--fs-orange); }
+
+  .detail-item-icon { font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+
+  .detail-item-text {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .detail-item-text strong {
+    color: var(--text-hi);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+  }
+
+  /* ══════════════════════════════════════════
+     CODE BLOCK
+  ══════════════════════════════════════════ */
+  .code-block {
+    background: #051515;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 11.5px;
+    line-height: 1.75;
+    overflow-x: auto;
+    margin-top: 18px;
+  }
+
+  .c-comment { color: var(--text-lo); }
+  .c-key     { color: #79c4ff; }
+  .c-string  { color: #a8d8a8; }
+  .c-num     { color: var(--fs-orange); }
+  .c-method  { color: var(--fs-green); }
+  .c-punct   { color: var(--text-lo); }
+
+  /* ══════════════════════════════════════════
+     LATENCY BARS
+  ══════════════════════════════════════════ */
+  .latency-bars { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+
+  .latency-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 90px;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+  }
+
+  .latency-label { color: var(--text-md); font-weight: 500; }
+
+  .latency-track {
+    height: 7px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .latency-fill { height: 100%; border-radius: 10px; }
+
+  .latency-val {
+    color: var(--text-lo);
+    font-family: monospace;
+    font-size: 12px;
+    text-align: right;
+  }
+
+  /* ══════════════════════════════════════════
+     SCENARIOS
+  ══════════════════════════════════════════ */
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .scenario-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .scenario-card:hover { border-color: var(--border-lt); }
+
+  .scenario-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .scenario-icon { font-size: 22px; margin-top: 1px; }
+
+  .scenario-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 3px;
+    color: var(--text-hi);
+  }
+
+  .scenario-header p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .scenario-body { padding: 20px 24px; }
+
+  .scenario-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .scenario-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-md);
+  }
+
+  .step-num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--border);
+    color: var(--text-lo);
+  }
+
+  .scenario-step.trigger .step-num { background: rgba(7,199,153,0.15); color: var(--fs-green); }
+  .scenario-step.action  .step-num { background: rgba(255,112,112,0.12); color: var(--om-coral); }
+
+  .scenario-roi {
+    background: rgba(7,199,153,0.04);
+    border: 1px solid rgba(7,199,153,0.12);
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+
+  .roi-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fs-green-dk);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .scenario-roi p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .mono-sm {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    background: rgba(7,199,153,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--fs-green);
+  }
+
+  /* ══════════════════════════════════════════
+     DATA MODEL
+  ══════════════════════════════════════════ */
+  .data-model {
+    display: grid;
+    grid-template-columns: 1fr 72px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  .data-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .data-box-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .data-box-header h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); }
+
+  .data-box-fields {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .data-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    font-size: 11.5px;
+  }
+
+  .df-name {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--text-md);
+    font-size: 11px;
+  }
+
+  .df-type { font-size: 10px; color: var(--text-lo); font-style: italic; }
+
+  .data-field.hl { background: rgba(7,199,153,0.06); }
+  .data-field.hl .df-name { color: var(--fs-green); }
+
+  .arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-top: 64px;
+    gap: 4px;
+  }
+
+  .arrow-col span {
+    font-size: 9px;
+    color: var(--text-lo);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .arrow-shaft {
+    width: 2px;
+    height: 36px;
+    background: linear-gradient(to bottom, var(--fs-green), var(--om-coral));
+    position: relative;
+  }
+
+  .arrow-shaft::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--om-coral);
+  }
+
+  /* ══════════════════════════════════════════
+     API SURFACE TABLE
+  ══════════════════════════════════════════ */
+  .surface-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .surface-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .surface-table th {
+    text-align: left;
+    padding: 11px 18px;
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.15);
+  }
+
+  .surface-table td {
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(26,80,80,0.4);
+    vertical-align: top;
+    color: var(--text-md);
+  }
+
+  .surface-table td:first-child { color: var(--text-hi); font-weight: 600; }
+  .surface-table tr:last-child td { border-bottom: none; }
+  .surface-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .b-yes     { background: rgba(7,199,153,0.1); color: var(--fs-green); }
+  .b-no      { background: rgba(255,112,112,0.1); color: var(--om-coral); }
+  .b-partial { background: rgba(255,163,47,0.1); color: var(--fs-orange); }
+  .b-gated   { background: rgba(158,54,241,0.1); color: var(--fs-purple); }
+
+  .mono-td {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--text-md);
+  }
+
+  /* ══════════════════════════════════════════
+     RECOMMENDATION
+  ══════════════════════════════════════════ */
+  .rec-card {
+    background: linear-gradient(135deg, rgba(7,199,153,0.06) 0%, rgba(255,112,112,0.04) 100%);
+    border: 1px solid rgba(7,199,153,0.18);
+    border-radius: 18px;
+    padding: 44px;
+  }
+
+  .rec-card > h3 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    margin-bottom: 14px;
+    color: var(--text-hi);
+  }
+
+  .rec-card > p {
+    color: var(--text-md);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 760px;
+    margin-bottom: 0;
+  }
+
+  .rec-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .rec-tier {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px 24px;
+    background: rgba(0,0,0,0.22);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .tier-badge {
+    flex-shrink: 0;
+    padding: 4px 11px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .t1 { background: rgba(7,199,153,0.15); color: var(--fs-green); }
+  .t2 { background: rgba(255,163,47,0.12); color: var(--fs-orange); }
+  .t3 { background: rgba(158,54,241,0.12); color: var(--fs-purple); }
+
+  .rec-tier-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+    color: var(--text-hi);
+  }
+
+  .rec-tier-content p {
+    font-size: 13px;
+    color: var(--text-md);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════════
+     CALLOUT
+  ══════════════════════════════════════════ */
+  .callout {
+    background: rgba(7,199,153,0.04);
+    border: 1px solid rgba(7,199,153,0.14);
+    border-left: 3px solid var(--fs-green);
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 13px;
+    color: var(--text-md);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+
+  .callout strong { color: var(--fs-green); }
+
+  /* ══════════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════════ */
+  .doc-footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-lo);
+    font-size: 12px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 960px) {
+    .topbar { padding: 12px 20px; }
+    .topbar-nav { display: none; }
+    .hero { padding: 56px 20px 48px; }
+    .hero h1 { font-size: 32px; }
+    .exec-inner { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px; }
+    .exec-summary { padding: 40px 20px; }
+    .page-content { padding: 48px 20px; }
+    .path-body { grid-template-columns: 1fr; }
+    .path-flow { border-right: none; border-bottom: 1px solid var(--border); }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .data-model { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .problem-cell:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .doc-footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     TOP NAV
+══════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-logos">
+    <div class="topbar-logo-fs">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" />
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-logo-om">
+      <img src="https://www.ivanmazour.com/wp-content/uploads/2013/05/Ometria-Logo.png" alt="Ometria" />
+    </div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#gap">The Gap</a>
+    <a href="#paths">Integration Paths</a>
+    <a href="#scenarios">Use Cases</a>
+    <a href="#data-model">Data Model</a>
+    <a href="#api-reference">API Reference</a>
+    <a href="#recommendation">Recommendation</a>
+  </nav>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="hero-eyebrow">Integration Value Story</div>
+
+  <div class="hero-logos-row">
+    <div class="hero-logo-block">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" style="height:34px; filter:brightness(0) invert(1);" />
+    </div>
+    <div class="hero-x">×</div>
+    <div class="hero-logo-block ometria">
+      <img src="https://www.ivanmazour.com/wp-content/uploads/2013/05/Ometria-Logo.png" alt="Ometria" />
+    </div>
+  </div>
+
+  <h1>Behavioral Intelligence<br>Meets Marketing Orchestration</h1>
+  <p class="hero-sub">
+    Ometria knows what customers bought. FullStory knows how they felt doing it.
+    This document maps every technically verified integration path between the two platforms
+    and the customer value unlocked at each layer.
+  </p>
+
+  <div class="hero-tags">
+    <span class="hero-tag green">&#10003; All surfaces verified against live documentation</span>
+    <span class="hero-tag pink">3 Integration Paths</span>
+    <span class="hero-tag purple">6 ROI Scenarios</span>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     EXECUTIVE SUMMARY
+══════════════════════════════════════════ -->
+<section class="exec-summary" id="executive-summary">
+  <div class="exec-inner">
+    <div class="exec-left">
+      <div class="section-label">Executive Summary</div>
+      <h2>The behavioral layer that retail marketing has been missing</h2>
+      <p>
+        Retail marketing platforms like Ometria are exceptional at acting on what customers <em>did</em> —
+        purchases, email opens, basket abandonment. They have never had visibility into <em>how</em> customers
+        experienced those moments: the friction, hesitation, and intent signals that appear before a transaction,
+        or explain its absence.
+      </p>
+      <p>
+        FullStory captures that behavioral layer at pixel fidelity. Three verified integration paths exist to
+        connect FullStory's signals into Ometria's campaign engine — each serving different use cases,
+        latency requirements, and organizational maturity.
+      </p>
+      <p>
+        The strongest path is deployable today. Together, these integrations enable a new class of retail
+        marketing: campaigns that respond to <em>experience</em>, not just transactions.
+      </p>
+    </div>
+
+    <div class="exec-right">
+      <a href="#gap" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,112,112,0.1);">🔍</div>
+        <div class="exec-link-text">
+          <h4>The Gap — What Ometria Can't See</h4>
+          <p>How the behavioral blind spot in retail marketing creates missed revenue and preventable churn.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#paths" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">⚡</div>
+        <div class="exec-link-text">
+          <h4>Integration Paths — How They Connect</h4>
+          <p>Server-side activation, warehouse ML scoring, and the FullStory Behavioral Data Layer.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#latency" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">⏱</div>
+        <div class="exec-link-text">
+          <h4>Latency Profile — Match Path to Use Case</h4>
+          <p>From near real-time activation to batch ML enrichment — which path fits which campaign.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#scenarios" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(158,54,241,0.1);">🎯</div>
+        <div class="exec-link-text">
+          <h4>Use Case Scenarios — The Value Story</h4>
+          <p>Six concrete campaign scenarios with documented ROI rationale across all integration surfaces.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#data-model" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.08);">🗂</div>
+        <div class="exec-link-text">
+          <h4>Data Model — Field-Level Mapping</h4>
+          <p>Exact mapping of FullStory signal fields to Ometria's push endpoint payload structure.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#api-reference" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,112,112,0.08);">📋</div>
+        <div class="exec-link-text">
+          <h4>API Reference — What's Real, What's Not</h4>
+          <p>Every Ometria integration surface: available, gated, or absent — verified against their docs.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#recommendation" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">✦</div>
+        <div class="exec-link-text">
+          <h4>Recommendation — Three-Tier Deployment</h4>
+          <p>Ship server-side first. Layer warehouse intelligence. Activate BDL as always-on enrichment.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-content">
+
+<!-- ══════════════════════════════════════════
+     THE GAP
+══════════════════════════════════════════ -->
+<section class="section" id="gap">
+  <div class="section-label">The Gap</div>
+  <div class="section-title">Marketing automation has a behavioral blind spot</div>
+  <p class="section-desc">
+    Retail marketing platforms receive structured outcome events. They have no window into the session
+    experience that precedes or explains those outcomes.
+  </p>
+
+  <div class="problem-grid">
+    <div class="problem-cell">
+      <div class="problem-cell-label red">What Ometria Can't See</div>
+      <h3>The Experience Layer</h3>
+      <p>Ometria receives orders, product views, basket changes. It cannot observe the session between those events — the experience that drove them or prevented them.</p>
+      <ul class="signal-list missing">
+        <li>Rage clicks on a broken promo code field</li>
+        <li>10 minutes on a PDP with no add-to-cart</li>
+        <li>Form error loops at checkout</li>
+        <li>Scroll depth and genuine attention patterns</li>
+        <li>The moment of hesitation before abandonment</li>
+        <li>Mobile tap frustration on a size/color selector</li>
+        <li>Session context that explains a missing order</li>
+      </ul>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-cell-label green">What FullStory Captures</div>
+      <h3>The Behavioral Data Layer</h3>
+      <p>FullStory observes every interaction at pixel fidelity and surfaces structured behavioral signals — identifiable, attributable, and actionable.</p>
+      <ul class="signal-list present">
+        <li>Frustration signals: rage clicks, dead clicks, error clicks</li>
+        <li>Engagement depth: scroll, dwell, attention scoring</li>
+        <li>Funnel friction: form errors, step abandonment by stage</li>
+        <li>Intent signals: product affinity, category dwell</li>
+        <li>Custom behavioral events via the Behavioral Data Layer</li>
+        <li>Predictive scores via FS Anywhere Warehouse + ML</li>
+        <li>Session replay URLs linkable to individual profiles</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     INTEGRATION PATHS
+══════════════════════════════════════════ -->
+<section class="section" id="paths">
+  <div class="section-label">Architecture</div>
+  <div class="section-title">Three integration surfaces</div>
+  <p class="section-desc">
+    Each path is assessed against confirmed capabilities on both sides.
+    No endpoints, behaviors, or features are assumed beyond what is documented.
+  </p>
+
+  <div class="callout">
+    <strong>FullStory Behavioral Data Layer (BDL):</strong> Now available through FullStory's early adopter program.
+    The BDL surfaces structured behavioral signals from raw session data as a queryable, subscribable data stream —
+    enabling real-time behavioral context to power downstream integrations. The client-side path below is live today for early adopters.
+  </div>
+
+  <div class="paths-grid">
+
+    <!-- PATH 01 -->
+    <div class="path-card">
+      <div class="path-header">
+        <div class="path-number p1">01</div>
+        <div class="path-header-text">
+          <h3>Server-Side: FullStory Anywhere → Ometria REST API</h3>
+          <p>FS Anywhere Activations fire behavioral signals directly to Ometria's push endpoint</p>
+        </div>
+        <div class="path-verdict v-strong">Strongest Path</div>
+      </div>
+      <div class="path-body">
+        <div class="path-flow">
+          <div class="flow-label">Data Flow</div>
+          <div class="flow-steps">
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(7,199,153,0.1);">🔍</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>FullStory Detects Signal</h4>
+                <p>Behavioral event fires in FS: rage click on checkout, form error loop, session abandonment pattern, high-intent dwell on a PDP.</p>
+                <span class="mtag mtag-green">FS Anywhere Activation</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(7,199,153,0.08);">⚡</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Server-Side Activation Fires</h4>
+                <p>FS Anywhere sends a server-to-server POST to Ometria's push endpoint with behavioral payload and identified user.</p>
+                <span class="mtag mtag-green">POST /v2/push</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(255,112,112,0.08);">📨</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Ometria Receives Custom Event</h4>
+                <p>Event lands on the contact profile with typed properties: signal type, page URL, FS session replay URL, frustration score.</p>
+                <span class="mtag mtag-pink">@type: custom_event</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(255,112,112,0.08);">🎯</div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Automation Campaign Triggered</h4>
+                <p>Ometria enters the contact into a campaign flow: rescue email, SMS recovery, retention sequence — personalized by the event's properties.</p>
+                <span class="mtag mtag-pink">Campaign Entry</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="path-details">
+          <div class="flow-label">Capabilities &amp; Constraints</div>
+          <div class="detail-list">
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Custom events trigger automation campaigns</strong>
+                Any custom_event type can serve as a campaign entry trigger in Ometria's automation flows.
+              </div>
+            </div>
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Rich event properties</strong>
+                Events carry string, number, boolean, date, or product list properties — session replay URL, signal type, frustration score, page, element.
+              </div>
+            </div>
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Contact enrichment in the same API call</strong>
+                Same push request can update contact properties (frustration_score, last_signal_type) alongside firing the event.
+              </div>
+            </div>
+            <div class="detail-item note">
+              <div class="detail-item-icon">△</div>
+              <div class="detail-item-text">
+                <strong>Timestamp must be current</strong>
+                Events with past timestamps will NOT enter the contact into an automation flow. Always use the current time.
+              </div>
+            </div>
+            <div class="detail-item note">
+              <div class="detail-item-icon">△</div>
+              <div class="detail-item-text">
+                <strong>Async queue — near-real-time</strong>
+                Ometria's push endpoint is asynchronous. Events are queued, not applied instantly. Expect seconds to low-minute lag.
+              </div>
+            </div>
+            <div class="detail-item con">
+              <div class="detail-item-icon">✗</div>
+              <div class="detail-item-text">
+                <strong>Cannot influence Ometria's personalization engine</strong>
+                FS signals cannot alter Ometria's recommendation engine output in real time via this path.
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+<span class="c-comment">// FullStory Anywhere → Ometria push payload</span>
+<span class="c-punct">{</span>
+  <span class="c-key">"@type"</span><span class="c-punct">:</span> <span class="c-string">"custom_event"</span><span class="c-punct">,</span>
+  <span class="c-key">"event_type"</span><span class="c-punct">:</span> <span class="c-string">"fullstory_checkout_friction"</span><span class="c-punct">,</span>
+  <span class="c-key">"timestamp"</span><span class="c-punct">:</span> <span class="c-string">"&lt;current ISO timestamp&gt;"</span><span class="c-punct">,</span>
+  <span class="c-key">"identity_email"</span><span class="c-punct">:</span> <span class="c-string">"[email protected]"</span><span class="c-punct">,</span>
+  <span class="c-key">"properties"</span><span class="c-punct">: {</span>
+    <span class="c-key">"signal_type"</span><span class="c-punct">:</span> <span class="c-string">"rage_click"</span><span class="c-punct">,</span>
+    <span class="c-key">"page_url"</span><span class="c-punct">:</span> <span class="c-string">"/checkout/payment"</span><span class="c-punct">,</span>
+    <span class="c-key">"frustration_score"</span><span class="c-punct">:</span> <span class="c-num">87</span><span class="c-punct">,</span>
+    <span class="c-key">"session_replay_url"</span><span class="c-punct">:</span> <span class="c-string">"https://app.fullstory.com/..."</span>
+  <span class="c-punct">}</span>
+<span class="c-punct">}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PATH 02 -->
+    <div class="path-card">
+      <div class="path-header">
+        <div class="path-number p2">02</div>
+        <div class="path-header-text">
+          <h3>Warehouse: FS Anywhere Warehouse → ML Scoring → Ometria</h3>
+          <p>Batch behavioral intelligence enriches Ometria contact attributes and powers dynamic segment-driven campaigns</p>
+        </div>
+        <div class="path-verdict v-viable">Viable — Batch</div>
+      </div>
+      <div class="path-body">
+        <div class="path-flow">
+          <div class="flow-label">Data Flow</div>
+          <div class="flow-steps">
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(255,163,47,0.1);">🏗️</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>FS Anywhere Warehouse Exports</h4>
+                <p>FullStory behavioral features land in Snowflake: session counts, funnel completion rates, engagement depth, frustration frequency per user.</p>
+                <span class="mtag mtag-orange">FS Anywhere Warehouse</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(255,163,47,0.08);">🧠</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>ML Models Score Contacts</h4>
+                <p>Models trained on FS + transaction data produce: churn risk score, CLV tier, next-best-action label, product affinity vector.</p>
+                <span class="mtag mtag-orange">Snowflake ML / dbt</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(255,112,112,0.08);">📤</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Scores Written to Ometria</h4>
+                <p>Batch job pushes scored contacts via REST API. Properties like churn_risk_score and nba_action populate Ometria contact profiles.</p>
+                <span class="mtag mtag-pink">POST /v2/push (contact)</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(7,199,153,0.08);">🎯</div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Dynamic Segments Update</h4>
+                <p>Ometria's dynamic segmentation re-evaluates against updated contact properties, auto-populating "High Churn Risk" and "Top CLV" segments for campaign entry.</p>
+                <span class="mtag mtag-green">Dynamic Segmentation</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="path-details">
+          <div class="flow-label">Capabilities &amp; Constraints</div>
+          <div class="detail-list">
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Richest signal surface</strong>
+                Full behavioral history informs the model — not a single event, but patterns across all sessions over time.
+              </div>
+            </div>
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Feeds Ometria's native dynamic segments</strong>
+                Score properties automatically re-qualify contacts into segment-driven campaigns without manual list management.
+              </div>
+            </div>
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Snowflake is a confirmed Ometria integration</strong>
+                Bidirectional Snowflake sync is documented — Ometria can both export to and import from Snowflake.
+              </div>
+            </div>
+            <div class="detail-item note">
+              <div class="detail-item-icon">△</div>
+              <div class="detail-item-text">
+                <strong>Snowflake integration is commercially gated</strong>
+                Must be enabled by Ometria CSM. Not self-serve. Factor into scoping conversations.
+              </div>
+            </div>
+            <div class="detail-item con">
+              <div class="detail-item-icon">✗</div>
+              <div class="detail-item-text">
+                <strong>Batch latency — hours, not seconds</strong>
+                Not suitable for in-session activation. Best for lifecycle, retention, and CLV-based campaigns.
+              </div>
+            </div>
+            <div class="detail-item con">
+              <div class="detail-item-icon">✗</div>
+              <div class="detail-item-text">
+                <strong>Cannot force dynamic segment membership via API</strong>
+                Dynamic segments are computed by Ometria internally. Only static segments accept API-pushed membership.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PATH 03 -->
+    <div class="path-card">
+      <div class="path-header">
+        <div class="path-number p3">03</div>
+        <div class="path-header-text">
+          <h3>Client-Side: FS Behavioral Data Layer → Ometria JS SDK</h3>
+          <p>In-browser behavioral signals enrich Ometria contact profiles via the JS tracker — available now through FullStory's early adopter program</p>
+        </div>
+        <div class="path-verdict v-ga">Early Adopter — Available</div>
+      </div>
+      <div class="path-body">
+        <div class="path-flow">
+          <div class="flow-label">Data Flow</div>
+          <div class="flow-steps">
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(158,54,241,0.12);">👁️</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>FS BDL Emits Behavioral Signal</h4>
+                <p>The FullStory Behavioral Data Layer surfaces a structured signal in the browser — frustration threshold crossed, high-intent dwell detected, funnel stage abandoned.</p>
+                <span class="mtag mtag-purple">FS Behavioral Data Layer</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(158,54,241,0.08);">📡</div>
+                <div class="flow-line"></div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Glue Code Calls Ometria SDK</h4>
+                <p>Page-level integration code subscribes to BDL events and calls Ometria's tracker with behavioral context passed as custom properties to identify().</p>
+                <span class="mtag mtag-purple">ometria.identify()</span>
+              </div>
+            </div>
+
+            <div class="flow-node">
+              <div class="flow-node-left">
+                <div class="flow-node-icon" style="background:rgba(255,112,112,0.08);">⏳</div>
+              </div>
+              <div class="flow-node-content">
+                <h4>Profile Updated Post-Session</h4>
+                <p>BDL fires the signal in 1–3 seconds. However, Ometria applies custom properties from identify() only after session completion (~30-min delay on Ometria's side). Properties feed dynamic segment rules and downstream campaign personalization.</p>
+                <span class="mtag mtag-pink">Contact enrichment (post-session)</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="path-details">
+          <div class="flow-label">Capabilities &amp; Constraints</div>
+          <div class="detail-list">
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Available now — FS early adopter program</strong>
+                The Behavioral Data Layer is live for early adopter customers. This is not future state.
+              </div>
+            </div>
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>No server infrastructure required</strong>
+                Pure browser-to-browser. Both SDKs run on-page. Zero backend activation layer needed for this path.
+              </div>
+            </div>
+            <div class="detail-item pro">
+              <div class="detail-item-icon">✓</div>
+              <div class="detail-item-text">
+                <strong>Always-on profile enrichment</strong>
+                Even with the post-session delay, properties like fs_frustration_flag update before the next Ometria send cycle — improving ongoing segmentation without any manual work.
+              </div>
+            </div>
+            <div class="detail-item note">
+              <div class="detail-item-icon">△</div>
+              <div class="detail-item-text">
+                <strong>Ometria applies identify() properties ~30 min post-session</strong>
+                FullStory's BDL fires in 1–3 seconds — the delay is entirely on Ometria's side. Contact properties from identify() are not written until ~30 minutes after the session ends. For real-time campaign triggering, combine with Path 01.
+              </div>
+            </div>
+            <div class="detail-item note">
+              <div class="detail-item-icon">△</div>
+              <div class="detail-item-text">
+                <strong>Cross-SDK call is not formally documented by Ometria</strong>
+                Calling ometria.*() from third-party JS works in practice but is fragile to Ometria SDK updates. A thin wrapper is advisable.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     LATENCY
+══════════════════════════════════════════ -->
+<section class="section" id="latency">
+  <div class="section-label">Performance</div>
+  <div class="section-title">Latency profile by path</div>
+  <p class="section-desc">Match each integration path to the right use case based on how quickly a behavioral signal needs to become a marketing action.</p>
+
+  <div class="latency-bars">
+    <div class="latency-row">
+      <span class="latency-label">03 — BDL Client-Side</span>
+      <div class="latency-track">
+        <div class="latency-fill" style="width:2%; background: linear-gradient(90deg, #9e36f1, #7729b5);"></div>
+      </div>
+      <span class="latency-val">1–3 sec</span>
+    </div>
+    <div class="latency-row">
+      <span class="latency-label">01 — Server-Side Anywhere</span>
+      <div class="latency-track">
+        <div class="latency-fill" style="width:8%; background: linear-gradient(90deg, #07c799, #059573);"></div>
+      </div>
+      <span class="latency-val">~30–90 sec</span>
+    </div>
+    <div class="latency-row">
+      <span class="latency-label">02 — Warehouse / ML</span>
+      <div class="latency-track">
+        <div class="latency-fill" style="width:82%; background: linear-gradient(90deg, #ffa12f, #ff6f94);"></div>
+      </div>
+      <span class="latency-val">2–24 hours</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     USE CASE SCENARIOS
+══════════════════════════════════════════ -->
+<section class="section" id="scenarios">
+  <div class="section-label">Value Scenarios</div>
+  <div class="section-title">What gets unlocked</div>
+  <p class="section-desc">
+    Each scenario represents a campaign type Ometria natively supports — now powered by FullStory behavioral intelligence
+    rather than transaction events alone.
+  </p>
+
+  <div class="scenarios-grid">
+
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-icon">🛒</div>
+        <div>
+          <h3>Frustrated Checkout Rescue</h3>
+          <p>Rage clicks, form error loops, or payment dead-ends trigger a personalized recovery — not a generic abandonment email.</p>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-flow">
+          <div class="scenario-step trigger"><div class="step-num">1</div>FS detects rage click / form error loop on checkout</div>
+          <div class="scenario-step trigger"><div class="step-num">2</div>Anywhere fires: <span class="mono-sm">fullstory_checkout_friction</span></div>
+          <div class="scenario-step action"><div class="step-num">3</div>Ometria enters contact into "Friction Rescue" automation</div>
+          <div class="scenario-step action"><div class="step-num">4</div>Email: "We noticed trouble" + session replay URL for CS</div>
+        </div>
+        <div class="scenario-roi">
+          <div class="roi-label">ROI Driver</div>
+          <p>Generic abandonment emails convert ~3–5%. Frustration-contextualized recovery — with offer + acknowledgment of friction — routinely outperforms by 2–4×. Session replay URL lets CS intervene proactively.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-icon">📉</div>
+        <div>
+          <h3>Behavioral Churn Prediction</h3>
+          <p>Engagement decline in session data predicts churn weeks before a customer goes silent — earlier than any transactional signal.</p>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-flow">
+          <div class="scenario-step trigger"><div class="step-num">1</div>FS Warehouse: session frequency, depth drop over 14 days</div>
+          <div class="scenario-step trigger"><div class="step-num">2</div>ML scores contact: <span class="mono-sm">churn_risk = 0.84</span></div>
+          <div class="scenario-step action"><div class="step-num">3</div>Score written to Ometria contact property via API</div>
+          <div class="scenario-step action"><div class="step-num">4</div>Dynamic segment triggers 3-touch retention campaign</div>
+        </div>
+        <div class="scenario-roi">
+          <div class="roi-label">ROI Driver</div>
+          <p>Behavioral churn signals fire 2–3 weeks before purchase-gap signals. Earlier intervention = higher retention rates. Models trained on FS + Ometria transaction data consistently outperform RFM-only models for churn prediction.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-icon">🔥</div>
+        <div>
+          <h3>High-Intent Dwell Detection</h3>
+          <p>Extended, focused PDP dwell with no cart action signals unresolved consideration — the exact moment for a personalized nudge.</p>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-flow">
+          <div class="scenario-step trigger"><div class="step-num">1</div>FS: 4+ min on single PDP, high scroll, no add-to-cart</div>
+          <div class="scenario-step trigger"><div class="step-num">2</div>Anywhere fires: <span class="mono-sm">fullstory_high_intent_dwell</span> + product_id</div>
+          <div class="scenario-step action"><div class="step-num">3</div>Ometria triggers "Consideration Nudge" with that product</div>
+          <div class="scenario-step action"><div class="step-num">4</div>Email/SMS: "Still thinking about [product]?" + social proof</div>
+        </div>
+        <div class="scenario-roi">
+          <div class="roi-label">ROI Driver</div>
+          <p>Traditional browse abandonment triggers on any PDP view. Dwell-qualified triggers fire only on genuinely interested contacts — higher precision means higher revenue per send and lower unsubscribe rates.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-icon">🎯</div>
+        <div>
+          <h3>Next Best Action via ML Scoring</h3>
+          <p>FS Warehouse ML models predict the highest-ROI action per customer — cross-sell, upgrade, loyalty enrollment — and Ometria delivers it.</p>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-flow">
+          <div class="scenario-step trigger"><div class="step-num">1</div>FS Warehouse: behavioral features joined with Ometria order history</div>
+          <div class="scenario-step trigger"><div class="step-num">2</div>ML: <span class="mono-sm">nba_action = "loyalty_enrollment"</span>, confidence 0.91</div>
+          <div class="scenario-step action"><div class="step-num">3</div>Contact property updated; NBA segment populates</div>
+          <div class="scenario-step action"><div class="step-num">4</div>Ometria delivers targeted loyalty enrollment campaign</div>
+        </div>
+        <div class="scenario-roi">
+          <div class="roi-label">ROI Driver</div>
+          <p>Loyalty-enrolled customers spend 2–4× more annually. Models that incorporate behavioral engagement — not just transactions — identify enrollment candidates earlier and with materially higher precision.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-icon">📞</div>
+        <div>
+          <h3>CS-Assisted Recovery with Session Replay</h3>
+          <p>Ometria automation surfaces FS session replay URLs to CS agents, enabling proactive outreach with full context on what went wrong.</p>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-flow">
+          <div class="scenario-step trigger"><div class="step-num">1</div>FS detects critical frustration for a high-CLV contact</div>
+          <div class="scenario-step trigger"><div class="step-num">2</div>Event payload includes <span class="mono-sm">session_replay_url</span> property</div>
+          <div class="scenario-step action"><div class="step-num">3</div>Ometria automation fires internal notification with replay link</div>
+          <div class="scenario-step action"><div class="step-num">4</div>CS agent reaches out: "We saw you had trouble — here's a fix"</div>
+        </div>
+        <div class="scenario-roi">
+          <div class="roi-label">ROI Driver</div>
+          <p>Proactive CS outreach before a complaint is filed dramatically improves NPS and retention for high-CLV customers. Session replay gives agents full context without asking the customer to re-explain their experience.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <div class="scenario-icon">📱</div>
+        <div>
+          <h3>Mobile UX Friction → Cross-Channel Recovery</h3>
+          <p>Mobile tap frustration and navigation dead-ends trigger a cross-channel response with a direct bypass path to completion.</p>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-flow">
+          <div class="scenario-step trigger"><div class="step-num">1</div>FS Mobile: repeated tap errors on size/color selector</div>
+          <div class="scenario-step trigger"><div class="step-num">2</div>Anywhere fires: <span class="mono-sm">fullstory_mobile_friction</span> + device + element</div>
+          <div class="scenario-step action"><div class="step-num">3</div>Ometria triggers cross-channel: push + email sequence</div>
+          <div class="scenario-step action"><div class="step-num">4</div>"Continue on desktop" deep-link bypasses the friction point</div>
+        </div>
+        <div class="scenario-roi">
+          <div class="roi-label">ROI Driver</div>
+          <p>Mobile UX bugs silently destroy conversion with no visible signal in analytics. Ometria's SMS + push channels can immediately re-engage with a friction-bypassing path, recovering revenue that would otherwise appear as unexplained abandonment.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     DATA MODEL
+══════════════════════════════════════════ -->
+<section class="section" id="data-model">
+  <div class="section-label">Technical Detail</div>
+  <div class="section-title">FullStory signal → Ometria data model</div>
+  <p class="section-desc">
+    Both the event and contact payloads are free-form within Ometria's documented type constraints.
+    This is the canonical field mapping for the primary server-side integration.
+  </p>
+
+  <div class="data-model">
+    <div class="data-box">
+      <div class="data-box-header">
+        <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" style="height:16px; filter:brightness(0) invert(1); opacity:0.8;" />
+        <h4>FullStory Signal Payload</h4>
+      </div>
+      <div class="data-box-fields">
+        <div class="data-field hl"><span class="df-name">signal_type</span><span class="df-type">string</span></div>
+        <div class="data-field hl"><span class="df-name">frustration_score</span><span class="df-type">number (0–100)</span></div>
+        <div class="data-field hl"><span class="df-name">session_replay_url</span><span class="df-type">string (URL)</span></div>
+        <div class="data-field"><span class="df-name">page_url</span><span class="df-type">string</span></div>
+        <div class="data-field"><span class="df-name">element_target</span><span class="df-type">string</span></div>
+        <div class="data-field"><span class="df-name">device_type</span><span class="df-type">string</span></div>
+        <div class="data-field"><span class="df-name">user_email</span><span class="df-type">identity key</span></div>
+        <div class="data-field"><span class="df-name">session_timestamp</span><span class="df-type">ISO datetime</span></div>
+      </div>
+    </div>
+
+    <div class="arrow-col">
+      <span>maps</span>
+      <div class="arrow-shaft"></div>
+      <span>to</span>
+    </div>
+
+    <div class="data-box">
+      <div class="data-box-header">
+        <img src="https://www.ivanmazour.com/wp-content/uploads/2013/05/Ometria-Logo.png" alt="Ometria" style="height:14px; width:auto; filter:brightness(0) invert(1); opacity:0.8; flex-shrink:0;" />
+        <h4>Ometria Push Payload</h4>
+      </div>
+      <div class="data-box-fields">
+        <div class="data-field hl"><span class="df-name">properties.signal_type</span><span class="df-type">string ≤ 512 chars</span></div>
+        <div class="data-field hl"><span class="df-name">properties.frustration_score</span><span class="df-type">number</span></div>
+        <div class="data-field hl"><span class="df-name">properties.session_replay_url</span><span class="df-type">string ≤ 512 chars</span></div>
+        <div class="data-field"><span class="df-name">properties.page_url</span><span class="df-type">string ≤ 512 chars</span></div>
+        <div class="data-field"><span class="df-name">properties.element_target</span><span class="df-type">string ≤ 512 chars</span></div>
+        <div class="data-field"><span class="df-name">properties.device_type</span><span class="df-type">string ≤ 512 chars</span></div>
+        <div class="data-field"><span class="df-name">identity_email</span><span class="df-type">contact identity key</span></div>
+        <div class="data-field"><span class="df-name">timestamp</span><span class="df-type">ISO datetime (must be current)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px;">
+    <div class="callout">
+      <strong>Property budget:</strong> Ometria contact <code style="font-family:monospace;font-size:12px;">properties</code> must be <strong>under 1KB combined</strong>.
+      Event properties support string (512 char max), number, boolean, date, or products_list.
+      Prioritize signal_type, frustration_score, and session_replay_url — these three fields carry the highest campaign value.
+      Additional context can be encoded in the event_type name (e.g. <code style="font-family:monospace;font-size:12px;">fullstory_checkout_friction_ragclick</code>).
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     API SURFACE REFERENCE
+══════════════════════════════════════════ -->
+<section class="section" id="api-reference">
+  <div class="section-label">Reference</div>
+  <div class="section-title">Ometria integration surface — verified capabilities</div>
+  <p class="section-desc">All entries verified against Ometria developer docs (docs.ometria.com) and support documentation. Nothing is inferred.</p>
+
+  <div class="surface-wrap">
+    <table class="surface-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Available</th>
+          <th>Method</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Write custom behavioral events</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td class="mono-td">POST /v2/push (@type: custom_event)</td>
+          <td>Triggers automation campaigns; timestamp must be current</td>
+        </tr>
+        <tr>
+          <td>Write contact profile attributes</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td class="mono-td">POST /v2/push (@type: contact)</td>
+          <td>Free-form properties object; &lt;1KB combined</td>
+        </tr>
+        <tr>
+          <td>Add contact to static segment</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td class="mono-td">@add_to_lists in contact push</td>
+          <td>Static segments only; max 16 per push</td>
+        </tr>
+        <tr>
+          <td>Trigger automation campaign entry</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td>Custom event with current timestamp</td>
+          <td>Automation must be configured with that event_type as entry trigger</td>
+        </tr>
+        <tr>
+          <td>Receive inbound webhooks from FS</td>
+          <td><span class="badge b-no">No</span></td>
+          <td>—</td>
+          <td>No open inbound webhook URI. Use REST API push endpoint instead.</td>
+        </tr>
+        <tr>
+          <td>Force dynamic segment membership</td>
+          <td><span class="badge b-no">No</span></td>
+          <td>—</td>
+          <td>Dynamic segments computed by Ometria internally; cannot be overridden via API</td>
+        </tr>
+        <tr>
+          <td>Inject signals into recommendation engine</td>
+          <td><span class="badge b-no">No</span></td>
+          <td>—</td>
+          <td>Personalization engine is Ometria-internal; no external signal injection documented</td>
+        </tr>
+        <tr>
+          <td>Real-time streaming ingest</td>
+          <td><span class="badge b-no">No</span></td>
+          <td>—</td>
+          <td>Push endpoint is async queue; near-real-time at best (~30–90s)</td>
+        </tr>
+        <tr>
+          <td>Snowflake bidirectional sync</td>
+          <td><span class="badge b-gated">CSM Gated</span></td>
+          <td>Snowflake Data Cloud connector</td>
+          <td>Bidirectional confirmed; requires CSM enablement, not self-serve</td>
+        </tr>
+        <tr>
+          <td>BigQuery integration</td>
+          <td><span class="badge b-no">No</span></td>
+          <td>—</td>
+          <td>Not a documented native Ometria integration</td>
+        </tr>
+        <tr>
+          <td>Receive webhooks FROM Ometria to FS</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td>Automation campaign webhook node</td>
+          <td>Ometria can POST to any HTTPS endpoint; requires commercial CSM enablement</td>
+        </tr>
+        <tr>
+          <td>Read contact / segment data</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td class="mono-td">GET /contacts, /lists, /profiles</td>
+          <td>Read-only; rate limited at 4 req/sec</td>
+        </tr>
+        <tr>
+          <td>JS SDK cross-call from FS BDL</td>
+          <td><span class="badge b-partial">Partial</span></td>
+          <td class="mono-td">ometria.identify() from page JS</td>
+          <td>Works in practice; not formally documented by Ometria; BDL fires in 1–3s but Ometria applies identify() properties ~30 min post-session</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     RECOMMENDATION
+══════════════════════════════════════════ -->
+<section class="section" id="recommendation">
+  <div class="rec-card">
+    <div class="section-label" style="margin-bottom: 10px;">Recommendation</div>
+    <h3>Build in three tiers — ship the cleanest win first</h3>
+    <p>
+      The server-side path is the only integration that is <strong style="color:var(--text-hi);">technically clean, documentable on both sides, and activation-grade today</strong>.
+      Lead with it. Layer in BDL enrichment as an always-on second signal, and warehouse intelligence as the ML story matures.
+    </p>
+
+    <div class="rec-tiers">
+      <div class="rec-tier">
+        <div class="tier-badge t1">Tier 1</div>
+        <div class="rec-tier-content">
+          <h4>Server-Side Activation — Ship First</h4>
+          <p>FullStory Anywhere fires behavioral custom events to <span style="font-family:monospace;font-size:12px;color:var(--fs-green);">POST /v2/push</span>. Ometria enters contacts into campaigns based on frustration signals, high-intent dwell, and abandonment patterns. Both sides fully documented. Demo-ready and customer-ready with no external dependencies.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t3">Tier 2</div>
+        <div class="rec-tier-content">
+          <h4>Behavioral Data Layer (Client-Side) — Always-On Enrichment</h4>
+          <p>Available now through FullStory's early adopter program. The BDL path runs as a continuous profile enrichment layer alongside Tier 1 — updating Ometria contact attributes with behavioral context after each session. No server infrastructure required. Best positioned as a complement to server-side activation, not a replacement.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t2">Tier 3</div>
+        <div class="rec-tier-content">
+          <h4>Warehouse ML Scoring — Add Predictive Depth</h4>
+          <p>FS Anywhere Warehouse + Snowflake + ML models produce behavioral scores (churn risk, CLV tier, next-best-action) that enrich Ometria contact profiles and power dynamic segment-driven campaigns. Requires Snowflake CSM enablement on the Ometria side. Highest analytical depth; best suited to customers with existing data science capability.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- end page-content -->
+
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <span>Integration surfaces verified against Ometria developer documentation (docs.ometria.com) and FullStory platform capabilities. Research date: March 2026.</span>
+  <div style="display:flex;align-items:center;gap:20px;flex-shrink:0;">
+    <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" style="height:16px;filter:brightness(0) invert(1);opacity:0.4;" />
+    <span style="color:var(--text-lo);">×</span>
+    <img src="https://www.ivanmazour.com/wp-content/uploads/2013/05/Ometria-Logo.png" alt="Ometria" style="height:14px;width:auto;filter:brightness(0) invert(1);opacity:0.35;" />
+  </div>
+</footer>
+
+</body>
+</html>

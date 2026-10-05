@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FullStory vs Noibu — Ecommerce Competitive Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* FullStory brand palette */
+    --fs-deep:      #0a2828;
+    --fs-dark:      #0e3c3c;
+    --fs-mid:       #135050;
+    --fs-green:     #07c799;
+    --fs-green-dk:  #059573;
+    --fs-mint:      #c1f1e6;
+    --fs-pink:      #ff6f94;
+    --fs-pink-dk:   #ff2059;
+    --fs-pink-lt:   #ffdbe4;
+    --fs-purple:    #9e36f1;
+    --fs-purple-dk: #7729b5;
+    --fs-purple-lt: #e9ccff;
+    --fs-orange:    #ffa12f;
+
+    /* Noibu brand palette */
+    --nb-red:       #e8334a;
+    --nb-red-dk:    #b91c1c;
+    --nb-red-lt:    #fde8eb;
+    --nb-slate:     #64748b;
+    --nb-slate-dk:  #475569;
+
+    /* Page chrome */
+    --bg:           #081f1f;
+    --card:         #0d3333;
+    --card-2:       #0f3c3c;
+    --border:       #1a5050;
+    --border-lt:    #1e5c5c;
+    --text-hi:      #e8f8f5;
+    --text-md:      #8ec8bf;
+    --text-lo:      #3d7a76;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text-hi);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* ══════════════════════════════════════════
+     TOP NAV
+  ══════════════════════════════════════════ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,31,31,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .topbar-logos {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .topbar-logo-fs img {
+    height: 22px;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+  }
+
+  .topbar-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: rgba(232,51,74,0.12);
+    border: 1px solid rgba(232,51,74,0.25);
+    color: var(--nb-red);
+  }
+
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .topbar-nav a {
+    color: var(--text-md);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+
+  .topbar-nav a:hover {
+    background: rgba(7,199,153,0.1);
+    color: var(--fs-green);
+  }
+
+  /* ══════════════════════════════════════════
+     HERO
+  ══════════════════════════════════════════ */
+  .hero {
+    background: linear-gradient(160deg, #081f1f 0%, #0b2e2e 45%, #0a2525 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 88px 56px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow-1 {
+    position: absolute;
+    top: -180px; right: -120px;
+    width: 640px; height: 640px;
+    background: radial-gradient(circle, rgba(7,199,153,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-glow-2 {
+    position: absolute;
+    bottom: -200px; left: -80px;
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, rgba(232,51,74,0.05) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--nb-red);
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+
+  .hero-vs-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .hero-logo-fs img {
+    height: 34px;
+    filter: brightness(0) invert(1);
+  }
+
+  .hero-vs {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    padding: 5px 12px;
+    border: 1px solid var(--border-lt);
+    border-radius: 6px;
+  }
+
+  .hero-logo-nb {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: rgba(232,51,74,0.6);
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -1.8px;
+    line-height: 1.1;
+    max-width: 860px;
+    margin-bottom: 22px;
+    background: linear-gradient(130deg, #e8f8f5 0%, #a8d8cf 60%, #07c799 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 19px;
+    color: var(--text-md);
+    max-width: 700px;
+    font-weight: 400;
+    line-height: 1.65;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .hero-tag.green  { background: rgba(7,199,153,0.18);  border: 1px solid rgba(7,199,153,0.5);  color: #0ef5be; }
+  .hero-tag.red    { background: rgba(232,51,74,0.18);  border: 1px solid rgba(232,51,74,0.5);  color: #ff5a72; }
+  .hero-tag.purple { background: rgba(158,54,241,0.18); border: 1px solid rgba(158,54,241,0.5); color: #c06dff; }
+
+  /* ══════════════════════════════════════════
+     EXECUTIVE SUMMARY
+  ══════════════════════════════════════════ */
+  .exec-summary {
+    background: linear-gradient(135deg, rgba(7,199,153,0.04) 0%, rgba(232,51,74,0.03) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 56px;
+  }
+
+  .exec-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .exec-left .section-label { margin-bottom: 12px; }
+
+  .exec-left h2 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    line-height: 1.2;
+    margin-bottom: 18px;
+    color: var(--text-hi);
+  }
+
+  .exec-left p {
+    font-size: 14px;
+    color: var(--text-md);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .exec-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .exec-link-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  }
+
+  .exec-link-card:hover {
+    border-color: var(--border-lt);
+    background: var(--card-2);
+    transform: translateX(3px);
+  }
+
+  .exec-link-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .exec-link-text h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 2px;
+  }
+
+  .exec-link-text p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.4;
+  }
+
+  .exec-link-arrow {
+    margin-left: auto;
+    color: var(--text-lo);
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+
+  .exec-link-card:hover .exec-link-arrow { color: var(--fs-green); }
+
+  /* ══════════════════════════════════════════
+     LAYOUT
+  ══════════════════════════════════════════ */
+  .page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 72px 56px;
+  }
+
+  .section { margin-bottom: 88px; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.9px;
+    margin-bottom: 10px;
+    color: var(--text-hi);
+  }
+
+  .section-desc {
+    color: var(--text-md);
+    font-size: 16px;
+    max-width: 720px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  /* ══════════════════════════════════════════
+     CALLOUT
+  ══════════════════════════════════════════ */
+  .callout {
+    background: rgba(7,199,153,0.04);
+    border: 1px solid rgba(7,199,153,0.14);
+    border-left: 3px solid var(--fs-green);
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 13px;
+    color: var(--text-md);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+
+  .callout strong { color: var(--fs-green); }
+
+  .callout.red {
+    background: rgba(232,51,74,0.04);
+    border-color: rgba(232,51,74,0.14);
+    border-left-color: var(--nb-red);
+  }
+
+  .callout.red strong { color: var(--nb-red); }
+
+  /* ══════════════════════════════════════════
+     PROBLEM GRID (capture comparison)
+  ══════════════════════════════════════════ */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .problem-cell {
+    background: var(--card);
+    padding: 38px;
+  }
+
+  .problem-cell:first-child { border-right: 1px solid var(--border); }
+
+  .problem-cell-label {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .problem-cell-label.red   { color: var(--nb-red); }
+  .problem-cell-label.green { color: var(--fs-green); }
+
+  .problem-cell h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.4px;
+  }
+
+  .problem-cell p {
+    color: var(--text-md);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .signal-list {
+    list-style: none;
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .signal-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-md);
+  }
+
+  .signal-list li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .signal-list.limited li::before { background: var(--nb-red); opacity: 0.5; }
+  .signal-list.full    li::before { background: var(--fs-green); }
+
+  /* ══════════════════════════════════════════
+     FEATURE COMPARISON TABLE
+  ══════════════════════════════════════════ */
+  .compare-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .compare-table thead tr {
+    background: rgba(0,0,0,0.2);
+  }
+
+  .compare-table th {
+    padding: 13px 20px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table th.col-fs  { color: var(--fs-green); }
+  .compare-table th.col-nb  { color: var(--nb-red); opacity: 0.8; }
+
+  .compare-table td {
+    padding: 13px 20px;
+    border-bottom: 1px solid rgba(26,80,80,0.4);
+    vertical-align: top;
+    color: var(--text-md);
+    line-height: 1.5;
+  }
+
+  .compare-table td:first-child {
+    color: var(--text-hi);
+    font-weight: 600;
+    width: 240px;
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .compare-table .category-row td {
+    background: rgba(0,0,0,0.18);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    font-weight: 700;
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .b-yes     { background: rgba(7,199,153,0.15);  border: 1px solid rgba(7,199,153,0.4);  color: #0ef5be; }
+  .b-no      { background: rgba(232,51,74,0.15);  border: 1px solid rgba(232,51,74,0.4);  color: #ff5a72; }
+  .b-partial { background: rgba(255,163,47,0.15); border: 1px solid rgba(255,163,47,0.4); color: #ffc05e; }
+  .b-gated   { background: rgba(158,54,241,0.15); border: 1px solid rgba(158,54,241,0.4); color: #c06dff; }
+
+  /* ══════════════════════════════════════════
+     STRENGTH / WEAKNESS CARDS
+  ══════════════════════════════════════════ */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .strength-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .strength-card-header {
+    padding: 20px 26px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .strength-card-header.fs { border-top: 3px solid var(--fs-green); }
+  .strength-card-header.nb { border-top: 3px solid var(--nb-red); }
+
+  .strength-card-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text-hi);
+  }
+
+  .strength-card-body {
+    padding: 22px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .strength-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .strength-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .si-green  { background: rgba(7,199,153,0.1); }
+  .si-red    { background: rgba(232,51,74,0.1); }
+  .si-purple { background: rgba(158,54,241,0.1); }
+  .si-orange { background: rgba(255,163,47,0.1); }
+
+  .strength-text h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 3px;
+  }
+
+  .strength-text p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════════
+     DISCOVERY QUESTIONS
+  ══════════════════════════════════════════ */
+  .question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 26px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .question-left {}
+
+  .question-tag {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .qt-surface  { color: var(--fs-orange); }
+  .qt-capture  { color: var(--fs-green); }
+  .qt-workflow { color: var(--fs-purple); }
+  .qt-strategy { color: var(--nb-red); }
+
+  .question-left h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-hi);
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+
+  .question-left p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .question-right {
+    padding: 14px 16px;
+    background: rgba(7,199,153,0.04);
+    border: 1px solid rgba(7,199,153,0.1);
+    border-radius: 8px;
+  }
+
+  .question-right-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--fs-green-dk);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .question-right p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════════
+     OBJECTION HANDLERS
+  ══════════════════════════════════════════ */
+  .objection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .objection-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .objection-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 26px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(232,51,74,0.03);
+  }
+
+  .objection-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .objection-header h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-hi);
+    line-height: 1.4;
+  }
+
+  .objection-header p {
+    font-size: 12px;
+    color: var(--nb-red);
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  .objection-body {
+    padding: 20px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .objection-response-label {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--fs-green);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .objection-response {
+    font-size: 13px;
+    color: var(--text-md);
+    line-height: 1.7;
+  }
+
+  .objection-response strong { color: var(--text-hi); }
+
+  .proof-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-md);
+    padding: 8px 12px;
+    background: rgba(7,199,153,0.04);
+    border-left: 2px solid var(--fs-green);
+    border-radius: 4px;
+    line-height: 1.55;
+  }
+
+  .proof-point strong { color: var(--text-hi); }
+
+  /* ══════════════════════════════════════════
+     DETAIL ITEMS (pro/con)
+  ══════════════════════════════════════════ */
+  .detail-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border-left: 2px solid transparent;
+  }
+
+  .detail-item.pro  { border-left-color: var(--fs-green); }
+  .detail-item.con  { border-left-color: var(--nb-red); }
+  .detail-item.note { border-left-color: var(--fs-orange); }
+
+  .detail-item-icon { font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+
+  .detail-item-text {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.55;
+  }
+
+  .detail-item-text strong {
+    color: var(--text-hi);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+  }
+
+  /* ══════════════════════════════════════════
+     RECOMMENDATION
+  ══════════════════════════════════════════ */
+  .rec-card {
+    background: linear-gradient(135deg, rgba(7,199,153,0.06) 0%, rgba(232,51,74,0.03) 100%);
+    border: 1px solid rgba(7,199,153,0.18);
+    border-radius: 18px;
+    padding: 44px;
+  }
+
+  .rec-card > h3 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    margin-bottom: 14px;
+    color: var(--text-hi);
+  }
+
+  .rec-card > p {
+    color: var(--text-md);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 760px;
+    margin-bottom: 0;
+  }
+
+  .rec-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .rec-tier {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px 24px;
+    background: rgba(0,0,0,0.22);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .tier-badge {
+    flex-shrink: 0;
+    padding: 4px 11px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .t-win  { background: rgba(7,199,153,0.15);  color: var(--fs-green); }
+  .t-hard { background: rgba(255,163,47,0.12);  color: var(--fs-orange); }
+  .t-coex { background: rgba(158,54,241,0.12);  color: var(--fs-purple); }
+
+  .rec-tier-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+    color: var(--text-hi);
+  }
+
+  .rec-tier-content p {
+    font-size: 13px;
+    color: var(--text-md);
+    line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════════
+     MONO / CODE TAGS
+  ══════════════════════════════════════════ */
+  .mono-sm {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    background: rgba(7,199,153,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--fs-green);
+  }
+
+  .mtag {
+    display: inline-block;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+  }
+
+  .mtag-green  { background: rgba(7,199,153,0.1); border: 1px solid rgba(7,199,153,0.2); color: var(--fs-green); }
+  .mtag-red    { background: rgba(232,51,74,0.1);  border: 1px solid rgba(232,51,74,0.2);  color: var(--nb-red); }
+  .mtag-purple { background: rgba(158,54,241,0.1); border: 1px solid rgba(158,54,241,0.22); color: var(--fs-purple); }
+  .mtag-orange { background: rgba(255,163,47,0.1); border: 1px solid rgba(255,163,47,0.2); color: var(--fs-orange); }
+
+  /* ══════════════════════════════════════════
+     PLATFORM SPLIT
+  ══════════════════════════════════════════ */
+  .platform-split {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: start;
+    margin-bottom: 40px;
+  }
+
+  .platform-side {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .platform-side-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .platform-side-header.fs { background: rgba(7,199,153,0.05); }
+  .platform-side-header.nb { background: rgba(232,51,74,0.04); }
+
+  .platform-side-header h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-hi);
+  }
+
+  .platform-side-header p {
+    font-size: 12px;
+    color: var(--text-md);
+    margin-top: 1px;
+  }
+
+  .platform-team-row {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(26,80,80,0.35);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .platform-team-row:last-child { border-bottom: none; }
+
+  .team-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 32px;
+    text-align: center;
+    margin-top: 1px;
+  }
+
+  .team-content h4 {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 4px;
+  }
+
+  .team-caps {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .team-cap {
+    font-size: 11.5px;
+    color: var(--text-md);
+    line-height: 1.45;
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .team-cap::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 7px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--fs-green);
+  }
+
+  .team-cap a {
+    color: var(--fs-green);
+    text-decoration: none;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  .team-cap a:hover { opacity: 1; }
+
+  .platform-vs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-lo);
+    padding-top: 80px;
+  }
+
+  .nb-only-block {
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nb-only-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: rgba(232,51,74,0.04);
+    border: 1px solid rgba(232,51,74,0.12);
+    border-radius: 10px;
+  }
+
+  .nb-only-item h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 3px;
+  }
+
+  .nb-only-item p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.5;
+  }
+
+  .nb-silent-teams {
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.1);
+  }
+
+  .nb-silent-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--nb-red);
+    font-weight: 700;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  .silent-team-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-lo);
+    margin-bottom: 6px;
+  }
+
+  .silent-team-row::before {
+    content: '—';
+    color: var(--text-lo);
+    font-size: 11px;
+  }
+
+  /* ══════════════════════════════════════════
+     REFERENCE CARDS
+  ══════════════════════════════════════════ */
+  .ref-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .ref-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.15s, transform 0.1s;
+  }
+
+  .ref-card:hover {
+    border-color: var(--border-lt);
+    transform: translateY(-2px);
+  }
+
+  .ref-card-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ref-card-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .ref-card-top h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-hi);
+    letter-spacing: -0.2px;
+  }
+
+  .ref-card p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.6;
+  }
+
+  .ref-card-link {
+    font-size: 11px;
+    color: var(--fs-green);
+    font-weight: 600;
+    margin-top: auto;
+  }
+
+  /* ══════════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════════ */
+  .doc-footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-lo);
+    font-size: 12px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 960px) {
+    .topbar { padding: 12px 20px; }
+    .topbar-nav { display: none; }
+    .hero { padding: 56px 20px 48px; }
+    .hero h1 { font-size: 32px; }
+    .exec-inner { grid-template-columns: 1fr; gap: 32px; }
+    .exec-summary { padding: 40px 20px; }
+    .page-content { padding: 48px 20px; }
+    .two-col { grid-template-columns: 1fr; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .platform-split { grid-template-columns: 1fr; }
+    .platform-vs { padding: 12px 0; }
+    .ref-cards { grid-template-columns: 1fr; }
+    .problem-cell:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .question-item { grid-template-columns: 1fr; }
+    .doc-footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     TOP NAV
+══════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-logos">
+    <div class="topbar-logo-fs">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" />
+    </div>
+    <div class="topbar-badge">vs Noibu</div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#what-is-noibu">What Is Noibu</a>
+    <a href="#platform">Platform vs. Tool</a>
+    <a href="#capture">Capture Architecture</a>
+    <a href="#matrix">Feature Matrix</a>
+    <a href="#strengths">Strengths</a>
+    <a href="#positioning">Positioning</a>
+  </nav>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="hero-eyebrow">Competitive Playbook — Ecommerce</div>
+
+  <div class="hero-vs-row">
+    <div class="hero-logo-fs">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" />
+    </div>
+    <div class="hero-vs">VS</div>
+    <div class="hero-logo-nb">Noibu</div>
+  </div>
+
+  <h1>Noibu serves one team.<br>FullStory serves all of them.</h1>
+  <p class="hero-sub">
+    Noibu is session replay-supported error identification for engineering. That's it.
+    FullStory is a platform that unifies product, UX, design, engineering, and data science
+    around a single source of behavioral truth — with real-time activation, warehouse-scale data,
+    and AI that works for every team, not just the one filing bug tickets.
+  </p>
+
+  <div class="hero-tags">
+    <span class="hero-tag green">&#10003; Based on analysis of Noibu's production JS</span>
+    <span class="hero-tag red">Verified capture architecture gap</span>
+    <span class="hero-tag purple">5 teams. 1 platform. 0 Noibu equivalents.</span>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     EXECUTIVE SUMMARY
+══════════════════════════════════════════ -->
+<section class="exec-summary" id="executive-summary">
+  <div class="exec-inner">
+    <div class="exec-left">
+      <div class="section-label">TL;DR</div>
+      <h2>A tool for one team vs. a platform for the whole org.</h2>
+      <p>
+        Noibu is error monitoring with session replay attached. It serves engineering.
+        Its entire value story is: "we found the bug, here's the stack trace,
+        here's what it's costing you." That's real. It's also the complete product.
+      </p>
+      <p>
+        FullStory is a behavioral data platform that unifies every team that touches the
+        digital experience. Product. UX. Design. Engineering. Data science. Each team gets
+        purpose-built capabilities — from AI-powered coding tools (Subtext) to warehouse-scale
+        behavioral data (Anywhere Warehouse) to real-time signal activation (Anywhere Activation)
+        to conversational analytics via the FullStory MCP server.
+        Noibu has no story for any of those teams.
+      </p>
+      <p>
+        The capture architecture gap matters too — FullStory captures 100% of sessions
+        continuously, Noibu samples on error detection. But the team breadth argument
+        is the more decisive competitive lever.
+      </p>
+    </div>
+
+    <div class="exec-right">
+      <a href="#what-is-noibu" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(232,51,74,0.1);">🔎</div>
+        <div class="exec-link-text">
+          <h4>What Is Noibu</h4>
+          <p>A fair, accurate description of what Noibu does well and who it's for.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#platform" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.12);">🏗️</div>
+        <div class="exec-link-text">
+          <h4>Platform vs. Tool — Who Does This Serve?</h4>
+          <p>Team-by-team breakdown: product, UX, engineering, data science, marketing. Noibu: engineering only.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#capture" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">⚡</div>
+        <div class="exec-link-text">
+          <h4>Capture Architecture Gap</h4>
+          <p>The technical truth: Noibu samples sessions. FullStory Fullcapture doesn't.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#matrix" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">📊</div>
+        <div class="exec-link-text">
+          <h4>Feature Matrix</h4>
+          <p>Side-by-side on capture, analytics, developer workflow, data access, and platform breadth.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#strengths" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(158,54,241,0.1);">🏆</div>
+        <div class="exec-link-text">
+          <h4>Where Each Side Wins</h4>
+          <p>Honest assessment. Know where Noibu has genuine strengths so you don't get caught flat-footed.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+
+      <a href="#positioning" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">✦</div>
+        <div class="exec-link-text">
+          <h4>Choosing the Right Tool</h4>
+          <p>Understanding where each tool fits based on your team's actual needs.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-content">
+
+<!-- ══════════════════════════════════════════
+     WHAT IS NOIBU
+══════════════════════════════════════════ -->
+<section class="section" id="what-is-noibu">
+  <div class="section-label">What Is Noibu</div>
+  <div class="section-title">What Noibu actually is</div>
+  <p class="section-desc">
+    A fair, accurate description of Noibu's capabilities and the problem it's designed to solve.
+  </p>
+
+  <div class="callout red">
+    Noibu is a legitimate product with a well-defined use case. The comparison below reflects what each tool actually does.
+  </div>
+
+  <div class="two-col">
+    <div class="strength-card">
+      <div class="strength-card-header nb">
+        <h3>Noibu's Core Value Proposition</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-red">🐛</div>
+          <div class="strength-text">
+            <h4>Error Detection + Revenue Attribution</h4>
+            <p>Noibu detects JS exceptions, network failures, and checkout errors automatically — then estimates the revenue each bug is costing per day. This dollar-first framing lands hard with both engineers and commerce teams.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🛒</div>
+          <div class="strength-text">
+            <h4>Hardcoded Ecommerce Funnel Heuristics</h4>
+            <p>Noibu's core script has pre-built detection for <span class="mono-sm">AddToCart</span>, <span class="mono-sm">CheckoutStarted</span>, <span class="mono-sm">PlaceOrder</span>, and <span class="mono-sm">CheckoutSuccess</span> — inferred from URL patterns and CSS selectors. Zero configuration for Shopify, SFCC, and Magento.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">⚙️</div>
+          <div class="strength-text">
+            <h4>Developer Triage Workflow</h4>
+            <p>Bugs surface in a prioritized queue with stack traces and a session replay attached. The handoff from "something is broken" to "dev can reproduce it" is tight. That's a workflow tool, not just an analytics tool.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">⚡</div>
+          <div class="strength-text">
+            <h4>Fast Time to Value</h4>
+            <p>One snippet. No configuration. Error detection is live in minutes. For a dev team with a mandate to reduce checkout bugs, this is the fastest possible path to a win.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header nb">
+        <h3>Who Noibu Is For</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-red">👷</div>
+          <div class="strength-text">
+            <h4>Primary Buyer: Engineering / Dev Teams</h4>
+            <p>Noibu speaks to developers. The pitch is: "we find the bug, we show you the stack trace, we tell you how much it costs, go fix it." That's a clear developer mandate. The buying motion often starts in engineering, not product or analytics.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🏪</div>
+          <div class="strength-text">
+            <h4>Target Accounts: Mid-Large Ecommerce Retailers</h4>
+            <p>Shopify Plus, Salesforce Commerce Cloud, Magento, BigCommerce. They specifically tune their funnel heuristics and checkout instrumentation to these platforms. Their value story degrades on custom-built stacks.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">📋</div>
+          <div class="strength-text">
+            <h4>The Trigger: A Conversion Drop Nobody Can Explain</h4>
+            <p>Noibu often gets purchased reactively — after a revenue drop, a bugged launch, or a checkout issue that customer support surfaced weeks after it started. They sell to pain that already exists.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     PLATFORM VS. TOOL
+══════════════════════════════════════════ -->
+<section class="section" id="platform">
+  <div class="section-label">Platform vs. Tool</div>
+  <div class="section-title">One platform. Five teams. One persona.</div>
+  <p class="section-desc">
+    The sharpest competitive frame: Noibu is session replay-supported error identification for engineering.
+    FullStory is a platform built for every team that owns or influences the digital experience.
+  </p>
+
+  <div class="platform-split">
+
+    <!-- FullStory side -->
+    <div class="platform-side">
+      <div class="platform-side-header fs">
+        <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" style="height:18px; filter:brightness(0) invert(1); opacity:0.85;" />
+        <div>
+          <h3>FullStory</h3>
+          <p>Platform for the entire digital experience org</p>
+        </div>
+      </div>
+
+      <div class="platform-team-row">
+        <div class="team-icon">⚙️</div>
+        <div class="team-content">
+          <h4>Engineering</h4>
+          <div class="team-caps">
+            <div class="team-cap"><a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank">FullStory MCP</a> — query session data conversationally in any AI tool</div>
+            <div class="team-cap"><a href="https://subtext.fullstory.com" target="_blank">Subtext</a> — session context ambient in Claude, Codex, Cursor while coding</div>
+            <div class="team-cap"><a href="https://github.com/fullstorydev/fs-skills" target="_blank">FS Skills</a> — semantic decoration layer: one tag serves analytics, testing, AI agents</div>
+            <div class="team-cap"><a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-activation" target="_blank">Anywhere Activation</a> — fire behavioral signals to any downstream system in near real-time</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-team-row">
+        <div class="team-icon">📊</div>
+        <div class="team-content">
+          <h4>Product</h4>
+          <div class="team-caps">
+            <div class="team-cap">StoryAI Opportunities — AI surfaces revenue-impacting friction with no config</div>
+            <div class="team-cap">Fullcapture + retroactive queries — answer questions you didn't know to ask</div>
+            <div class="team-cap">FullStory Conversions — funnel analysis against your actual implementation</div>
+            <div class="team-cap"><a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank">MCP server</a> — product questions answered in seconds via natural language</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-team-row">
+        <div class="team-icon">🎨</div>
+        <div class="team-content">
+          <h4>UX &amp; Design</h4>
+          <div class="team-caps">
+            <div class="team-cap">Pixel-perfect session replay across 100% of sessions</div>
+            <div class="team-cap">Rage clicks, dead clicks, scroll depth, hesitation patterns</div>
+            <div class="team-cap">Frustration signals across entire journeys — not just checkout</div>
+            <div class="team-cap">Mobile + web parity via native iOS, Android, and web SDKs</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-team-row">
+        <div class="team-icon">🔬</div>
+        <div class="team-content">
+          <h4>Data Science</h4>
+          <div class="team-caps">
+            <div class="team-cap"><a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-warehouse" target="_blank">Anywhere Warehouse</a> — full behavioral data in Snowflake, BigQuery, Redshift</div>
+            <div class="team-cap">Join session behavior to transaction, CRM, and attribution data</div>
+            <div class="team-cap">Build churn models, CLV scores, and propensity models on behavioral features</div>
+            <div class="team-cap">Hourly sync of comprehensive event schema — not a summary export</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-team-row">
+        <div class="team-icon">📣</div>
+        <div class="team-content">
+          <h4>Marketing &amp; Analytics</h4>
+          <div class="team-caps">
+            <div class="team-cap"><a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-activation" target="_blank">Anywhere Activation</a> — trigger campaigns from live behavioral events (rage click, abandonment, high intent)</div>
+            <div class="team-cap">Behavioral segments for personalization and retargeting</div>
+            <div class="team-cap">Session replay URL in every activation payload — closes the attribution loop</div>
+            <div class="team-cap">Value stories: <a href="https://adobe-value-stories.fullstorydemo.com/ajo-remarketing-value-story.html" target="_blank">AJO Remarketing</a>, <a href="https://adobe-value-stories.fullstorydemo.com/cja-signal-streams-value-story.html" target="_blank">CJA Signal Streams</a>, <a href="https://adobe-value-stories.fullstorydemo.com/dev-experience-value-story.html" target="_blank">Dev Experience</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-vs">VS</div>
+
+    <!-- Noibu side -->
+    <div class="platform-side">
+      <div class="platform-side-header nb">
+        <div style="font-size:18px; font-weight:800; color:rgba(232,51,74,0.7); letter-spacing:-0.5px;">Noibu</div>
+        <div>
+          <h3>Noibu</h3>
+          <p>Tool for one team</p>
+        </div>
+      </div>
+
+      <div class="nb-only-block">
+        <div class="nb-only-item">
+          <div style="font-size:20px;">⚙️</div>
+          <div>
+            <h4>Engineering — &#10003; Served</h4>
+            <p>Error detection, prioritized bug queue, stack traces, session replay attached to the bug report. Hardcoded ecomm funnel heuristics for Shopify/SFCC/Magento. Fast to value. Tight dev workflow.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="nb-silent-teams">
+        <div class="nb-silent-label">Not served by Noibu</div>
+        <div class="silent-team-row">Product — no retroactive queries, no AI-surfaced friction beyond known errors</div>
+        <div class="silent-team-row">UX / Design — replay is error-triggered, not continuous; no behavioral analytics layer</div>
+        <div class="silent-team-row">Data Science — no warehouse export, no API, data stays in Noibu's silo</div>
+        <div class="silent-team-row">Marketing / Analytics — no activation, no downstream integrations, no behavioral segments</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Reference Cards -->
+  <div class="ref-cards">
+    <a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(7,199,153,0.12);">🤖</div>
+        <h4>FullStory MCP Server</h4>
+      </div>
+      <p>AI systems query FullStory behavioral data conversationally — from friction points to conversion rates, in seconds. Every team, every AI tool.</p>
+      <div class="ref-card-link">fullstory.com/blog/fullstory-mcp ↗</div>
+    </a>
+
+    <a href="https://github.com/fullstorydev/fs-skills" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(158,54,241,0.12);">🏷️</div>
+        <h4>FS Skills — Semantic Decoration</h4>
+      </div>
+      <p>Add one semantic attribute. Serve analytics, test automation, component monitoring, AI agent navigation, and Adobe signaling simultaneously. "When your experience is semantic, it's agentic."</p>
+      <div class="ref-card-link">github.com/fullstorydev/fs-skills ↗</div>
+    </a>
+
+    <a href="https://adobe-value-stories.fullstorydemo.com/ajo-remarketing-value-story.html" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(255,163,47,0.12);">📨</div>
+        <h4>AJO Remarketing Value Story</h4>
+      </div>
+      <p>FullStory behavioral signals personalize AJO recovery emails — intent, friction, abandonment reason. "AJO sends the email. FullStory writes it." Friction-contextualized emails convert 2–4× over standard abandonment flows.</p>
+      <div class="ref-card-link">adobe-value-stories.fullstorydemo.com ↗</div>
+    </a>
+
+    <a href="https://adobe-value-stories.fullstorydemo.com/cja-signal-streams-value-story.html" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(158,54,241,0.12);">📊</div>
+        <h4>CJA Signal Streams Value Story</h4>
+      </div>
+      <p>CJA tells you where users drop. FullStory explains why. Session replay embedded in CJA funnel analysis. Friction signals become CJA dimensions — from anomaly to root cause in seconds, not weeks.</p>
+      <div class="ref-card-link">adobe-value-stories.fullstorydemo.com ↗</div>
+    </a>
+
+    <a href="https://adobe-value-stories.fullstorydemo.com/dev-experience-value-story.html" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(7,199,153,0.12);">🧑‍💻</div>
+        <h4>Dev Experience Value Story</h4>
+      </div>
+      <p>One semantic tagging pass powers analytics, testing, monitoring, and AI agents simultaneously. FS Skills + Fullcapture + Anywhere Activations → behavioral signals without a tagging sprint.</p>
+      <div class="ref-card-link">adobe-value-stories.fullstorydemo.com ↗</div>
+    </a>
+
+    <a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-activation" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(7,199,153,0.12);">🔔</div>
+        <h4>Anywhere Activation</h4>
+      </div>
+      <p>Near real-time behavioral signal delivery to any downstream system — webhooks, APIs, campaign triggers. Fire on rage clicks, abandonment, high-intent dwell, or any custom behavioral event.</p>
+      <div class="ref-card-link">developer.fullstory.com ↗</div>
+    </a>
+
+    <a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-warehouse" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(255,163,47,0.12);">🏗️</div>
+        <h4>Anywhere Warehouse</h4>
+      </div>
+      <p>Comprehensive behavioral data synced hourly to Snowflake, BigQuery, or Redshift. Join to transaction data. Train models. Build segments. Noibu has no warehouse story.</p>
+      <div class="ref-card-link">developer.fullstory.com ↗</div>
+    </a>
+
+    <a href="https://subtext.fullstory.com" target="_blank" class="ref-card">
+      <div class="ref-card-top">
+        <div class="ref-card-icon" style="background:rgba(158,54,241,0.12);">🧑‍💻</div>
+        <h4>Subtext — FS in Your IDE</h4>
+      </div>
+      <p>FullStory MCP plugin for Claude Code, Codex, and Cursor. Session behavior surfaces as ambient context while engineers write code — not a bug queue you switch to, but data that's already there.</p>
+      <div class="ref-card-link">subtext.fullstory.com ↗</div>
+    </a>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     CAPTURE ARCHITECTURE
+══════════════════════════════════════════ -->
+<section class="section" id="capture">
+  <div class="section-label">Technical Differentiator</div>
+  <div class="section-title">The capture architecture gap</div>
+  <p class="section-desc">
+    This is the most important technical distinction in the competitive conversation.
+    It's not about features — it's about what data exists to query in the first place.
+  </p>
+
+  <div class="callout">
+    <strong>Source:</strong> This analysis is based on direct inspection of Noibu's production JavaScript
+    (<span class="mono-sm">collect-core.js</span>, <span class="mono-sm">collect-recording.js</span>,
+    <span class="mono-sm">collect-worker.js</span>) served from their CDN. The sampling behavior
+    is not marketing — it is present in the source code.
+  </div>
+
+  <div class="problem-grid">
+    <div class="problem-cell">
+      <div class="problem-cell-label red">Noibu's Capture Model</div>
+      <h3>Error-triggered, sampled recording</h3>
+      <p>Noibu's recording layer (<span class="mono-sm">collect-recording.js</span>) is built on rrweb — the same open-source DOM-snapshotting library used by many tools. Critically, the recording config includes an explicit <span class="mono-sm">sampling</span> parameter on mouse and scroll interaction handlers. Sessions are most likely triggered by error detection, not captured continuously for all visitors.</p>
+      <ul class="signal-list limited">
+        <li>Sessions may not be captured if no error fires</li>
+        <li>No concept of retroactive analysis — you can only find what was already instrumented</li>
+        <li>HTTP payload capture requires manual configuration of up to 20 URLs per domain</li>
+        <li>No warehouse export or downstream queryability</li>
+        <li>Revenue attribution only covers detected errors — not behavioral friction that isn't a bug</li>
+        <li>No data beyond Noibu's own analysis layer</li>
+      </ul>
+    </div>
+    <div class="problem-cell">
+      <div class="problem-cell-label green">FullStory Fullcapture</div>
+      <h3>Always-on, continuous, retroactive</h3>
+      <p>FullStory captures the complete DOM state continuously for 100% of sessions (or your configured threshold). The defining capability is retroactive queryability: because everything is captured upfront, you can ask questions about past user behavior that nobody thought to instrument for. That question doesn't exist in Noibu's architecture.</p>
+      <ul class="signal-list full">
+        <li>100% of sessions captured continuously — regardless of whether an error fired</li>
+        <li>Retroactive queries across all historical sessions</li>
+        <li>No manual URL configuration — full HTTP signal captured</li>
+        <li>Warehouse export: full behavioral data accessible in Snowflake / BigQuery</li>
+        <li>Friction surfaces even when it isn't a code error — rage clicks, dead clicks, hesitation, form abandonment</li>
+        <li>StoryAI Opportunities proactively surfaces revenue-impacting patterns</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     FEATURE MATRIX
+══════════════════════════════════════════ -->
+<section class="section" id="matrix">
+  <div class="section-label">Side-by-Side</div>
+  <div class="section-title">Feature comparison matrix</div>
+  <p class="section-desc">
+    Detailed capability comparison across capture, analytics, developer workflow, data access, and platform scope.
+  </p>
+
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th class="col-fs">FullStory</th>
+          <th class="col-nb">Noibu</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="category-row"><td colspan="3">Capture Model</td></tr>
+        <tr>
+          <td>Session capture scope</td>
+          <td>100% of sessions, always-on</td>
+          <td>Likely error-triggered / sampled (sampling param confirmed in source)</td>
+        </tr>
+        <tr>
+          <td>Capture trigger</td>
+          <td>Continuous from page load</td>
+          <td>Activated by error detection events</td>
+        </tr>
+        <tr>
+          <td>DOM replay fidelity</td>
+          <td>Fullcapture: inline computed styles, shadow DOM, iframes at scale</td>
+          <td>rrweb-based: solid, same primitives — edge case coverage unknown</td>
+        </tr>
+        <tr>
+          <td>HTTP / network capture</td>
+          <td><span class="badge b-yes">Full</span> — automatic</td>
+          <td><span class="badge b-partial">Partial</span> — requires manual URL config (20 URL cap)</td>
+        </tr>
+        <tr>
+          <td>Retroactive querying</td>
+          <td><span class="badge b-yes">Yes</span> — core architecture</td>
+          <td><span class="badge b-no">No</span> — reactive model only</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Error Detection</td></tr>
+        <tr>
+          <td>JS error detection</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-yes">Yes</span> — deep taxonomy (React/Vue/GraphQL/CSP)</td>
+        </tr>
+        <tr>
+          <td>Stack trace capture</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-yes">Yes</span> — strong; attached to session replay</td>
+        </tr>
+        <tr>
+          <td>Revenue attribution per bug</td>
+          <td><span class="badge b-yes">Yes</span> — StoryAI Opportunities + Conversions</td>
+          <td><span class="badge b-yes">Yes</span> — automatic, out of the box</td>
+        </tr>
+        <tr>
+          <td>Ecommerce funnel heuristics</td>
+          <td><span class="badge b-partial">Config required</span> — maps to your actual implementation</td>
+          <td><span class="badge b-yes">Hardcoded</span> — AddToCart, Checkout, PlaceOrder, etc.</td>
+        </tr>
+        <tr>
+          <td>Developer bug queue</td>
+          <td><span class="badge b-no">Not native</span></td>
+          <td><span class="badge b-yes">Yes</span> — core product surface</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Behavioral Analytics</td></tr>
+        <tr>
+          <td>Rage clicks / dead clicks</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-yes">Yes</span></td>
+        </tr>
+        <tr>
+          <td>Form analytics</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-partial">Partial</span> — form errors only</td>
+        </tr>
+        <tr>
+          <td>Scroll / dwell / attention</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-partial">Sampled</span> — sampling param confirmed</td>
+        </tr>
+        <tr>
+          <td>AI-surfaced friction (no config)</td>
+          <td><span class="badge b-yes">StoryAI Opportunities</span></td>
+          <td><span class="badge b-no">No</span> — error-based only</td>
+        </tr>
+        <tr>
+          <td>Funnel / conversion analysis</td>
+          <td><span class="badge b-yes">FullStory Conversions</span></td>
+          <td><span class="badge b-partial">Heuristic checkout only</span></td>
+        </tr>
+        <tr>
+          <td>Friction beyond code errors</td>
+          <td><span class="badge b-yes">Yes</span> — behavioral patterns, UX friction</td>
+          <td><span class="badge b-no">No</span> — must be a detectable JS/network error</td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Developer Workflow &amp; Tooling</td></tr>
+        <tr>
+          <td>Bug triage queue</td>
+          <td><span class="badge b-no">Not native</span></td>
+          <td><span class="badge b-yes">Yes</span> — prioritized by $ impact</td>
+        </tr>
+        <tr>
+          <td>IDE / AI coding integration</td>
+          <td><span class="badge b-yes">Subtext</span> — MCP for Claude, Codex, Cursor</td>
+          <td><span class="badge b-no">No</span></td>
+        </tr>
+        <tr>
+          <td>Session context in dev tools</td>
+          <td><span class="badge b-yes">Via Subtext</span> — ambient context while coding</td>
+          <td><span class="badge b-partial">Attached to bug report</span> — not ambient</td>
+        </tr>
+        <tr>
+          <td>MCP server (conversational analytics)</td>
+          <td><span class="badge b-yes">Yes</span> — <a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank" style="color:var(--fs-green);">fullstory.com/blog/fullstory-mcp</a></td>
+          <td><span class="badge b-no">No</span></td>
+        </tr>
+        <tr>
+          <td>Semantic decoration layer (FS Skills)</td>
+          <td><span class="badge b-yes">Yes</span> — one tag: analytics + testing + AI agents</td>
+          <td><span class="badge b-no">No</span></td>
+        </tr>
+        <tr>
+          <td>Real-time behavioral activation</td>
+          <td><span class="badge b-yes">Anywhere Activation</span> — webhooks, APIs, near real-time</td>
+          <td><span class="badge b-no">No</span></td>
+        </tr>
+
+        <tr class="category-row"><td colspan="3">Data Access &amp; Platform</td></tr>
+        <tr>
+          <td>Data warehouse export</td>
+          <td><span class="badge b-yes">Yes</span> — Snowflake, BigQuery, Redshift</td>
+          <td><span class="badge b-no">No</span></td>
+        </tr>
+        <tr>
+          <td>REST API for session data</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-no">No public API</span></td>
+        </tr>
+        <tr>
+          <td>Integrations ecosystem</td>
+          <td><span class="badge b-yes">Broad</span> — 50+ integrations</td>
+          <td><span class="badge b-partial">Narrow</span> — Jira, Slack, select platforms</td>
+        </tr>
+        <tr>
+          <td>Mobile (iOS / Android)</td>
+          <td><span class="badge b-yes">Yes</span> — native SDKs</td>
+          <td><span class="badge b-partial">React Native only</span></td>
+        </tr>
+        <tr>
+          <td>Platform scope</td>
+          <td>Platform-agnostic — any stack</td>
+          <td>Ecommerce platforms only (Shopify, SFCC, Magento, BigCommerce)</td>
+        </tr>
+        <tr>
+          <td>Core Web Vitals</td>
+          <td><span class="badge b-yes">Yes</span></td>
+          <td><span class="badge b-yes">Yes</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     STRENGTHS
+══════════════════════════════════════════ -->
+<section class="section" id="strengths">
+  <div class="section-label">Capabilities</div>
+  <div class="section-title">Where each side wins</div>
+  <p class="section-desc">
+    An accurate picture of where each platform excels.
+  </p>
+
+  <div class="two-col">
+
+    <div class="strength-card">
+      <div class="strength-card-header fs">
+        <h3>Where FullStory Wins</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-green">📸</div>
+          <div class="strength-text">
+            <h4>Fullcapture — Always-On, All Sessions</h4>
+            <p>Noibu likely samples. FullStory captures 100% of sessions continuously. That's the foundation for everything else — retroactive queries, accurate funnel data, AI-surfaced insights. You can't analyze what you didn't capture.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🔮</div>
+          <div class="strength-text">
+            <h4>Retroactive Queryability</h4>
+            <p>Ask any question about any past session. "Who rage-clicked the promo code field last month?" is answerable in FullStory because the data was captured. In Noibu's model, if no error fired and the session wasn't sampled, that data doesn't exist.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🤖</div>
+          <div class="strength-text">
+            <h4>StoryAI Opportunities — Proactive Friction Detection</h4>
+            <p>AI surfaces revenue-impacting patterns you didn't know to look for — without you having to define funnels or configure error detection first. Noibu only surfaces what its error-detection logic knows to look for.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">🤖</div>
+          <div class="strength-text">
+            <h4>MCP Server — Conversational Behavioral Analytics</h4>
+            <p>The <a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank" style="color:var(--fs-green);">FullStory MCP server</a> lets any AI system query behavioral data in natural language — friction points, cohort behavior, conversion rates, session context. Every team. Any AI tool. Noibu has no equivalent.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">🧑‍💻</div>
+          <div class="strength-text">
+            <h4>Subtext + FS Skills — The Dev Experience Stack</h4>
+            <p>Subtext brings session context into Claude, Codex, and Cursor as ambient context while engineers code. <a href="https://github.com/fullstorydev/fs-skills" target="_blank" style="color:var(--fs-green);">FS Skills</a> provides semantic decoration guidance: one <code style="font-size:11px;background:rgba(7,199,153,0.1);padding:1px 5px;border-radius:3px;color:var(--fs-green);">data-fs-element</code> attribute simultaneously serves analytics, test automation, component monitoring, and AI agent navigation. Noibu has none of this.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">⚡</div>
+          <div class="strength-text">
+            <h4>Anywhere Activation — Real-Time Behavioral Signals</h4>
+            <p><a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-activation" target="_blank" style="color:var(--fs-green);">Anywhere Activation</a> fires behavioral events to any downstream system in near real-time — webhooks, campaign triggers, personalization engines, CDPs. Noibu captures errors for internal review. FullStory activates behavioral signals across your entire tech stack.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-orange">🏗️</div>
+          <div class="strength-text">
+            <h4>Anywhere Warehouse — Behavioral Data for Data Science</h4>
+            <p><a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-warehouse" target="_blank" style="color:var(--fs-green);">Anywhere Warehouse</a> syncs comprehensive behavioral data hourly to Snowflake, BigQuery, or Redshift. Join to transactions, train ML models, build churn and CLV scores. Noibu has no warehouse export — data stays trapped in their silo.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🌐</div>
+          <div class="strength-text">
+            <h4>Platform-Agnostic &amp; Mobile-Native</h4>
+            <p>FullStory works on any stack. Noibu is tuned to Shopify, SFCC, Magento, BigCommerce — their funnel heuristics break on custom stacks. Noibu also supports React Native only; FullStory has native iOS and Android SDKs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header nb">
+        <h3>Where Noibu Has a Genuine Edge</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-red">💰</div>
+          <div class="strength-text">
+            <h4>Automatic Revenue Attribution per Bug</h4>
+            <p>Out-of-the-box dollar impact per detected error — no funnel configuration required. FullStory Conversions and Opportunities get you there, but with more setup. This is the most compelling Noibu demo moment.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🛒</div>
+          <div class="strength-text">
+            <h4>Zero-Config Ecommerce Funnel Detection</h4>
+            <p>Noibu pre-instruments AddToCart, CheckoutStarted, PlaceOrder, and CheckoutSuccess via hardcoded URL patterns and CSS selectors for major platforms. A Shopify merchant gets checkout funnel coverage before they've configured anything.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🐞</div>
+          <div class="strength-text">
+            <h4>Deep Error Taxonomy for Modern Stacks</h4>
+            <p>Noibu classifies errors specifically: <span class="mono-sm">ReactError</span>, <span class="mono-sm">VueError</span>, <span class="mono-sm">FetchException</span>, <span class="mono-sm">UnhandledRejectionError</span>, <span class="mono-sm">PageCheckError</span>. For a React-heavy storefront, this specificity is genuinely useful.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">⚡</div>
+          <div class="strength-text">
+            <h4>Dev Team Fast-Lane</h4>
+            <p>One snippet, no configuration, bugs surfaced in hours with stack traces attached. For an engineering team whose sole mandate is "reduce checkout errors," Noibu reaches a win faster than FullStory. That's a real objection in deals where the buyer is purely dev-focused.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🎯</div>
+          <div class="strength-text">
+            <h4>Tight Problem / Tight Pitch</h4>
+            <p>Noibu's pitch is narrow and concrete. In a buying committee meeting, "we find bugs and tell you how much they cost" beats "we capture everything so you can ask any question." Know when you're in that room — and have an answer for it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     POSITIONING RECOMMENDATION
+══════════════════════════════════════════ -->
+<section class="section" id="positioning">
+  <div class="section-label">Guidance</div>
+  <div class="section-title">Choosing the right tool</div>
+
+  <div class="rec-card">
+    <h3>Understanding where each tool fits</h3>
+    <p>
+      These tools solve different problems for different teams. The right choice depends on what your organization actually needs.
+    </p>
+
+    <div class="rec-tiers">
+
+      <div class="rec-tier">
+        <div class="tier-badge t-win">FullStory Advantage</div>
+        <div class="rec-tier-content">
+          <h4>Multi-stakeholder deal: Product + Analytics + Engineering</h4>
+          <p>
+            When product and analytics teams are in the room alongside engineering, FullStory's breadth wins
+            on total value. Noibu is a dev tool. FullStory is a platform. The ROI surface is larger,
+            the use cases are richer, and the warehouse export closes off any "we'll just join the data ourselves" objection.
+            Make the Fullcapture vs. sampled architecture the anchor argument.
+          </p>
+        </div>
+      </div>
+
+      <div class="rec-tier">
+        <div class="tier-badge t-win">FullStory Advantage</div>
+        <div class="rec-tier-content">
+          <h4>Custom stack or non-standard platform</h4>
+          <p>
+            Noibu's value degrades sharply outside of Shopify, SFCC, Magento, and BigCommerce.
+            Their funnel heuristics are hardcoded to platform defaults. Custom-built ecommerce,
+            headless commerce, or hybrid stacks break their out-of-the-box story immediately.
+            FullStory is platform-agnostic by design.
+          </p>
+        </div>
+      </div>
+
+      <div class="rec-tier">
+        <div class="tier-badge t-win">FullStory Advantage</div>
+        <div class="rec-tier-content">
+          <h4>Mobile app is in scope</h4>
+          <p>
+            Noibu supports React Native only. FullStory has native iOS and Android SDKs.
+            If the retailer has a native mobile app (most do), FullStory is the only option for
+            unified web + mobile behavioral capture. Frame mobile parity as a hard requirement, not a nice-to-have.
+          </p>
+        </div>
+      </div>
+
+      <div class="rec-tier">
+        <div class="tier-badge t-hard">Evaluate Carefully</div>
+        <div class="rec-tier-content">
+          <h4>Engineering-only buying committee on a standard Shopify store</h4>
+          <p>
+            If the sole buyer is a dev team on Shopify, Noibu's zero-config funnel detection and bug queue
+            create a fast, concrete win. FullStory requires more setup to match Noibu's time-to-value for
+            pure error triage. Your best move: widen the room to include a product or analytics stakeholder
+            before the deal gets too far. If you can't — compete on Fullcapture vs. sampling and
+            retroactive queryability as a risk argument.
+          </p>
+        </div>
+      </div>
+
+      <div class="rec-tier">
+        <div class="tier-badge t-coex">Complementary</div>
+        <div class="rec-tier-content">
+          <h4>Noibu already deeply embedded in engineering culture</h4>
+          <p>
+            If engineering has built workflows, alerting, and on-call runbooks around Noibu's bug queue,
+            ripping it out is a political fight you may not need to win. Consider positioning FullStory
+            as the product and analytics layer alongside Noibu for engineering — then use warehouse export
+            and Subtext to gradually pull the developer use case toward FullStory over time.
+            Coexistence today, consolidation later.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+</div><!-- /page-content -->
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer class="doc-footer">
+  <div>
+    <img src="https://www.fullstory.com/images/fs_logo.svg" alt="FullStory" style="height:16px; filter:brightness(0) invert(1); opacity:0.4; vertical-align:middle;" />
+    &nbsp; Competitive Playbook — FullStory vs Noibu
+  </div>
+  <div>Ecommerce &nbsp;·&nbsp; Technical capture analysis based on Noibu production JS &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; <a href="/sales-brief/" style="color:var(--text-lo); opacity:0.5; text-decoration:none; font-size:11px;">sales brief →</a></div>
+</footer>
+
+</body>
+</html>

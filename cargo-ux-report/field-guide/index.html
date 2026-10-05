@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[INTERNAL] Fullstory — CarGo UX Report — Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #080808;
+  --bg-2:         #0f0f0f;
+  --bg-3:         #141414;
+  --bg-4:         #1a1a1a;
+  --border:       #222222;
+  --border-hi:    #333333;
+  --amber:        #f59e0b;
+  --amber-dk:     #d97706;
+  --amber-lt:     #fde68a;
+  --green:        #22c55e;
+  --green-dk:     #16a34a;
+  --red:          #ef4444;
+  --red-dk:       #dc2626;
+  --blue:         #60a5fa;
+  --purple:       #a78bfa;
+  --text-hi:      #f1f5f9;
+  --text-md:      #94a3b8;
+  --text-lo:      #475569;
+  --text-dim:     #334155;
+  --banner-bg:    #451a03;
+  --banner-border:#92400e;
+  --banner-text:  #fde68a;
+  --partner:      #ff5a35;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', monospace; background: var(--bg); color: var(--text-hi); font-size: 12.5px; line-height: 1.75; }
+
+/* Internal Banner */
+.internal-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 300; background: var(--banner-bg); border-bottom: 1px solid var(--banner-border); padding: 7px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--banner-text); }
+.banner-left { display: flex; align-items: center; gap: 10px; }
+.banner-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); animation: blink 1.2s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.banner-right a { color: var(--banner-text); text-decoration: none; border: 1px solid var(--banner-border); padding: 3px 10px; border-radius: 3px; font-size: 10px; letter-spacing: 1px; transition: background 0.1s; }
+.banner-right a:hover { background: rgba(245,158,11,0.15); }
+
+/* Topbar */
+.topbar { position: sticky; top: 35px; z-index: 200; background: rgba(8,8,8,0.96); border-bottom: 1px solid var(--border); padding: 10px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; backdrop-filter: blur(8px); }
+.topbar-left { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text-lo); }
+.topbar-prompt { color: var(--green); font-weight: 700; }
+.topbar-title  { color: var(--text-md); }
+.topbar-badge { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 7px; border: 1px solid var(--amber-dk); color: var(--amber); border-radius: 2px; }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.topbar-nav a { color: var(--text-lo); text-decoration: none; font-size: 10px; font-weight: 500; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 2px; transition: color 0.12s, background 0.12s; }
+.topbar-nav a:hover { color: var(--amber); background: rgba(245,158,11,0.07); }
+
+/* Hero */
+.hero { padding: 56px 32px 44px; border-bottom: 1px solid var(--border); margin-top: 35px; }
+.hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 20px; }
+.hero-eyebrow::before { content: '> '; color: var(--green); }
+.hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; color: var(--text-hi); margin-bottom: 14px; }
+.hero h1 .cursor { display: inline-block; width: 3px; height: 1.1em; background: var(--amber); vertical-align: middle; margin-left: 4px; animation: blink 1s step-end infinite; }
+.hero-sub { font-size: 13px; color: var(--text-md); max-width: 680px; line-height: 1.8; margin-bottom: 24px; }
+.hero-meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 11px; color: var(--text-lo); }
+.hero-meta span::before { content: '# '; }
+
+/* Layout */
+.page { max-width: 1100px; margin: 0 auto; padding: 0 32px 80px; }
+.section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+.section-header { margin-bottom: 28px; }
+.section-cmd { font-size: 10px; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
+.section-cmd::before { content: '$ '; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.3px; margin-bottom: 6px; }
+.section-desc { font-size: 12px; color: var(--text-md); max-width: 640px; line-height: 1.75; }
+
+/* Talk Track Frames */
+.frame-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.frame-card { background: var(--bg-2); border: 1px solid var(--border); padding: 20px 22px; }
+.frame-card:first-child { grid-column: 1 / -1; background: rgba(245,158,11,0.05); border-color: rgba(245,158,11,0.25); }
+.frame-num { font-size: 10px; color: var(--amber); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.frame-card h3 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 8px; line-height: 1.4; }
+.frame-card p, .frame-card li { font-size: 12px; color: var(--text-md); line-height: 1.75; }
+.frame-card ul { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.frame-card ul li::before { content: '→ '; color: var(--amber); }
+.one-liner { font-size: 15px; font-weight: 700; color: var(--amber); padding: 10px 0 6px; line-height: 1.4; }
+
+/* Presenter Notes */
+.presenter-notes { background: var(--bg-2); border: 1px solid var(--border); border-left: 3px solid var(--amber); padding: 20px 24px; margin-bottom: 24px; }
+.pn-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin-bottom: 12px; }
+.pn-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pn-bullets li { font-size: 12px; color: var(--text-md); line-height: 1.7; padding-left: 18px; position: relative; }
+.pn-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--amber); font-weight: 700; }
+.pn-bullets li strong { color: var(--text-hi); }
+.pn-bullets li.fs::before { content: '✓'; color: var(--green); }
+.pn-bullets li.gap::before { content: '✗'; color: var(--red); }
+.pn-bullets li.note::before { content: '#'; color: var(--text-lo); }
+
+/* Discovery Questions */
+.discovery-list { display: flex; flex-direction: column; gap: 2px; }
+.dq-item { background: var(--bg-2); border: 1px solid var(--border); border-left: 3px solid var(--border-hi); }
+.dq-item.open { border-left-color: var(--amber); }
+.dq-header { padding: 16px 20px; display: grid; grid-template-columns: 28px 1fr 90px; gap: 12px; align-items: start; }
+.dq-num { font-size: 11px; color: var(--amber); font-weight: 700; padding-top: 1px; }
+.dq-tag { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+.tag-eng     { color: var(--green); }
+.tag-product { color: var(--blue); }
+.tag-data    { color: var(--purple); }
+.tag-ux      { color: var(--amber); }
+.dq-question { font-size: 12.5px; font-weight: 600; color: var(--text-hi); line-height: 1.5; font-style: italic; }
+.dq-type { font-size: 10px; color: var(--text-lo); text-align: right; padding-top: 2px; }
+.dq-why { font-size: 11px; color: var(--text-md); line-height: 1.65; padding: 0 20px 16px 60px; }
+.dq-surface { font-size: 11px; color: var(--text-md); line-height: 1.65; padding: 12px 20px 16px 60px; border-top: 1px solid var(--border); }
+.dq-surface-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+
+/* Objection Handlers */
+.objection-list { display: flex; flex-direction: column; gap: 12px; }
+.obj-card { background: var(--bg-2); border: 1px solid var(--border); }
+.obj-header { padding: 14px 20px; border-bottom: 1px solid var(--border); background: rgba(239,68,68,0.04); display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+.obj-quote { font-size: 12.5px; font-weight: 600; color: var(--text-hi); line-height: 1.5; font-style: italic; }
+.obj-quote::before { content: '"'; color: var(--red); }
+.obj-quote::after  { content: '"'; color: var(--red); }
+.obj-persona { font-size: 10px; color: var(--text-lo); white-space: nowrap; padding-top: 3px; }
+.obj-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.obj-response-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.orl-response { color: var(--green); }
+.orl-frame    { color: var(--amber); }
+.obj-response { font-size: 12px; color: var(--text-md); line-height: 1.75; }
+.obj-response strong { color: var(--text-hi); }
+.obj-frame { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); padding: 12px 14px; font-size: 12px; color: var(--text-md); line-height: 1.7; font-style: italic; }
+.obj-frame strong { color: var(--amber); }
+
+/* Workflow Steps */
+.workflow-steps { display: flex; flex-direction: column; gap: 2px; }
+.workflow-step { background: var(--bg-2); border: 1px solid var(--border); display: grid; grid-template-columns: 48px 1fr; }
+.workflow-step-num { padding: 18px 16px; border-right: 1px solid var(--border); background: var(--bg-3); display: flex; align-items: flex-start; justify-content: center; }
+.wsn-inner { font-size: 14px; font-weight: 700; color: var(--amber); }
+.workflow-step-body { padding: 18px 20px; }
+.workflow-step-title { font-size: 12.5px; font-weight: 700; color: var(--text-hi); margin-bottom: 5px; }
+.workflow-step-desc { font-size: 12px; color: var(--text-md); line-height: 1.7; }
+.code-inline { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 3px; color: var(--green); border: 1px solid var(--border-hi); }
+.workflow-step-cmd { margin-top: 10px; background: var(--bg-3); border: 1px solid var(--border-hi); padding: 10px 14px; font-size: 11px; color: var(--green); line-height: 1.7; }
+.workflow-step-cmd .comment { color: var(--text-lo); }
+
+/* Positioning */
+.pos-list { display: flex; flex-direction: column; gap: 2px; }
+.pos-row { display: grid; grid-template-columns: 120px 1fr; gap: 0; background: var(--bg-2); border: 1px solid var(--border); }
+.pos-badge-col { padding: 16px 18px; border-right: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: center; background: var(--bg-3); }
+.pos-badge { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 8px; border: 1px solid; text-align: center; line-height: 1.3; }
+.pb-crit { border-color: #dc2626; color: var(--red); background: rgba(239,68,68,0.08); }
+.pb-high { border-color: var(--amber-dk); color: var(--amber); background: rgba(245,158,11,0.08); }
+.pb-med  { border-color: #6d28d9; color: var(--purple); background: rgba(167,139,250,0.08); }
+.pb-mon  { border-color: var(--green-dk); color: var(--green); background: rgba(34,197,94,0.08); }
+.pos-content { padding: 16px 20px; }
+.pos-content h4 { font-size: 12.5px; font-weight: 700; color: var(--text-hi); margin-bottom: 5px; }
+.pos-content p  { font-size: 12px; color: var(--text-md); line-height: 1.7; }
+
+/* Doc Links */
+.doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+.doc-link { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; background: var(--bg-2); border: 1px solid var(--border); text-decoration: none; transition: border-color 0.12s, background 0.12s; }
+.doc-link:hover { border-color: var(--border-hi); background: var(--bg-3); }
+.doc-link-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; width: 20px; text-align: center; }
+.doc-link-title { font-size: 12px; font-weight: 700; color: var(--text-hi); margin-bottom: 2px; }
+.doc-link-desc  { font-size: 11px; color: var(--text-lo); line-height: 1.55; margin-bottom: 4px; }
+.doc-link-url   { font-size: 10px; color: var(--text-dim); word-break: break-all; }
+.doc-link:hover .doc-link-url { color: var(--amber); }
+.doc-section-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.dsl-fs { color: var(--green); }
+.dsl-issue { color: var(--red); }
+
+/* Callout */
+.callout { background: var(--bg-2); border: 1px solid var(--border); border-left: 3px solid var(--text-lo); padding: 12px 16px; font-size: 12px; color: var(--text-md); line-height: 1.7; margin-bottom: 20px; }
+.callout.amber { border-left-color: var(--amber); }
+.callout.amber strong { color: var(--amber); }
+.callout.green { border-left-color: var(--green); }
+.callout.green strong { color: var(--green); }
+.callout.red   { border-left-color: var(--red); }
+.callout.red   strong { color: var(--red); }
+
+/* Footer */
+.doc-footer { border-top: 1px solid var(--border); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-dim); flex-wrap: wrap; gap: 12px; }
+.doc-footer a { color: var(--amber); text-decoration: none; opacity: 0.7; }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .topbar-nav { display: none; }
+  .frame-grid { grid-template-columns: 1fr; }
+  .obj-body { grid-template-columns: 1fr; }
+  .pos-row { grid-template-columns: 80px 1fr; }
+  .doc-grid { grid-template-columns: 1fr; }
+  .hero { padding: 40px 20px 32px; }
+  .page { padding: 0 20px 60px; }
+  .topbar { padding: 10px 20px; }
+  .dq-header { grid-template-columns: 24px 1fr; }
+  .dq-type { display: none; }
+  .workflow-step { grid-template-columns: 1fr; }
+  .workflow-step-num { border-right: none; border-bottom: 1px solid var(--border); justify-content: flex-start; padding: 10px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTERNAL BANNER -->
+<div class="internal-banner">
+  <div class="banner-left">
+    <div class="banner-dot"></div>
+    <span>▓ INTERNAL — NOT FOR SHARING OUTSIDE THE TEAM ▓</span>
+  </div>
+  <div class="banner-right">
+    <a href="../" target="_blank">View Full Report →</a>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-prompt">~/specops $</span>
+    <span class="topbar-title">cargo-ux-report/field-guide</span>
+    <span class="topbar-badge">Internal</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#talk-track">Talk Track</a>
+    <a href="#section-notes">Section Notes</a>
+    <a href="#discovery">Discovery Qs</a>
+    <a href="#pushback">Pushback</a>
+    <a href="#investigation">Investigation</a>
+    <a href="#monitoring">Monitoring</a>
+    <a href="#fs-docs">FS Docs</a>
+  </nav>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Field Guide — Internal Use Only</div>
+  <h1>CarGo UX Report: Field Guide<span class="cursor"></span></h1>
+  <p class="hero-sub">
+    Internal companion to the CarGo Digital Experience &amp; Purchase Funnel Report. Contains the talk track for presenting findings to leadership, section-by-section scripted bullets, discovery questions for engineering and product stakeholders, responses to common pushback, the Fullstory MCP investigation workflow used to produce this analysis, and monitoring guidance for tracking resolution.
+  </p>
+  <div class="hero-meta">
+    <span>SpecOps · April 2026</span>
+    <span>Source: Fullstory MCP · 30-day behavioral data</span>
+    <span>For internal team use only</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ══════════════════════ TALK TRACK ══════════════════════ -->
+<section class="section" id="talk-track">
+  <div class="section-header">
+    <div class="section-cmd">run talk-track --asset=cargo-ux-report</div>
+    <div class="section-title">The Core Frame</div>
+    <div class="section-desc">Lead with this. The structural story matters more than any individual data point.</div>
+  </div>
+
+  <div class="frame-grid">
+
+    <!-- PRIMARY ARGUMENT -->
+    <div class="frame-card">
+      <div class="frame-num">// PRIMARY ARGUMENT</div>
+      <div class="one-liner">We have two structural failures shutting down the purchase funnel — one at the top, one at the bottom — and between them, less than 2% of users who try to book actually complete a purchase.</div>
+      <p style="margin-top:10px;">This is not a UX polish issue. These are engineering failures with measurable conversion impact. The car availability error alone blocks 89.6% of users in the purchase funnel before they ever reach checkout. The payment API failure blocks 69% of the survivors. Session recordings confirm that users are trying — they're rage clicking, scrolling for explanations, retrying. The product is failing them, not the other way around.</p>
+    </div>
+
+    <!-- FRAME 1: THE DATA -->
+    <div class="frame-card">
+      <div class="frame-num">// THE NUMBERS</div>
+      <h3>Lead with the funnel math — it's damning on its own</h3>
+      <ul>
+        <li>12,600 users entered the purchase funnel in 30 days</li>
+        <li>7,113 (89.6%) hit the cart error on the car detail page</li>
+        <li>~154 made it to checkout review (~1.2% pass-through)</li>
+        <li>49 of those hit payment API failure (69%)</li>
+        <li>Effective conversion: well under 1% of funnel entrants</li>
+      </ul>
+    </div>
+
+    <!-- FRAME 2: SESSIONS -->
+    <div class="frame-card">
+      <div class="frame-num">// SESSION EVIDENCE</div>
+      <h3>The sessions tell the human story behind the numbers</h3>
+      <ul>
+        <li>Every sampled session ended in abandonment — 5 of 5</li>
+        <li>Cart error: users scroll for an explanation that isn't there</li>
+        <li>Payment: 2 of 3 sessions show SILENT failure — no error shown</li>
+        <li>No user attempted a payment method edit after failure</li>
+        <li>No "try similar cars" was offered after availability error</li>
+      </ul>
+    </div>
+
+    <!-- FRAME 3: SCOPE -->
+    <div class="frame-card">
+      <div class="frame-num">// FULL PICTURE</div>
+      <h3>Beyond the purchase funnel, friction exists at every stage</h3>
+      <ul>
+        <li>19,511 users hitting the 404 page (87% refresh rate)</li>
+        <li>52% of funnel users rage click car titles that don't navigate</li>
+        <li>40% rage click car images expecting navigation</li>
+        <li>581 users hitting errors on host-side "Finalize Lineup"</li>
+        <li>10+ city markets returning inventory API errors</li>
+      </ul>
+    </div>
+
+    <!-- STOPPER -->
+    <div class="frame-card">
+      <div class="frame-num">// STOPPER</div>
+      <h3>If leadership asks "why now" or "how bad is it really"</h3>
+      <ul>
+        <li>This is 30-day data — the failures are ongoing, not historic</li>
+        <li>89.6% cart error rate is not a long tail edge case — it's structural</li>
+        <li>Silent payment failures mean users don't even know they failed</li>
+        <li>The Fullstory MCP produced this analysis in hours, not weeks — the monitoring capability is now in place to track resolution in real time</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ SECTION NOTES ══════════════════════ -->
+<section class="section" id="section-notes">
+  <div class="section-header">
+    <div class="section-cmd">cat presenter-notes.md</div>
+    <div class="section-title">Section-by-Section Presenter Notes</div>
+    <div class="section-desc">Scripted bullets aligned to each section of the full report. Use when walking through the asset with leadership or engineering.</div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 01 — Full Funnel Overview</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Six stages covered</strong> — We mapped every stage from first search through host onboarding. This isn't a partial view.</li>
+      <li><strong>Severity color coding</strong> — Red dots are conversion-blocking. Orange are significant drop-off. Purple are UX friction that compounds the others.</li>
+      <li class="gap"><strong>The cross-cutting column</strong> — The 404 issue (19,511 users) is separate from the purchase funnel — it's losing acquisition traffic before users even get started.</li>
+      <li class="note">Pause here for questions on any stage. Leadership will likely want to anchor on the car detail page number — let them, then connect it to Wall 1.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 02 — The Two Walls</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="gap"><strong>Wall 1 is the bigger fix</strong> — 89.6% is not a targeting problem or a messaging problem. It's inventory data quality. Unbookable cars are appearing as available in search results.</li>
+      <li><strong>Wall 2 is the scarier one</strong> — Even users who fight through everything still hit a 69% payment API failure at the last click. And most of them don't even see an error message — the UI silently fails.</li>
+      <li class="fs"><strong>These require different teams</strong> — Wall 1 is inventory/search API. Wall 2 is payment infrastructure. Frame them as separate workstreams with separate owners.</li>
+      <li class="note">If engineering is in the room: the payment endpoint is <code class="code-inline">/v2/payments/approveFunds</code> — network-level failures, not HTTP 4xx. This is not a validation issue.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 03 — Session Evidence</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li><strong>These are real users, not averages</strong> — Session recordings are the unvarnished truth. Walk through one cart session and one payment session slowly. The pattern of rage click → scroll → abandon is visceral.</li>
+      <li class="gap"><strong>The silent failure is the one that lands hardest</strong> — Showing a user who clicked submit, got no response, clicked again, waited, and left without knowing their booking failed is more persuasive than any metric.</li>
+      <li class="fs"><strong>5 of 5 sampled sessions ended in abandonment</strong> — That's not a cherry-picked stat. That's the Fullstory signal group for these failures. There are no green sessions in this cohort.</li>
+      <li class="note">Have the session URLs ready (in Fullstory) in case leadership wants to watch one live. They're in the MCP output from this analysis.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 04 — Priority Matrix</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li><strong>The critical tier is short</strong> — Four issues, two of which are the same root cause (cart availability). This is not a 40-issue backlog. The critical path is narrow.</li>
+      <li class="fs"><strong>Medium items are real but not the priority</strong> — The checkout step label issue (not clickable) and the car image rage clicks matter, but they're downstream of the two walls. Fix the walls first.</li>
+      <li class="note">If product asks about sequencing: P1 items are independent. Both can be worked in parallel by separate teams without coordination cost.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 05 — Recommendations</div>
+  <div class="presenter-notes">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>P1 fixes are pre-requisite</strong> — There's no point optimizing checkout UX if 90% of users can't reach checkout. Land the structural fixes first.</li>
+      <li><strong>P1.b is actually two fixes</strong> — Fix the API reliability AND fix the silent failure. Even if the API fails occasionally, users need to know it failed and know what to do next.</li>
+      <li><strong>P2 recovery UX is high leverage</strong> — Adding "similar available cars" after the availability error costs relatively little but could recapture a meaningful chunk of the 7,113 blocked users.</li>
+      <li class="note">Close with: "We can re-run this analysis in 30 days to measure the before/after on every metric in the priority matrix."</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ DISCOVERY QUESTIONS ══════════════════════ -->
+<section class="section" id="discovery">
+  <div class="section-header">
+    <div class="section-cmd">cat discovery-questions.txt</div>
+    <div class="section-title">Discovery Questions</div>
+    <div class="section-desc">For conversations with engineering, product, and data stakeholders. These open the door to root cause — not attacks, just genuine inquiry.</div>
+  </div>
+
+  <div class="discovery-list">
+
+    <div class="dq-item open">
+      <div class="dq-header">
+        <div class="dq-num">01</div>
+        <div>
+          <div class="dq-tag tag-eng">Engineering</div>
+          <div class="dq-question">What does the Add to Cart flow actually check — is availability determined client-side, at the API call, or does it hit a separate inventory service?</div>
+        </div>
+        <div class="dq-type">opens: root cause</div>
+      </div>
+      <div class="dq-why">
+        The cart error fires synchronously with no latency — suggesting either a client-side check against stale data, or a fast-failing availability API. Understanding the architecture tells us whether this is a data freshness problem, a cache invalidation problem, or an API contract mismatch. The fix strategy is completely different for each.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "It checks against our inventory service" → Ask: what's the TTL on that data? Is it refreshed between search results rendering and the cart add attempt?<br>
+        "We cache availability in the search index" → The cache is stale. Cars that appear available in search have already been booked or removed from inventory.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">02</div>
+        <div>
+          <div class="dq-tag tag-eng">Engineering</div>
+          <div class="dq-question">Is there an alert or on-call trigger for the /v2/payments/approveFunds endpoint failure rate? What does the server-side error log show for those requests?</div>
+        </div>
+        <div class="dq-type">opens: payment root cause</div>
+      </div>
+      <div class="dq-why">
+        69% failure rate at the payment step means either the endpoint is misconfigured, a downstream payment processor is unreliable, or there's a bug introduced in a recent deploy. This is high enough to have a P1-level alert — if it doesn't exist, that's a secondary finding. Server-side logs will reveal whether this is timeout, auth failure, or a processor-side rejection.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We have monitoring" → Ask: what's the threshold? 69% failure in a 30-day window should have fired. Either the threshold is too high or the monitoring isn't covering this endpoint.<br>
+        "We don't have per-endpoint monitoring" → This is a separate, immediate action item: add monitoring to the payment critical path.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">03</div>
+        <div>
+          <div class="dq-tag tag-product">Product</div>
+          <div class="dq-question">What's the intended behavior when a car in the search results is no longer available? Is there a spec for what the user should see?</div>
+        </div>
+        <div class="dq-type">opens: UX gap</div>
+      </div>
+      <div class="dq-why">
+        Session recordings show users scrolling back up the car listing after the error, looking for an explanation. The current behavior is an error message with no context and no recovery path. If there's no spec for this state, that's the gap. If there is a spec that's not being followed, that's a different conversation.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We show an error message" → Yes, but users don't understand why. The ask is: why is the car unavailable, and what should the user do next?<br>
+        "We're supposed to show alternatives" → So the spec exists but isn't implemented. That's a clear backlog item with defined requirements.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">04</div>
+        <div>
+          <div class="dq-tag tag-eng">Engineering</div>
+          <div class="dq-question">The /v2/cars/getAllCarsInOrgInCity endpoint is returning network errors for 10+ cities. Is this a known issue? Are those cities intentionally unsupported or should they be returning results?</div>
+        </div>
+        <div class="dq-type">opens: inventory coverage</div>
+      </div>
+      <div class="dq-why">
+        Oklahoma City, Indianapolis, Charlotte, Austin, New York, Madison, Albuquerque, Savannah, St. Louis, Lansing, and others are all failing. This is either a configuration gap (cities with no inventory) or a broader API reliability issue. 300+ users per city are being dead-ended in search.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "Those cities have no cars" → They should return an empty result with a message, not a network error. The error is what sends Fullstory signals and leaves users confused.<br>
+        "Those should work" → Then we have a bug. The endpoint is failing silently and there's no alert on it.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">05</div>
+        <div>
+          <div class="dq-tag tag-data">Data</div>
+          <div class="dq-question">What was the deploy history in the last 30–60 days? Did any of these failure signals spike after a specific release?</div>
+        </div>
+        <div class="dq-type">opens: regression identification</div>
+      </div>
+      <div class="dq-why">
+        If the cart error rate or payment failure rate spiked after a specific deploy, that's a regression with a clear rollback or hotfix path. The Fullstory data has timestamps — we can correlate failure rate changes to deploy dates with a compare-to-previous window query.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We had a deploy on [date]" → Rerun the discover_groups query with compare_to_previous=true to see delta_pct and confirm if that's when the signal spiked.<br>
+        "These have always been this way" → Then this is a chronic, unmonitored failure, not a regression. Makes the monitoring gap even more significant.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">06</div>
+        <div>
+          <div class="dq-tag tag-ux">UX / Product</div>
+          <div class="dq-question">What does the payment confirmation UI show when the API call fails? Is there a defined error state, or does the submit button just stop responding?</div>
+        </div>
+        <div class="dq-type">opens: silent failure</div>
+      </div>
+      <div class="dq-why">
+        Two of three sampled sessions show zero visible feedback after payment failure — the button appears to do nothing. This may be a race condition, a missing error boundary, or an error state that's conditionally rendered but never firing. Knowing the intended behavior helps scope the fix.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "There's supposed to be an error toast/modal" → It's not rendering. Either the error state logic has a bug or the component isn't receiving the failure signal from the API call.<br>
+        "We don't have an error state for that" → Then the immediate fix is adding one, even before fixing the underlying API. A visible error message is the highest-leverage UX change possible here.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ PUSHBACK HANDLERS ══════════════════════ -->
+<section class="section" id="pushback">
+  <div class="section-header">
+    <div class="section-cmd">grep -r "pushback" ./cargo-ux-report/</div>
+    <div class="section-title">Stakeholder Pushback Handlers</div>
+    <div class="section-desc">The four challenges you'll hear in the room when presenting these findings.</div>
+  </div>
+
+  <div class="objection-list">
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">We know about the cart error — it's on the backlog. Why are you treating it like a crisis?</div>
+        </div>
+        <div class="obj-persona">// Engineering / Product Lead</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            <strong>The scale changes the conversation.</strong> "On the backlog" is a different thing when the failure rate is 89.6% of everyone who tries to book a car. This isn't a long tail — it's blocking the majority of purchase intent in the product. Fullstory quantified what was previously anecdotal: this is the conversion issue, not a conversion issue.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"89.6% is not a bug — it's the product. Every other conversion optimization we do is irrelevant until this is fixed."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">How do we know those session recordings are representative? It's only 5 sessions.</div>
+        </div>
+        <div class="obj-persona">// Engineering / Data Skeptic</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            The sessions are illustrative, not the primary evidence. The 89.6% cart error rate comes from <strong>7,113 users</strong> over 30 days — that's the ConsoleErrorsByText signal across the full purchase funnel cohort. The sessions show <em>what that number looks like from the inside</em>. If you want more sessions, we can pull 50 — the pattern will be the same.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"The five sessions are a window into 7,113. Pull more if you want — we'll add them to this analysis in minutes."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">The payment failure rate sounds high, but some of those are users with bad cards. That's expected.</div>
+        </div>
+        <div class="obj-persona">// Product / Finance</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            Some portion of "Insufficient Funds" errors (15 users, 24.2%) are legitimate payment declines. But the <strong>primary signal is a network-level failure</strong> on <code class="code-inline">/v2/payments/approveFunds</code> — not an HTTP 402 or card decline response. A connection failure at the API level is not user error. And two of three sessions showed <strong>no error message at all</strong> — if it were a legitimate decline, the card processor would return something the app should surface.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Bad cards return a 4xx. Network failures return nothing. Our problem is the nothing."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">This is a demo environment — we can't assume these numbers represent production behavior.</div>
+        </div>
+        <div class="obj-persona">// Leadership / Stakeholder</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            That's a valid distinction for some signals (bot traffic, internal testing). But <strong>the purchase funnel behavioral patterns are real user intent</strong> — 12,600 users in the funnel, rage clicks on Add to Cart, and the payment endpoint failures are all consistent with real attempted bookings. The same Fullstory MCP methodology applies directly to production orgs — we can run the identical query against any instrumented customer environment in minutes.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"The methodology is the proof of concept. Point us at a production org and we'll reproduce this analysis for a real customer."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ INVESTIGATION WORKFLOW ══════════════════════ -->
+<section class="section" id="investigation">
+  <div class="section-header">
+    <div class="section-cmd">./investigate --method=fullstory-mcp</div>
+    <div class="section-title">Fullstory MCP Investigation Workflow</div>
+    <div class="section-desc">How this analysis was produced. Reproducible in any Fullstory-instrumented org. Total wall-clock time: under 2 hours including session review.</div>
+  </div>
+
+  <div class="callout amber" style="margin-bottom:24px;">
+    <strong>Prerequisite:</strong> Fullstory MCP server configured in Claude Code settings. Tools used: get_pages, get_opportunities, discover_groups, get_managed_funnels, get_sessions_for_opportunity.
+  </div>
+
+  <div class="workflow-steps">
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">01</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Baseline org survey</div>
+        <div class="workflow-step-desc">Run <code class="code-inline">get_pages</code>, <code class="code-inline">get_opportunities</code> (30d, no scope), and <code class="code-inline">discover_groups</code> (30d, no scope) in parallel. This gives the full page inventory, pre-ranked AI opportunities, and the top frustration/error groups across all users.</div>
+        <div class="workflow-step-cmd">
+          <span class="comment"># Run all three in parallel — takes &lt;30s</span><br>
+          get_pages(regex="")<br>
+          get_opportunities(time_range="30d")<br>
+          discover_groups(relative_time_range="30d", limit=10)
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">02</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Identify managed funnels, scope to purchase path</div>
+        <div class="workflow-step-desc">Call <code class="code-inline">get_managed_funnels</code> to find defined funnels. Identify the purchase funnel, checkout funnel, and search-to-checkout funnel. Then run <code class="code-inline">discover_groups</code> scoped to each funnel to get frustration signals specifically among users in those flows.</div>
+        <div class="workflow-step-cmd">
+          <span class="comment"># Funnel IDs returned by get_managed_funnels</span><br>
+          discover_groups(funnel_id="2BWVg4GQY7Uo", relative_time_range="30d")<br>
+          discover_groups(funnel_id="ytEwKbV4XEIq", relative_time_range="30d")<br>
+          discover_groups(funnel_id="MSdxpcaXdnZZ", relative_time_range="30d")
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">03</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Identify the highest-impact signal groups</div>
+        <div class="workflow-step-desc">From the discover_groups output, extract the top signals by user_pct within the funnel. Sort by: ConsoleErrorsByText, NetworkErrorByPath, RageClickByElement, DeadClickByElement, ErrorClickByElement. Note the group_id and metric_id for each top signal — you'll need these to pull sessions.</div>
+        <div class="workflow-step-cmd">
+          <span class="comment"># Key signals identified from this analysis:</span><br>
+          ConsoleErrorsByText | "Error. Can't add to Cart..." | 89.6% funnel<br>
+          NetworkErrorByPath  | /v2/payments/approveFunds    | 69% checkout review<br>
+          RageClickByElement  | Car Title Link               | 52% funnel<br>
+          RageClickByElement  | Car Image                    | 40% funnel
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">04</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Pull sessions for the highest-impact groups</div>
+        <div class="workflow-step-desc">Use <code class="code-inline">get_sessions_for_opportunity</code> with the metric_id and group_id from step 3. Pull 5–10 sessions per signal group. Pass each session to the <code class="code-inline">fullstory:session-context</code> subagent for analysis — never call get_session_events directly in the main context.</div>
+        <div class="workflow-step-cmd">
+          <span class="comment"># For each signal group:</span><br>
+          get_sessions_for_opportunity(<br>
+          &nbsp;&nbsp;metric_id="ConsoleErrorsByText",<br>
+          &nbsp;&nbsp;group_id="Error. Can't add to Cart...",<br>
+          &nbsp;&nbsp;relative_time_range="30d",<br>
+          &nbsp;&nbsp;limit=5<br>
+          )<br>
+          <span class="comment"># Then spawn session-context agents in parallel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">05</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Synthesize and write the report</div>
+        <div class="workflow-step-desc">Combine: (a) funnel cohort signal data from discover_groups, (b) opportunity metadata from get_opportunities, (c) page-scoped signals from discover_groups per page, and (d) session-level behavior from the subagents. Build the priority matrix and recommendations from the combined data. Write to the field-playbooks design system format.</div>
+        <div class="workflow-step-cmd">
+          <span class="comment"># Output: index.html + field-guide/index.html</span><br>
+          <span class="comment"># Total time: &lt;2h including all MCP calls + writing</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ MONITORING GUIDANCE ══════════════════════ -->
+<section class="section" id="monitoring">
+  <div class="section-header">
+    <div class="section-cmd">./monitor --mode=ongoing --interval=30d</div>
+    <div class="section-title">Ongoing Monitoring Guidance</div>
+    <div class="section-desc">How to track resolution of each issue and measure before/after impact after fixes are shipped.</div>
+  </div>
+
+  <div class="pos-list">
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-crit">P1<br>WALL 1</div></div>
+      <div class="pos-content">
+        <h4>Cart availability error — measure weekly post-fix</h4>
+        <p>Track <code class="code-inline">ConsoleErrorsByText</code> for "Error. Can't add to Cart — the car is not available" scoped to the Purchase Funnel. Baseline: 89.6% user_pct. Target post-fix: &lt;5%. Use <code class="code-inline">compare_to_previous=true</code> in discover_groups to see week-over-week delta. If the city API fixes ship separately, track the <code class="code-inline">/v2/cars/getAllCarsInOrgInCity</code> network errors independently.</p>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo?completed=true&completeSessions=false" target="_blank" style="font-size:10px;color:var(--green);text-decoration:none;border:1px solid #1a2e1a;border-radius:3px;padding:2px 8px;">↗ Purchase Funnel</a>
+          <a href="https://app.fullstory.com/ui/18PNWR/storyai/opportunities?issue=yWnIIzsW7L9p" target="_blank" style="font-size:10px;color:var(--green);text-decoration:none;border:1px solid #1a2e1a;border-radius:3px;padding:2px 8px;">↗ Dead Click Opportunity</a>
+          <a href="https://app.fullstory.com/ui/18PNWR/session/3515707492497354698:7444742086037988510" target="_blank" style="font-size:10px;color:var(--text-lo);text-decoration:none;border:1px solid #222;border-radius:3px;padding:2px 8px;">↗ Sample Session</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-crit">P1<br>WALL 2</div></div>
+      <div class="pos-content">
+        <h4>Payment approval failure — track per deploy</h4>
+        <p>Monitor <code class="code-inline">NetworkErrorByPath</code> for <code class="code-inline">/v2/payments/approveFunds</code> scoped to the Checkout Review &gt; Success Funnel. Baseline: 69% user_pct. Add <code class="code-inline">compare_to_previous=true</code> after each payment infrastructure deploy to catch regressions immediately. Also monitor <code class="code-inline">ConsoleErrorsByText</code> for "error Transaction Denied" as a secondary signal.</p>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/ytEwKbV4XEIq?completed=true&completeSessions=false" target="_blank" style="font-size:10px;color:var(--green);text-decoration:none;border:1px solid #1a2e1a;border-radius:3px;padding:2px 8px;">↗ Checkout Review → Success</a>
+          <a href="https://app.fullstory.com/ui/18PNWR/session/8180835257996781121:3840492203496302986" target="_blank" style="font-size:10px;color:var(--text-lo);text-decoration:none;border:1px solid #222;border-radius:3px;padding:2px 8px;">↗ Session 1</a>
+          <a href="https://app.fullstory.com/ui/18PNWR/session/1467644205489944836:4405438448362114963" target="_blank" style="font-size:10px;color:var(--text-lo);text-decoration:none;border:1px solid #222;border-radius:3px;padding:2px 8px;">↗ Session 2 (silent)</a>
+          <a href="https://app.fullstory.com/ui/18PNWR/session/693759049271876455:6108249543224906370" target="_blank" style="font-size:10px;color:var(--text-lo);text-decoration:none;border:1px solid #222;border-radius:3px;padding:2px 8px;">↗ Session 3 (silent)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-high">HIGH<br>UX</div></div>
+      <div class="pos-content">
+        <h4>Car image / title link rage clicks — measure after search results fix</h4>
+        <p>Track <code class="code-inline">RageClickByElement</code> for Car Image (Hmm55z0KoWA1) and Car Title Link (CfntdqhKJ3uD) in the Purchase Funnel. Baselines: 40% and 52% respectively. These should drop sharply if the click target or navigation fix ships correctly. If they persist, the problem is at the routing level, not the element level.</p>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-high">HIGH<br>404</div></div>
+      <div class="pos-content">
+        <h4>404 page routing — track after redirect logic ships</h4>
+        <p>Monitor <code class="code-inline">RefreshedPageByPage</code> scoped to page_id 136 (404 Page). Baseline: 87.2% refresh rate across 19,511 users. Combine with a <code class="code-inline">get_sessions_for_opportunity</code> pull to understand which inbound paths are broken — the session URLs will reveal the referring URLs causing 404s.</p>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-mon">ONGOING<br>BASELINE</div></div>
+      <div class="pos-content">
+        <h4>Monthly full-funnel re-run</h4>
+        <p>Re-run the full investigation workflow (Steps 1–4 above) monthly. This takes &lt;2 hours and surfaces any new issues before they accumulate to crisis scale. Set a target: purchase funnel pass-through rate from &lt;1.2% to &gt;15% within 60 days of P1 fixes shipping. Use <code class="code-inline">get_managed_funnels</code> + <code class="code-inline">discover_groups</code> per funnel as the recurring baseline.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ FS DOCS ══════════════════════ -->
+<section class="section" id="fs-docs">
+  <div class="section-header">
+    <div class="section-cmd">ls ./fullstory-docs/</div>
+    <div class="section-title">Fullstory Reference Docs</div>
+    <div class="section-desc">The features used to produce this analysis. Know these before presenting to a technical audience.</div>
+  </div>
+
+  <div class="doc-section-label dsl-fs"># Fullstory MCP &amp; Analytics Features</div>
+  <div class="doc-grid" style="margin-bottom:20px;">
+
+    <a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🤖</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Fullstory MCP Server</div>
+        <div class="doc-link-desc">Natural language behavioral data querying via Claude Code. Used for every signal group and session pull in this analysis.</div>
+        <div class="doc-link-url">fullstory.com/blog/fullstory-mcp/</div>
+      </div>
+    </a>
+
+    <a href="https://help.fullstory.com/hc/en-us/articles/360020622854" target="_blank" class="doc-link">
+      <div class="doc-link-icon">⚡</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">StoryAI Opportunities</div>
+        <div class="doc-link-desc">AI-ranked issue detection used for pre-scoped opportunity discovery. 7 opportunities identified in initial survey.</div>
+        <div class="doc-link-url">help.fullstory.com → Opportunities</div>
+      </div>
+    </a>
+
+    <a href="https://help.fullstory.com/hc/en-us/articles/360020829973" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🎬</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Session Replay</div>
+        <div class="doc-link-desc">Full session recordings used to observe exactly what users see and do at each failure point. 5 sessions sampled for this report.</div>
+        <div class="doc-link-url">help.fullstory.com → Session Replay</div>
+      </div>
+    </a>
+
+    <a href="https://help.fullstory.com/hc/en-us/articles/360020828553" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📉</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Funnels &amp; Conversion Analysis</div>
+        <div class="doc-link-desc">15 funnels defined in this org. Purchase Funnel, Checkout Review &gt; Success, and Checkout From Search scoped the frustration signals to conversion-impacting flows.</div>
+        <div class="doc-link-url">help.fullstory.com → Funnels</div>
+      </div>
+    </a>
+
+    <a href="https://help.fullstory.com/hc/en-us/articles/1500004115261" target="_blank" class="doc-link">
+      <div class="doc-link-icon">😡</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Rage Clicks &amp; Frustration Signals</div>
+        <div class="doc-link-desc">Rage clicks, dead clicks, and error clicks were the primary behavioral signals used to identify friction across all funnel stages.</div>
+        <div class="doc-link-url">help.fullstory.com → Signals &amp; Metrics</div>
+      </div>
+    </a>
+
+    <a href="https://subtext.fullstory.com" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🧑‍💻</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Subtext — Fullstory in the IDE</div>
+        <div class="doc-link-desc">The session-context subagent (fullstory:session-context) used in this analysis is part of the Subtext Claude Code integration.</div>
+        <div class="doc-link-url">subtext.fullstory.com</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+</div><!-- /page -->
+
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <div>Internal — Fullstory SpecOps · April 2026 · Not for sharing outside the team</div>
+  <div><a href="../" target="_blank">→ View Full Report</a></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" data-sync-pair="copart-mcp-analysis-20260807">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[INTERNAL] Fullstory — Copart MCP Analysis — Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #080808;
+  --bg-2:         #0f0f0f;
+  --bg-3:         #141414;
+  --bg-4:         #1a1a1a;
+  --border:       #222222;
+  --border-hi:    #333333;
+  --amber:        #f59e0b;
+  --amber-dk:     #d97706;
+  --amber-lt:     #fde68a;
+  --green:        #22c55e;
+  --green-dk:     #16a34a;
+  --red:          #ef4444;
+  --red-dk:       #dc2626;
+  --blue:         #60a5fa;
+  --purple:       #a78bfa;
+  --text-hi:      #f1f5f9;
+  --text-md:      #94a3b8;
+  --text-lo:      #475569;
+  --text-dim:     #334155;
+  --banner-bg:    #451a03;
+  --banner-border:#92400e;
+  --banner-text:  #fde68a;
+  --partner:      #f26522;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'JetBrains Mono','Fira Code','SF Mono',monospace;background:var(--bg);color:var(--text-hi);font-size:12.5px;line-height:1.75;}
+
+/* INTERNAL BANNER */
+.internal-banner{position:fixed;top:0;left:0;right:0;z-index:300;background:var(--banner-bg);border-bottom:1px solid var(--banner-border);padding:7px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--banner-text);}
+.banner-left{display:flex;align-items:center;gap:10px;}
+.banner-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.banner-right a{color:var(--banner-text);text-decoration:none;border:1px solid var(--banner-border);padding:3px 10px;border-radius:3px;font-size:10px;letter-spacing:1px;transition:background 0.1s;}
+.banner-right a:hover{background:rgba(245,158,11,0.15);}
+
+/* TOPBAR */
+.topbar{position:sticky;top:35px;z-index:200;background:rgba(8,8,8,0.96);border-bottom:1px solid var(--border);padding:10px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;backdrop-filter:blur(8px);}
+.topbar-left{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-lo);}
+.topbar-prompt{color:var(--green);font-weight:700;}
+.topbar-title{color:var(--text-md);}
+.topbar-badge{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border:1px solid var(--amber-dk);color:var(--amber);border-radius:2px;}
+.topbar-nav{display:flex;align-items:center;gap:2px;}
+.topbar-nav a{color:var(--text-lo);text-decoration:none;font-size:10px;font-weight:500;letter-spacing:0.5px;padding:4px 10px;border-radius:2px;transition:color 0.12s,background 0.12s;}
+.topbar-nav a:hover{color:var(--amber);background:rgba(245,158,11,0.07);}
+
+/* LAUNCH CALLOUT */
+.launch-callout{background:rgba(245,158,11,0.05);border-bottom:1px solid rgba(245,158,11,0.2);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.launch-callout-text{font-size:12px;color:var(--text-md);line-height:1.5;}
+.launch-callout-text strong{color:var(--amber);}
+.launch-btn{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:#000;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:8px 18px;border-radius:2px;white-space:nowrap;transition:background 0.12s;flex-shrink:0;}
+.launch-btn:hover{background:var(--amber-lt);}
+
+/* HERO */
+.hero{padding:56px 32px 44px;border-bottom:1px solid var(--border);margin-top:35px;}
+.hero-eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:20px;}
+.hero-eyebrow::before{content:'> ';color:var(--green);}
+.hero h1{font-size:26px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text-hi);margin-bottom:14px;}
+.hero h1 .cursor{display:inline-block;width:3px;height:1.1em;background:var(--amber);vertical-align:middle;margin-left:4px;animation:blink 1s step-end infinite;}
+.hero-sub{font-size:13px;color:var(--text-md);max-width:680px;line-height:1.8;margin-bottom:24px;}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:11px;color:var(--text-lo);}
+.hero-meta span::before{content:'# ';}
+
+/* LAYOUT */
+.page{max-width:1100px;margin:0 auto;padding:0 32px 80px;}
+.section{padding:48px 0;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.section-header{margin-bottom:28px;}
+.section-cmd{font-size:10px;color:var(--green);letter-spacing:1px;margin-bottom:6px;}
+.section-cmd::before{content:'$ ';}
+.section-title{font-size:18px;font-weight:700;color:var(--text-hi);letter-spacing:-0.3px;margin-bottom:6px;}
+.section-desc{font-size:12px;color:var(--text-md);max-width:640px;line-height:1.75;}
+
+/* FRAME CARDS */
+.frame-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.frame-card{background:var(--bg-2);border:1px solid var(--border);padding:20px 22px;}
+.frame-card:first-child{grid-column:1 / -1;background:rgba(245,158,11,0.05);border-color:rgba(245,158,11,0.25);}
+.frame-num{font-size:10px;color:var(--amber);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.frame-card h3{font-size:13px;font-weight:700;color:var(--text-hi);margin-bottom:8px;line-height:1.4;}
+.frame-card p,.frame-card li{font-size:12px;color:var(--text-md);line-height:1.75;}
+.frame-card ul{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+.frame-card ul li::before{content:'→ ';color:var(--amber);}
+.one-liner{font-size:15px;font-weight:700;color:var(--amber);padding:10px 0 6px;line-height:1.4;}
+.script-line{font-size:12px;color:var(--text-md);line-height:1.75;padding:8px 0 0;}
+.script-line+.script-line{border-top:1px dashed var(--border);padding-top:10px;margin-top:6px;}
+
+/* PRESENTER NOTES */
+.presenter-notes{background:var(--bg-2);border:1px solid var(--border);border-left:3px solid var(--amber);padding:20px 24px;margin-bottom:24px;}
+.pn-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:12px;}
+.pn-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.pn-bullets li{font-size:12px;color:var(--text-md);line-height:1.7;padding-left:18px;position:relative;}
+.pn-bullets li::before{content:'→';position:absolute;left:0;color:var(--amber);font-weight:700;}
+.pn-bullets li strong{color:var(--text-hi);}
+.pn-bullets li.fs::before{content:'✓';color:var(--green);}
+.pn-bullets li.gap::before{content:'✗';color:var(--red);}
+.pn-bullets li.note::before{content:'#';color:var(--text-lo);}
+
+/* DISCOVERY QUESTIONS */
+.discovery-list{display:flex;flex-direction:column;gap:2px;}
+.dq-item{background:var(--bg-2);border:1px solid var(--border);border-left:3px solid var(--border-hi);}
+.dq-item.open{border-left-color:var(--amber);}
+.dq-header{padding:16px 20px;display:grid;grid-template-columns:28px 1fr 90px;gap:12px;align-items:start;}
+.dq-num{font-size:11px;color:var(--amber);font-weight:700;padding-top:1px;}
+.dq-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:5px;}
+.tag-capture{color:var(--green);}
+.tag-data{color:var(--blue);}
+.tag-workflow{color:var(--purple);}
+.tag-strategy{color:var(--amber);}
+.dq-question{font-size:12.5px;font-weight:600;color:var(--text-hi);line-height:1.5;font-style:italic;}
+.dq-type{font-size:10px;color:var(--text-lo);text-align:right;padding-top:2px;}
+.dq-why{font-size:11px;color:var(--text-md);line-height:1.65;padding:0 20px 16px 60px;}
+.dq-surface{font-size:11px;color:var(--text-md);line-height:1.65;padding:12px 20px 16px 60px;border-top:1px solid var(--border);}
+.dq-surface-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:4px;}
+
+/* OBJECTION HANDLERS */
+.objection-list{display:flex;flex-direction:column;gap:12px;}
+.obj-card{background:var(--bg-2);border:1px solid var(--border);}
+.obj-header{padding:14px 20px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.04);display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;}
+.obj-quote{font-size:12.5px;font-weight:600;color:var(--text-hi);line-height:1.5;font-style:italic;}
+.obj-quote::before{content:'"';color:var(--red);}
+.obj-quote::after{content:'"';color:var(--red);}
+.obj-persona{font-size:10px;color:var(--text-lo);white-space:nowrap;padding-top:3px;}
+.obj-body{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.obj-response-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:6px;}
+.orl-response{color:var(--green);}
+.orl-frame{color:var(--amber);}
+.obj-response{font-size:12px;color:var(--text-md);line-height:1.75;}
+.obj-response strong{color:var(--text-hi);}
+.obj-frame{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18);padding:12px 14px;font-size:12px;color:var(--text-md);line-height:1.7;font-style:italic;}
+.obj-frame strong{color:var(--amber);}
+
+/* POSITIONING */
+.pos-list{display:flex;flex-direction:column;gap:2px;}
+.pos-row{display:grid;grid-template-columns:120px 1fr;gap:0;background:var(--bg-2);border:1px solid var(--border);}
+.pos-badge-col{padding:16px 18px;border-right:1px solid var(--border);display:flex;align-items:flex-start;justify-content:center;background:var(--bg-3);}
+.pos-badge{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 8px;border:1px solid;text-align:center;line-height:1.3;}
+.pb-win {border-color:var(--green-dk);color:var(--green);background:rgba(34,197,94,0.08);}
+.pb-hard{border-color:var(--amber-dk);color:var(--amber);background:rgba(245,158,11,0.08);}
+.pb-coex{border-color:#6d28d9;color:var(--purple);background:rgba(167,139,250,0.08);}
+.pb-no  {border-color:var(--red-dk);color:var(--red);background:rgba(239,68,68,0.08);}
+.pos-content{padding:16px 20px;}
+.pos-content h4{font-size:12.5px;font-weight:700;color:var(--text-hi);margin-bottom:5px;}
+.pos-content p{font-size:12px;color:var(--text-md);line-height:1.7;}
+
+/* DOC LINKS */
+.doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;}
+.doc-link{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--bg-2);border:1px solid var(--border);text-decoration:none;transition:border-color 0.12s,background 0.12s;}
+.doc-link:hover{border-color:var(--border-hi);background:var(--bg-3);}
+.doc-link-icon{font-size:14px;flex-shrink:0;margin-top:1px;width:20px;text-align:center;}
+.doc-link-title{font-size:12px;font-weight:700;color:var(--text-hi);margin-bottom:2px;}
+.doc-link-desc{font-size:11px;color:var(--text-lo);line-height:1.55;margin-bottom:4px;}
+.doc-link-url{font-size:10px;color:var(--text-dim);word-break:break-all;}
+.doc-link:hover .doc-link-url{color:var(--amber);}
+
+/* CALLOUT */
+.callout{background:var(--bg-2);border:1px solid var(--border);border-left:3px solid var(--text-lo);padding:12px 16px;font-size:12px;color:var(--text-md);line-height:1.7;margin-bottom:20px;}
+.callout.amber{border-left-color:var(--amber);}
+.callout.amber strong{color:var(--amber);}
+.callout.green{border-left-color:var(--green);}
+.callout.green strong{color:var(--green);}
+.callout.red{border-left-color:var(--red);}
+.callout.red strong{color:var(--red);}
+
+/* DATA TABLE */
+.data-wrap{background:var(--bg-2);border:1px solid var(--border);overflow:hidden;}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{text-align:left;padding:10px 14px;font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-lo);font-weight:700;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3);}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-md);vertical-align:top;line-height:1.5;}
+.data-table td:first-child{font-family:inherit;font-size:11px;color:var(--text-hi);font-weight:600;width:180px;}
+.data-table tr:last-child td{border-bottom:none;}
+
+/* FOOTER */
+.doc-footer{border-top:1px solid var(--border);padding:20px 32px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text-dim);flex-wrap:wrap;gap:12px;}
+.doc-footer a{color:var(--amber);text-decoration:none;opacity:0.7;}
+</style>
+</head>
+<body>
+
+<!-- ── INTERNAL BANNER ── -->
+<div class="internal-banner">
+  <div class="banner-left">
+    <div class="banner-dot"></div>
+    ▓ INTERNAL — NOT FOR PROSPECT SHARING ▓
+  </div>
+  <div class="banner-right">
+    <a href="../index.html">Open Report →</a>
+  </div>
+</div>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-prompt">~/specops</span>
+    <span style="color:var(--border-hi);">$</span>
+    <span class="topbar-title">copart-mcp-analysis-20260807/field-guide</span>
+    <span class="topbar-badge">Internal</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#delivery">Delivery</a>
+    <a href="#q1">Q1 Talk Track</a>
+    <a href="#q1-blind-spots">Blind Spots</a>
+    <a href="#q1-device">Device</a>
+    <a href="#recommendations">Recs</a>
+    <a href="#q2">Q2 Talk Track</a>
+    <a href="#objections">Objections</a>
+    <a href="#discovery">Discovery</a>
+    <a href="#ids">All IDs</a>
+  </nav>
+</div>
+
+<!-- ── LAUNCH CALLOUT ── -->
+<div class="launch-callout" style="margin-top:35px;">
+  <div class="launch-callout-text">
+    <strong>Companion deck open in a separate tab.</strong> Field guide scrolls in sync when both files are open side-by-side. Use this guide during delivery — never share it.
+  </div>
+  <a href="../index.html" class="launch-btn">Open Report →</a>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-eyebrow">Fullstory MCP Analysis · Copart · August 2026</div>
+  <h1>[INTERNAL] Field Guide — Copart MCP Analysis<span class="cursor"></span></h1>
+  <div class="hero-sub">Delivery guide for the two-question Fullstory MCP analysis for Copart (o-76DP-eu1, EU region). Contains the scripted delivery, talk tracks for both questions, objection handlers, and all live Fullstory IDs for re-runs.</div>
+  <div class="hero-meta">
+    <span>org: o-76DP-eu1 (EU)</span>
+    <span>analyst: gurtej@fullstory.com · parinay.rikhy@copart.com</span>
+    <span>slides: 27 · mcp calls: 14</span>
+    <span>partner: #f26522</span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: DELIVERY SCRIPT -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="delivery">
+  <div class="section-header">
+    <div class="section-cmd">run_delivery --mode live</div>
+    <div class="section-title">Delivery Script</div>
+    <div class="section-desc">Numbered script for the full deck. Start on slide 1, follow in order. Times are approximate for a 30-min session.</div>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Before You Start</div>
+    <ul class="pn-bullets">
+      <li class="note">Open <strong>index.html</strong> (the deck) in one browser tab and this field guide in another — they scroll-sync automatically.</li>
+      <li class="note">Have the Fullstory EU replay UI ready at <strong>app.eu1.fullstory.com/ui/o-76DP-eu1/</strong> for live session pulls if asked.</li>
+      <li class="note">Confirm who's in the room: <strong>gurtej@fullstory.com</strong> (FS sponsor), <strong>parinay.rikhy@copart.com</strong> (Copart side). Adjust depth accordingly.</li>
+      <li class="gap">Do not share this field guide. Do not share methodology.yaml.</li>
+    </ul>
+  </div>
+
+  <div class="frame-grid">
+    <div class="frame-card">
+      <div class="frame-num">Core Argument</div>
+      <div class="one-liner">Fullstory's AI answered two real questions from your data — live, in a single session, with a fully auditable trail.</div>
+      <div class="script-line">This deck is not a dashboard screenshot. Every number you'll see was computed in real time by Claude calling Fullstory APIs — the same APIs your team uses, with the same data you already have. What you're seeing is what AI-powered behavioral analysis actually looks like in production.</div>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 1–2 (0–3 min)</div>
+      <h3>Cover + Overview</h3>
+      <p>Open with the four hero stats (top right of slide 1) to anchor the room. Then flip to the nav slide and orient them: "We answered both questions first, then showed our work — tool by tool."</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 3–4 (3–8 min)</div>
+      <h3>Q1 Question + Answer</h3>
+      <p>Let the question slide breathe — pause before flipping. On the answer slide, start with the vbar (96.3% never click) and read left to right. Then hit the three tiles. Don't over-explain yet — the root causes come next.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 5–8 (8–14 min)</div>
+      <h3>Q1 Journey · Causes · Bug · Pathways</h3>
+      <p>Walk the journey table top to bottom — they'll recognize these pages. The bug slide is the most important: the delivery error affects 1,087 members right now. Pause here. The pathway slide is the resolution: two paths, one addressable.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 9–13 (14–18 min)</div>
+      <h3>Q1 Tool Chronicle</h3>
+      <p>This is the MCP education. Go tool by tool. Emphasize that the funnel ID (1462273925) is a live Copart Fullstory object — they can compute it right now and get fresh numbers. That's the key differentiator.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 14–16 (18–22 min)</div>
+      <h3>Q1 Forensic Blind Spots</h3>
+      <p>Three findings the prior analysis missed — all confirmed with session replay. Lead with the mobile expand failure (score 15,963, highest in Q1). See the Q1 Forensic Blind Spots talk-track section below for full slide-by-slide scripts. These slides are optional — skip for a business-first audience running short on time, present for technical audiences who own these systems.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 17 (22–23 min)</div>
+      <h3>Q1 Device Behavior (NEW)</h3>
+      <p>Cross-device journey and device breakdown. Mobile is 10% of badge viewers but 36% of title clickers — and all sampled converters completed on Desktop. Walk the journey: win on Desktop → pay on Mobile (dead end, no title CTA) → email bridges the gap → return to Desktop 6.2 days later. The three broken surfaces table at the bottom explains why mobile is a dead end.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 18–19 (23–26 min)</div>
+      <h3>Q2 Question + Answer</h3>
+      <p>Same flow: let the question land, then hit the answer. The three cohort tiles tell the whole story — 27/41/32 split. The 7-day activation lever is the insight they should leave with.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 20–22 (26–28 min)</div>
+      <h3>Q2 Methodology · Distribution · Session</h3>
+      <p>The session slide (Gilroy iOS) is particularly powerful — you can pull it live from the Fullstory UI if you want. It proves the 4.74-day median: the first bid is a considered, deliberate action after extended due diligence.</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 23–24 (28–30 min)</div>
+      <h3>Q2 Chronicle · Recommendations (NEW)</h3>
+      <p>Slide 23 closes Q2 with the tool chronicle. Slide 24 is the Recommendations close for the full deck — four ranked interventions from Q1. Walk them in order: two P1s (mobile expand TypeError fix + payment success page CTA) and two P2s (Dashboard ChunkLoadError + badge CTA). End with: "What's the next question you want us to answer?"</p>
+    </div>
+    <div class="frame-card">
+      <div class="frame-num">Slide 25–27 (30 min)</div>
+      <h3>MCP Explainer · MCP Detail · Tool Table</h3>
+      <p>The vs-grid is your close: traditional vs. MCP. Read both columns. The tool table is reference — don't read it, offer to leave them the deck.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: Q1 TALK TRACK -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="q1">
+  <div class="section-header">
+    <div class="section-cmd">load_talking_points --question 1</div>
+    <div class="section-title">Q1 — Post Lot Won Funnel</div>
+    <div class="section-desc">Why don't lot winners request their title after winning the bid?</div>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">The Answer in One Sentence</div>
+    <ul class="pn-bullets">
+      <li>96.3% of lot winners never click Mail My Title because the button is on a different page than the badge, delivery logistics compete for attention immediately, and ~36 users per day hit a broken delivery error page with no recovery.</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Key Numbers to Know Cold</div>
+    <ul class="pn-bullets">
+      <li class="note">69,906 — unique lot winners (badge seers) in 30 days</li>
+      <li class="note">3.75% — badge-to-title conversion via badge-first pathway (2,556 users)</li>
+      <li class="note">4,913 — total title requestors across both pathways</li>
+      <li class="note">6.2 days — median time from badge to title click</li>
+      <li class="note">59.6% of converters complete within 24h · 88.7% within 7 days · 11.3% take 7+ days</li>
+      <li class="note">48% of badge-seers (32,819) visit Payment History cross-session — but only 7.59% click Mail Title</li>
+      <li class="note">92.4% (30,328 users) reach the right page and leave without clicking — hidden button</li>
+      <li class="note">97% of all conversions flow through Payment History (not Lots Won, 3.8%)</li>
+      <li class="note">1,087 — users hitting the delivery error page in 30 days (~36/day)</li>
+      <li class="note">12.5% / 11.2% — top two competing behaviors after badge (browse lots / Lots Won)</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Slide 4 — Right-Censoring Callout (Analyst Note)</div>
+    <ul class="pn-bullets">
+      <li class="gap">The deck includes a measurement note on the Q1 Answer slide. Do not read it aloud verbatim — use it as a backup if someone challenges the 3.75% rate as low or declining.</li>
+      <li class="note"><strong>If they ask "is conversion trending down?":</strong> "No — that's a measurement artifact called right-censoring. The 3.75% rate is measured over a 30-day window, but the median journey takes 6.2 days. Members who won lots in the last week of the window didn't have enough time to complete before the measurement closed — so they're counted as non-converters even though many will convert. The underlying daily rate is stable at 3.5–3.8%. This is a structural gap in how conversion is measured, not a declining trend."</li>
+      <li class="note"><strong>If they ask why we're showing a rate that undercounts:</strong> "Because the rate still represents real friction. 96.3% of lot winners not taking action in 30 days — even accounting for the measurement artifact — is the genuine finding. The artifact explains why the number looks lower than it might be over a longer window, not why it's not a problem."</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Talk Points — Slide by Slide</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Slide 4 (Answer):</strong> "The number that matters is 96.3%. Nineteen in twenty lot winners never take the title request step. We're not talking about churn — we're talking about a workflow step that isn't completing."</li>
+      <li class="fs"><strong>Slide 5 (Journey):</strong> "The journey data tells us where they're going. 12.5% are already looking at another lot. 11.2% are managing multiple wins. These aren't confused users — they're busy buyers."</li>
+      <li class="fs"><strong>Slide 6 (Root Causes):</strong> "There's no single cause. The badge and the button live on different pages with no bridge. Delivery logistics are more urgent. And 1,087 members are hitting a dead-end error page every month."</li>
+      <li class="gap"><strong>Slide 7 (Bug):</strong> "This is the finding I want to flag specifically. The delivery error page hits 1,087 unique members a month — 36 a day. The error message says: 'Sorry, shipping is not available for the listed zip code.' That's a valid business constraint. But the page offers nothing else: no transporter directory, no help link, no alternative. A JavaScript exception fires on exit. We reviewed two sessions: a Santa Rosa PREMIER Exporter who hit the error three times in ten seconds and then logged out and back in to retry, and a Freeport desktop user who hit it twice with the exception firing each time. Neither member reached the title step. This is a UX P1 — not because the restriction is wrong, but because the dead end is."</li>
+      <li class="fs"><strong>Slide 8 (Pathways):</strong> "The good news is that 4,913 users found the button — nearly half without touching the badge at all. They went directly to Payment History. These are your experienced buyers who already know the workflow. The lever is the badge-first pathway."</li>
+      <li class="gap"><strong>Slide 9 (PH Funnel — NEW):</strong> "Here's what makes this interesting. 48% of badge-seers — 32,819 members — do make it to Payment History. The button exists there. But 92.4% of them leave without clicking it. This isn't a navigation problem anymore. Something is happening at the page level."</li>
+      <li class="fs"><strong>Slide 10 (PH Session — NEW):</strong> "We watched a PREMIER Dealer in Philadelphia visit Payment History three separate times before clicking. Sessions one and two: they saw 'Mail/Pickup ready' as a status label and left — they thought it meant the title was already being processed. Session three: they clicked the lot row, a detail panel expanded, the button appeared inside, they clicked. 124 seconds. Once they found the entry point, completion was immediate. The friction isn't the flow — it's finding the start."</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">The Hidden Button — What to Expect from the Room</div>
+    <ul class="pn-bullets">
+      <li class="note">Copart's team will likely know the expand-row interaction exists — they built it. They may push back with "it's discoverable."</li>
+      <li class="gap"><strong>Counter:</strong> "Discoverable to someone who knows to click a row. Not discoverable to someone reading a status label that says 'Mail/Pickup ready' — that reads as confirmation, not as an invitation to take action. The session data shows PREMIER members — your most experienced cohort — making this mistake across multiple sessions."</li>
+      <li class="note">They may ask how many users behave this way vs. the Philadelphia member being an outlier.</li>
+      <li class="fs"><strong>Counter:</strong> "The funnel answer: 30,328 users reach Payment History and don't click. 92.4%. That's not an outlier — that's the default behavior."</li>
+      <li class="note">If they ask why converters convert: experienced buyers who have done this before already know to expand the row. First-time winners don't.</li>
+    </ul>
+  </div>
+
+  <div class="callout amber">
+    <strong>The recommendation you should be ready to give:</strong> Two interventions, ranked by impact:<br><br>
+    <strong>1. Surface the button at list level on Payment History</strong> — a "Request Title" button visible in the lot row without expanding fixes the 92.4% miss rate. This is the highest-leverage change available.<br><br>
+    <strong>2. Add a "Request Title" CTA directly from the You Won badge</strong> — eliminates the multi-step navigation barrier for new lot winners. Even a 2× improvement would be ~2,500 additional requests per month.<br><br>
+    The delivery error page is a separate P1 fix — recovery CTA needed for the 1,087 users per month stranded with no path forward.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2B: Q1 FORENSIC BLIND SPOTS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="q1-blind-spots">
+  <div class="section-header">
+    <div class="section-cmd">load_talking_points --question 1 --forensic-findings</div>
+    <div class="section-title">Q1 — Forensic Blind Spots (3 New Findings)</div>
+    <div class="section-desc">Three issues the prior analysis missed — all newly confirmed with session evidence. Present these after the Tool Chronicle if the audience is technical. Present them after Slide 8 (Pathways) if they're business-focused and you want to keep momentum.</div>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">How to Frame These Slides</div>
+    <ul class="pn-bullets">
+      <li class="note">These three slides were not in the original analysis. They were found by re-interrogating the Fullstory data with a forensic lens — testing every claim, then asking "what did we not look for?"</li>
+      <li class="fs"><strong>Opening line for the room:</strong> "After validating the Q1 findings, we ran a second pass asking: what are we missing? Three additional issues surfaced — each confirmed with session replay. I want to walk through them because two are P1s that likely have engineering owners in this room."</li>
+      <li class="note">The three findings form a severity stack: expand failure (mobile, P1, score 15,963) → auth expiry (cross-device, P1, score 13,492) → dead click (desktop, P1, score 4,826). Lead with expand failure — highest impact, most concrete.</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Slide NEW-A: Expand Failure (Mobile) — Talk Points</div>
+    <ul class="pn-bullets">
+      <li class="note"><strong>Key numbers:</strong> 4,093 mobile users blocked · 4.8% of Payment History visitors · priority score 15,963 (highest in Q1)</li>
+      <li class="fs"><strong>How to open:</strong> "Before a member can see the Mail Title button, they have to expand the payment row. For 4,093 mobile members last month — nearly 1 in 21 — that tap throws a JavaScript error. The expand arrow triggers a TypeError that fires within 14 milliseconds. The row partially loads. The invoice details don't. The member taps again. Taps again. Gives up."</li>
+      <li class="fs"><strong>On the session evidence:</strong> "We watched a member in Bloomington on Android go through exactly this. They navigated to Payment History, tapped the expand arrow, got the error, tried Unpaid Invoices instead, opened a transporter scheduling dialog — and never reached the Mail Title button. The session replay is linked in the slide."</li>
+      <li class="gap"><strong>The trend number matters:</strong> "The error rate is up 678% compared to the prior period. This isn't a chronic issue — a recent code change introduced it. That's actually good news: it's likely one commit."</li>
+      <li class="note"><strong>97.6% mobile vs. 2.4% desktop</strong> is your diagnostic. Point to it: "This is a touch-event or mobile render issue. Desktop members are almost entirely unaffected."</li>
+      <li class="gap"><strong>If they ask who owns this:</strong> "It's in the expand-row component on the Payment History page — the same row that surfaces the Mail Title button. The TypeError message is: Cannot read properties of undefined (reading '0'). Your front-end team can locate the commit from there."</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Slide NEW-B: copart-mail-title Dead Click (Desktop) — Talk Points</div>
+    <ul class="pn-bullets">
+      <li class="note"><strong>Key numbers:</strong> 1,547 desktop users blocked · +784% frustration rate change · priority score 4,826</li>
+      <li class="fs"><strong>How to open:</strong> "Blind Spot B is the desktop counterpart. 1,547 members found the Mail Title component. It was visible, it looked clickable — and it didn't respond. 2,453 dead click events. Average 1.3 clicks per user before giving up. These aren't discovery failures. These are members who found the interface and the interface failed them."</li>
+      <li class="fs"><strong>On the session evidence:</strong> "We watched a member in Littleton, Windows. They had a lot with Mail/Pickup ready status — lot 5706 2926, a 2019 Subaru Forester in Albuquerque. Payment History loaded correctly. The status label was visible. They clicked the component. Nothing. Dead click recorded."</li>
+      <li class="gap"><strong>On the +784% comparison:</strong> "The frustration rate is up 8.84× versus the prior measurement period. The deck frames this carefully: the comparison baseline reflects a period of lower engagement — not necessarily a period when the component was fully functional. What we can say with confidence is that ~70 dead clicks per day has been the sustained rate for the full 30-day measurement window. This is a chronic pattern, not a single spike. The error rate being up 111% in the same window on the same component points to a state initialization or async binding issue — the click handler isn't resolving before the component renders."</li>
+      <li class="note"><strong>If they say the volume is smaller (1,547 vs. 4,093):</strong> "True — but these users are further along the workflow. The mobile expand failure blocks access to the row entirely. This blocks the final click on a component they've already found. The two issues compound."</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Slide NEW-C: Auth Expiry / 401 Loop — Talk Points</div>
+    <ul class="pn-bullets">
+      <li class="note"><strong>Key numbers:</strong> 3,697 users affected · 9,258 network errors · 36.7% are 401s · priority score 13,492</li>
+      <li class="fs"><strong>How to open:</strong> "Blind Spot C is an infrastructure issue wearing a UX costume. When a session cookie expires mid-journey, Payment History fires four API calls simultaneously without a valid token. All four return 401. The page renders as 'No records found' — even for members with active lots and title-eligible payments. It looks like an empty page. From the member's perspective, their history disappeared."</li>
+      <li class="fs"><strong>Walk the sequence:</strong> "Here's the exact timeline from a session in Houston. Member was on Unpaid Invoices, navigating to Payment History. 254 milliseconds after the page loads, four calls fire simultaneously: title delivery, e-sign eligibility, license info, invoice data — all 401. Console logs: Error loading title delivery details: status 401. Page shows No records found. Login redirect fires at 59,356ms — 530 milliseconds after they landed. They re-authenticate, go back to Payment History, and try again."</li>
+      <li class="gap"><strong>The diagnostic detail:</strong> "The 1,427 users experiencing 401s on the Login page are the tell. The API is firing during the redirect — before the token refreshes. Payment History needs a session-state guard: don't fire API calls until the auth token is confirmed valid post-redirect."</li>
+      <li class="note"><strong>Who this affects:</strong> "3,697 users per month. 2.1% of all org users. And the frustration rate is up 112.8%. Members who re-authenticate and return to Payment History still need to complete the Mail Title workflow — now with a second navigational hurdle in front of them."</li>
+      <li class="gap"><strong>If they say this is an auth system issue, not UX:</strong> "The fix is an engineering change — a guard on the API initialization. The impact is UX: members staring at an empty Payment History page with no indication that re-authentication will solve it. The two aren't in conflict — the engineering fix resolves the UX failure."</li>
+    </ul>
+  </div>
+
+  <div class="callout amber">
+    <strong>Priority ranking for the room:</strong><br><br>
+    <strong>1. Mobile expand failure (Blind Spot A) — fix first.</strong> 4,093 users, +678% trend, score 15,963. One commit likely caused it. Engineering can locate it from the TypeError + component selector.<br><br>
+    <strong>2. Auth expiry 401 loop (Blind Spot C) — add session-state guard.</strong> 3,697 users, score 13,492. Do not fire Payment History APIs until auth token is confirmed post-redirect.<br><br>
+    <strong>3. copart-mail-title dead click (Blind Spot B) — chronic binding investigation.</strong> 1,547 users, score 4,826. ~70 dead clicks/day sustained across the 30-day window. Investigate state initialization or async binding on the component — the click handler likely resolves after the component renders. Check for touch-vs-pointer differences; 97.5% of affected users are desktop.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2C: Q1 DEVICE BEHAVIOR -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="q1-device">
+  <div class="section-header">
+    <div class="section-cmd">load_talking_points --question 1 --device-analysis</div>
+    <div class="section-title">Q1 — Device Behavior (Slide 17)</div>
+    <div class="section-desc">Cross-device journey and the three broken surfaces that make mobile a dead end for title requests.</div>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">The Counterintuitive Finding</div>
+    <ul class="pn-bullets">
+      <li>Mobile is 3.5× overrepresented among title clickers (36% of clicks, 10% of badge views) — yet every sampled funnel converter completed on Desktop. The reason: all three surfaces where the title CTA exists or is blocked are broken on mobile.</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Device Breakdown — Numbers to Know</div>
+    <ul class="pn-bullets">
+      <li class="note">Desktop: 61,602 badge views · 1,098 title clicks · 1.78% conversion</li>
+      <li class="note">Mobile: 6,886 badge views · 609 title clicks · 8.84% conversion (but 36% of all clicks)</li>
+      <li class="note">Payments are ~70% mobile · All sampled converters completed on Desktop</li>
+      <li class="note">Median journey: 6.2 days from badge to title request</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Cross-Device Journey — Talk Points</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Opening frame:</strong> "Before we go to Q2, I want to show you something the device data reveals about the title request journey. Mobile and Desktop are playing different roles — and the data explains why conversion is almost entirely happening on Desktop even though mobile drives payments."</li>
+      <li class="fs"><strong>On the journey:</strong> "Here's the pattern. Members win on Desktop — that's where the You Won badge fires, in auction view. Payment happens on mobile — your payments are 70% mobile. After paying, they land on the payment success page. And then nothing. No title CTA. That's the dead end. An email arrives days later — AuctionReminder or Buyer Pickup Complete — they open it, go back to Desktop, navigate to Payment History, and eventually find the Mail Title button. The median gap is 6.2 days. Email is what bridges the device switch."</li>
+      <li class="gap"><strong>The three broken surfaces:</strong> "(1) Payment success page — 29,169 monthly visitors, 'Arrange transportation' is the only CTA. No title mailing option. (2) Dashboard 'Get titles (N)' tab — ChunkLoadError: Loading chunk 2368 failed. Members who navigate there expecting to manage title requests hit a JavaScript error. (3) Mobile Payment History expand — the Typography expand tap that would reveal the Mail Title button throws a TypeError for 4,093 mobile users per month. So even members who navigate to the right page on mobile can't access the button."</li>
+      <li class="fs"><strong>Why this matters for the fix list:</strong> "Fixing any one of these surfaces routes mobile members to Desktop less. Fixing the payment success page — adding a title CTA there — captures members at peak intent, immediately after they've paid. That's the highest-leverage intervention."</li>
+      <li class="note"><strong>If they ask why mobile has a higher click-through rate despite lower volume:</strong> "The 8.84% rate on mobile vs. 1.78% on desktop is the wrong comparison — mobile badge seers are more engaged members by selection. The insight is that despite higher intent, mobile title clicks don't translate to funnel completions. All the mechanical barriers are on mobile."</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2D: RECOMMENDATIONS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="recommendations">
+  <div class="section-header">
+    <div class="section-cmd">load_talking_points --recommendations</div>
+    <div class="section-title">Recommendations (Slide 24)</div>
+    <div class="section-desc">Four ranked interventions for the title request gap. Present after Q2 Chronicle as the deck's close before MCP mechanics.</div>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Framing the Recommendations Slide</div>
+    <ul class="pn-bullets">
+      <li class="note">This is the "what do you do with this?" slide. The two P1s are engineering fixes. The two P2s are product changes. Frame them as a fix list, not a roadmap.</li>
+      <li class="fs"><strong>Opening line:</strong> "We started with a question: why don't lot winners request their title? The data gave us four answers — and each one is a specific fix. Let me walk through them ranked by impact."</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">The Four Interventions</div>
+    <ul class="pn-bullets">
+      <li class="gap"><strong>P1: Fix the Mobile Payment History expand TypeError.</strong> "4,093 mobile members per month hit a JavaScript error before they can even see the Mail Title button. This is a touch-event regression — 97.6% mobile. Your front-end team can locate the commit from the error message: TypeError: Cannot read properties of undefined (reading '0') on the expand-row component. This is likely one fix."</li>
+      <li class="gap"><strong>P1: Add a Mail Title CTA to the payment success page.</strong> "29,169 members land on the payment success page every month. The only next-step CTA is 'Arrange transportation.' These are members who just paid — they're at peak intent. A single 'Mail your title' button on that page eliminates the most significant gap in the cross-device journey. This is a product change, not an engineering bug."</li>
+      <li class="note"><strong>P2: Fix the Dashboard 'Get titles (N)' ChunkLoadError.</strong> "Members who click that tab expecting to manage title requests hit a JavaScript chunk load failure. This is an existing surface that's already advertising title management — it's just broken. Resolving it gives members a third place to take action, after Payment History and the payment success page."</li>
+      <li class="note"><strong>P2: Add a Mail Title CTA to the You Won badge.</strong> "The badge is where the journey starts. Putting a title mailing shortcut there eliminates the 6.2-day lag for members who would act immediately after winning. Even a 2× improvement in that group adds ~2,500 additional title requests per month."</li>
+    </ul>
+  </div>
+
+  <div class="callout amber">
+    <strong>The close:</strong> "These four fixes — two engineering, two product — address every structural barrier we found. The P1s can ship in a sprint. The P2s are product decisions. Together they could move the 3.75% conversion rate into double digits. The only question is sequencing." Then: <strong>"What's the next question you want us to answer?"</strong>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: Q2 TALK TRACK -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="q2">
+  <div class="section-header">
+    <div class="section-cmd">load_talking_points --question 2</div>
+    <div class="section-title">Q2 — Time to First Bid</div>
+    <div class="section-desc">How many days does it take for a new active member to place their first bid?</div>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">The Answer in One Sentence</div>
+    <ul class="pn-bullets">
+      <li>4.74 days median — but the distribution is trimodal: 27% bid within 24 hours, 41% bid within 7 days, and 32% take up to 90 days. If they haven't bid by day 7, most won't.</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Key Numbers to Know Cold</div>
+    <ul class="pn-bullets">
+      <li class="note">298,666 — new registrants in 90-day window</li>
+      <li class="note">71 — first bids placed in that window (2.4% activation)</li>
+      <li class="note">4.74 days / 409,178,480ms — median registration-to-bid</li>
+      <li class="note">27% — same-day bidders (19 users, median 64 min)</li>
+      <li class="note">68% — bid within 7 days (48 users)</li>
+      <li class="note">32% — long-tail (days 8–90, 23 users)</li>
+      <li class="note">Page 1310 — Complete Registration proxy for new member</li>
+      <li class="note">6N30kCdfTpDV — Bid Now Click defined event ID</li>
+    </ul>
+  </div>
+
+  <div class="presenter-notes">
+    <div class="pn-label">Talk Points — Slide by Slide</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Slide 13 (Answer):</strong> "4.74 days is the median. But the median alone doesn't tell the story — it's masking a three-part distribution. Let me show you."</li>
+      <li class="fs"><strong>Slide 14 (Methodology):</strong> "Before we built any funnel, we watched a real first-bid session. That's not typical analytics. We do this because the session teaches us how to build the funnel correctly."</li>
+      <li class="fs"><strong>Slide 15 (Distribution):</strong> "The three cohorts have different implications. The 27% who bid same-day are high-intent — they came to bid on a specific vehicle. The 41% who bid within 7 days are your re-engagement target. The 32% long-tail will convert on their own schedule — campaigns have low marginal yield there."</li>
+      <li class="fs"><strong>Slide 16 (Session):</strong> "The Gilroy session is exactly why we watch before we aggregate. 25 minutes of photo inspection, reading condition reports, checking lot details — then the bid. The 4.74-day median makes sense when you understand the due diligence first-time buyers do."</li>
+      <li class="note"><strong>If they ask about n=71:</strong> "71 is the number who registered AND bid in the same 90-day window. Many more members registered but will bid later. This is a conservative sample of the full activation funnel — the directional insight holds."</li>
+    </ul>
+  </div>
+
+  <div class="callout amber">
+    <strong>The recommendation you should be ready to give:</strong> A day-2 or day-3 re-engagement email targeting new registrants who haven't bid would capture a significant share of the 41% consideration cohort. Subject line framing: "The lot you were looking at is still available" — personalized to the last-viewed lot. 7 days is the activation cliff; focus resources there, not on the long-tail.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: OBJECTION HANDLERS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="objections">
+  <div class="section-header">
+    <div class="section-cmd">load_objections --category mcp-ai</div>
+    <div class="section-title">Objection Handlers</div>
+    <div class="section-desc">Anticipated pushback on the AI/MCP methodology and the findings themselves.</div>
+  </div>
+
+  <div class="objection-list">
+    <div class="obj-card">
+      <div class="obj-header">
+        <div class="obj-quote">We already have analytics. Why does AI need to do this?</div>
+        <div class="obj-persona">Analytics team / Product</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">Response</div>
+          <div class="obj-response">The answer isn't that AI replaces your analytics — it's that it <strong>removes the queue.</strong> The Q2 analysis took 5 tool calls and found the three-cohort activation pattern in the same session. That's work that would typically take a data analyst a full day and require a backlog slot. The methodology is fully documented and re-runnable with the same IDs.</div>
+        </div>
+        <div class="obj-frame"><strong>Re-frame:</strong> "Your team already has the data. What they don't have is time. This is what it looks like when that constraint goes away."</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div class="obj-quote">How do I know these numbers are right? AI can hallucinate.</div>
+        <div class="obj-persona">Skeptical stakeholder</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">Response</div>
+          <div class="obj-response">Every number in this deck has a Fullstory object ID behind it. The funnel that produced 3.75% — it's ID 1462273925. You can paste that into your Fullstory UI right now and get the same number. The MCP doesn't generate data; it queries your data and returns the API result. The analysis log is auditable.</div>
+        </div>
+        <div class="obj-frame"><strong>Re-frame:</strong> "This is the opposite of hallucination — every claim has a live ID you can verify independently. Try this: open Fullstory and search for segment mLidnrLV0uoc."</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div class="obj-quote">The n=71 for Q2 is too small to act on.</div>
+        <div class="obj-persona">Data analyst</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">Response</div>
+          <div class="obj-response">Fair point — this is directional, not a production measurement. But the three-cohort shape (27/41/32) is consistent with activation research across e-commerce. The same-day cohort (64-min median) and the 7-day cliff are strong enough signals to inform campaign timing, even if the absolute numbers grow over time. We're recommending a 7-day re-engagement window, not a conversion goal based on these 71 users.</div>
+        </div>
+        <div class="obj-frame"><strong>Re-frame:</strong> "Run it again in 90 days with fresh data. The same funnel IDs will give you a larger sample with the same methodology. That's the point of reproducibility."</div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div class="obj-quote">We knew about the 3.75% title rate already. This isn't new.</div>
+        <div class="obj-persona">Product manager</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">Response</div>
+          <div class="obj-response">The rate isn't the new finding — the <strong>reason</strong> is. The delivery error page (1,087 users/month), the two-pathway structure (48% bypass the badge entirely), and the 6.2-day lag were not visible in a dashboard. They required session watching and cross-session funnel analysis to surface. The question is: which of those three causes do you want to address first?</div>
+        </div>
+        <div class="obj-frame"><strong>Re-frame:</strong> "Knowing the rate doesn't tell you what to build. The three root causes give you a prioritized fix list."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: DISCOVERY QUESTIONS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="discovery">
+  <div class="section-header">
+    <div class="section-cmd">load_discovery --target copart-product</div>
+    <div class="section-title">Discovery Questions</div>
+    <div class="section-desc">Ask these to deepen the conversation and surface next-question candidates.</div>
+  </div>
+
+  <div class="discovery-list">
+    <div class="dq-item open">
+      <div class="dq-header">
+        <div class="dq-num">01</div>
+        <div>
+          <div class="dq-tag tag-strategy">Strategy</div>
+          <div class="dq-question">Is the title request step on your product roadmap, or is the assumption that members know to request it?</div>
+        </div>
+        <div class="dq-type">Open / Setup</div>
+      </div>
+      <div class="dq-why">Establishes whether this is a known gap or a surprise. If it's on the roadmap, you can offer to help quantify impact to prioritize. If it's a surprise, you've just surfaced a blind spot.</div>
+    </div>
+
+    <div class="dq-item open">
+      <div class="dq-header">
+        <div class="dq-num">02</div>
+        <div>
+          <div class="dq-tag tag-data">Data</div>
+          <div class="dq-question">Do you track what percentage of won lots result in a title delivery completion end-to-end — not just the click, but the physical delivery?</div>
+        </div>
+        <div class="dq-type">Gap Probe</div>
+      </div>
+      <div class="dq-why">The MCP analysis shows the digital funnel. If Copart tracks downstream delivery completion, there may be an even starker gap — members who click Mail Title but the delivery still fails.</div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">03</div>
+        <div>
+          <div class="dq-tag tag-workflow">Workflow</div>
+          <div class="dq-question">What happens when a member calls support after hitting the delivery error page? Is there an escalation path?</div>
+        </div>
+        <div class="dq-type">Process</div>
+      </div>
+      <div class="dq-why">Session evidence shows members who hit the delivery restriction with no recovery path eventually abandon or call support. Understanding call volume from this error helps quantify the total cost beyond UX friction.</div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">04</div>
+        <div>
+          <div class="dq-tag tag-strategy">Strategy</div>
+          <div class="dq-question">What's your current new-member re-engagement strategy in the first 7 days after registration?</div>
+        </div>
+        <div class="dq-type">Strategic</div>
+      </div>
+      <div class="dq-why">Bridges Q2 to their marketing/CRM stack. If they have email automation, the 7-day activation cliff finding has direct tactical implications. If they don't, it opens a conversation about first-session optimization.</div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">05</div>
+        <div>
+          <div class="dq-tag tag-data">Data</div>
+          <div class="dq-question">What other post-auction workflow questions has your team been trying to answer? Who owns that analysis today?</div>
+        </div>
+        <div class="dq-type">Next Question</div>
+      </div>
+      <div class="dq-why">The setup for "What's the next question we can answer?" — the close of the deck. Gets them thinking in pipeline terms rather than one-off analysis mode.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: ALL LIVE IDS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="ids">
+  <div class="section-header">
+    <div class="section-cmd">dump_ids --org o-76DP-eu1 --all</div>
+    <div class="section-title">All Live Fullstory IDs</div>
+    <div class="section-desc">Every segment, funnel, metric, element, and event used in this analysis. All are live objects in org o-76DP-eu1 (EU region, api.eu1.fullstory.com).</div>
+  </div>
+
+  <div class="callout green">
+    <strong>Re-run protocol:</strong> Use these IDs directly — do not rebuild. For re-runs, call compute_funnel(funnel_id=...) or compute_metric(metric_id=...) with the saved IDs. If an ID returns empty results, check methodology.yaml for the original query string to rebuild.
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px;margin-top:16px;">
+
+    <div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">Named Elements</div>
+      <div class="data-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>CSS / Location</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>rYjflc06PcL6</td><td>Post Auction PDP | You Won Badge</td><td>.LOT_WON</td><td>Q1 funnel entry — fires when member wins a lot on LDP</td></tr>
+            <tr><td>aiwFp3ZWpuQP</td><td>Mail title initiation btn - PH</td><td>copart-payment-history .mail-title-button</td><td>Q1 funnel conversion — only on Payment History page</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">Pages &amp; Events</div>
+      <div class="data-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>URL / Type</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>1310</td><td>Complete Registration</td><td>/complete-registration</td><td>Q2 proxy for "new member" — only visited at end of signup</td></tr>
+            <tr><td>6N30kCdfTpDV</td><td>Bid Now Click</td><td>Defined event — inclusive of pre + live bids</td><td>Q2 proxy for "first bid placed" — validated on mobile iOS</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">Segments</div>
+      <div class="data-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>mLidnrLV0uoc</td><td>badge-seer-universe (30d)</td><td>69,906 unique users · 316,597 badge events</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">Funnels</div>
+      <div class="data-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Result</th><th>Parameters</th></tr></thead>
+          <tbody>
+            <tr><td>1462273925</td><td>Q1: Badge → Mail Title</td><td>68,085 → 2,556 (3.75%) · median 6.2d</td><td>cross-session · last_30_days</td></tr>
+            <tr><td>1895096984</td><td>Q1: Post-badge Journey</td><td>LDP 12.5% · Lots Won 11.2% · Payments 7.5% · PH 6.7%</td><td>journey · direction: start</td></tr>
+            <tr><td>740493564</td><td>Q2: Reg → First Bid (90d base)</td><td>298,666 → 71 (2.4%) · median 4.74d</td><td>cross-session · last_90_days</td></tr>
+            <tr><td>1791497858</td><td>Q2: Reg → First Bid (1-day bracket)</td><td>19 users (27%) · median 64 min</td><td>within_seconds: 86400</td></tr>
+            <tr><td>1454360081</td><td>Q2: Reg → First Bid (7-day bracket)</td><td>48 users (68%) · median 37 hours</td><td>within_seconds: 604800</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">Metrics</div>
+      <div class="data-wrap">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Result</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>727832490</td><td>Total Mail Title clickers — all paths</td><td>4,913 unique users</td><td>Captures badge-first (2,556) + direct-to-PH (2,357)</td></tr>
+            <tr><td>1500272455</td><td>Delivery error page visitors</td><td>1,087 unique users (~36/day)</td><td>URL startsWith /member-payments/delivery/error — first attempt with "equals" returned 0 (dynamic lot number in path)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout" style="margin-top:20px;border-left-color:var(--partner);">
+    <strong style="color:var(--partner);">All IDs also in methodology.yaml</strong> — at <code style="font-size:11px;background:rgba(255,255,255,0.04);padding:1px 4px;">clients/Copart (u-MSA-eu1)/Copart Member - Web - USA (o-76DP-eu1)/methodology.yaml</code>. That file is the authoritative re-run reference with original query strings as fallback.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: REFERENCE DOCS -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-cmd">ls ./references</div>
+    <div class="section-title">Reference Resources</div>
+  </div>
+  <div class="doc-grid">
+    <a class="doc-link" href="https://app.eu1.fullstory.com/ui/o-76DP-eu1/" target="_blank">
+      <div class="doc-link-icon">🔗</div>
+      <div>
+        <div class="doc-link-title">Copart Fullstory UI (EU)</div>
+        <div class="doc-link-desc">Live session replay and org context for o-76DP-eu1</div>
+        <div class="doc-link-url">app.eu1.fullstory.com/ui/o-76DP-eu1/</div>
+      </div>
+    </a>
+    <a class="doc-link" href="https://app.eu1.fullstory.com/ui/o-76DP-eu1/segments/mLidnrLV0uoc" target="_blank">
+      <div class="doc-link-icon">👥</div>
+      <div>
+        <div class="doc-link-title">Badge-Seer Segment (69,906 users)</div>
+        <div class="doc-link-desc">Segment mLidnrLV0uoc — all lot winners in last 30 days</div>
+        <div class="doc-link-url">app.eu1.fullstory.com/ui/o-76DP-eu1/segments/mLidnrLV0uoc</div>
+      </div>
+    </a>
+    <a class="doc-link" href="../index.html">
+      <div class="doc-link-icon">📊</div>
+      <div>
+        <div class="doc-link-title">Companion Deck</div>
+        <div class="doc-link-desc">The customer-facing 27-slide analysis deck</div>
+        <div class="doc-link-url">../index.html</div>
+      </div>
+    </a>
+    <a class="doc-link" href="../../../methodology.yaml">
+      <div class="doc-link-icon">📋</div>
+      <div>
+        <div class="doc-link-title">methodology.yaml</div>
+        <div class="doc-link-desc">All IDs, queries, and run parameters for reproducibility</div>
+        <div class="doc-link-url">clients/Copart (u-MSA-eu1)/Copart Member - Web - USA (o-76DP-eu1)/methodology.yaml</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<div class="doc-footer">
+  <span>[INTERNAL ONLY] Fullstory Field Playbooks · Copart MCP Analysis Field Guide · Aug 2026</span>
+  <a href="../index.html">Open Report →</a>
+</div>
+
+<!-- ── SCROLL SYNC (receive from deck) ── -->
+<script>
+var p = document.documentElement.getAttribute('data-sync-pair');
+if (p) {
+  var CH = 'fs-sync:' + p;
+  var sectionMap = {
+    'cover': '#delivery',
+    'nav': '#delivery',
+    'q1-question': '#q1',
+    'q1-answer': '#q1',
+    'q1-destinations': '#q1',
+    'q1-causes': '#q1',
+    'q1-bug': '#q1',
+    'q1-pathways': '#q1',
+    'q1-chronicle': '#q1',
+    'q1-blind-spot-expand': '#q1-blind-spots',
+    'q1-blind-spot-dead-click': '#q1-blind-spots',
+    'q1-blind-spot-auth': '#q1-blind-spots',
+    'q1-device-behavior': '#q1-device',
+    'recommendations': '#recommendations',
+    'q2-question': '#q2',
+    'q2-answer': '#q2',
+    'q2-methodology': '#q2',
+    'q2-distribution': '#q2',
+    'q2-session': '#q2',
+    'q2-chronicle': '#q2',
+    'mcp-explainer': '#ids',
+    'mcp-detail': '#ids'
+  };
+  function recv(k) {
+    var target = sectionMap[k];
+    if (target) {
+      var el = document.querySelector(target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  var bc = null;
+  try { bc = new BroadcastChannel(CH); } catch(e) {}
+  if (bc) bc.onmessage = function(e){ if (e.data && e.data.type==='fs-sync') recv(e.data.section); };
+  window.addEventListener('storage', function(e) {
+    if (e.key !== CH || !e.newValue) return;
+    try { var d = JSON.parse(e.newValue); if (d.section) recv(d.section); } catch(x) {}
+  });
+}
+</script>
+
+<!-- FS.identify — field guide only, never in deliverable -->
+<script>window['_fs_org']='o-24HEHW-na1';window['_fs_host']='fullstory.com';window['_fs_script']='edge.fullstory.com/s/fs.js';window['_fs_namespace']='FS';(function(m,n,e,t,l,o,g,y){if(e in m){if(m.console&&m.console.log){m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].')}return}g=m[e]=function(a,b,s){g.q?g.q.push([a,b,s]):g._api(a,b,s)};g.q=[];o=n.createElement(t);o.async=1;o.crossOrigin='anonymous';o.src='https://'+_fs_script;y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);g.identify=function(i,v,s){g(l,{uid:i},s);if(v)g(l,v,s)};g.setUserVars=function(v,s){g(l,v,s)};g.event=function(i,v,s){g('event',{n:i,p:v},s)};g.anonymize=function(){g.identify(!!0)};g.shutdown=function(){g._api=function(){}};g.restart=function(){g._api=g._api||g};g.log=function(a,b){g('log',[a,b],void 0)};g.consent=function(a){g('consent',!1===a?{userInput:'opt-out'}:{userInput:'opt-in'},void 0)};g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};g.clearUserCookie=function(){};g.setVars=function(n,p){g('setVars',[n,p],void 0)};g._w={};y='XMLHttpRequest';g._w[y]=m[y];y='fetch';g._w[y]=m[y];if(m[y])m[y]=function(){return g._w[y].apply(this,arguments)};g._v='1.3.0'})(window,document,window['_fs_namespace'],'script','user');
+setTimeout(function(){ if(window.FS) FS.identify('lane@fullstory.com',{displayName:'Lane (SpecOps)',email:'lane@fullstory.com'}); }, 2000);
+</script>
+
+</body>
+</html>

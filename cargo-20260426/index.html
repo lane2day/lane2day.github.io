@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fullstory — CarGo Weekly Friction Report (Apr 20–26, 2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fs-deep:#0a2828; --fs-dark:#0e3c3c; --fs-mid:#135050;
+  --fs-green:#07c799; --fs-green-dk:#059573; --fs-mint:#c1f1e6;
+  --fs-pink:#ff6f94; --fs-pink-dk:#ff2059;
+  --fs-orange:#ffa12f; --fs-purple:#9e36f1;
+  --bg:#081f1f; --card:#0d3333; --card-2:#0f3c3c;
+  --border:#1a5050; --border-lt:#1e5c5c;
+  --text-hi:#e8f8f5; --text-md:#8ec8bf; --text-lo:#3d7a76;
+  --issue:#ff5a35; --issue-dk:#d93f1a; --issue-lt:#fff0eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text-hi); line-height:1.6; font-size:15px; }
+
+.topbar { position:sticky; top:0; z-index:100; background:rgba(8,31,31,0.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 56px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.topbar-logos { display:flex; align-items:center; gap:14px; }
+.topbar-logo-fs img { height:22px; filter:brightness(0) invert(1); opacity:0.9; }
+.topbar-divider { width:1px; height:20px; background:var(--border-lt); }
+.topbar-badge { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:4px; background:rgba(7,199,153,0.12); border:1px solid rgba(7,199,153,0.25); color:var(--fs-green); }
+.topbar-nav { display:flex; align-items:center; gap:4px; }
+.topbar-nav a { color:var(--text-md); text-decoration:none; font-size:12px; font-weight:600; padding:6px 11px; border-radius:6px; transition:background 0.15s, color 0.15s; white-space:nowrap; }
+.topbar-nav a:hover { background:rgba(7,199,153,0.1); color:var(--fs-green); }
+
+.hero { background:linear-gradient(160deg,#081f1f 0%,#0b2e2e 45%,#0a2525 100%); border-bottom:1px solid var(--border); padding:88px 56px 72px; position:relative; overflow:hidden; }
+.hero-glow-1 { position:absolute; top:-180px; right:-120px; width:640px; height:640px; background:radial-gradient(circle,rgba(7,199,153,0.07) 0%,transparent 65%); pointer-events:none; }
+.hero-glow-2 { position:absolute; bottom:-200px; left:-80px; width:560px; height:560px; background:radial-gradient(circle,rgba(255,90,53,0.05) 0%,transparent 65%); pointer-events:none; }
+.hero-eyebrow { font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:700; margin-bottom:28px; color:var(--fs-green); }
+.hero-meta-row { display:flex; align-items:center; gap:18px; margin-bottom:36px; flex-wrap:wrap; }
+.hero-meta-row .hero-logo-fs img { height:34px; filter:brightness(0) invert(1); }
+.hero-report-badge { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-lo); padding:5px 12px; border:1px solid var(--border-lt); border-radius:6px; }
+.hero h1 { font-size:48px; font-weight:800; letter-spacing:-1.8px; line-height:1.1; max-width:880px; margin-bottom:22px; background:linear-gradient(130deg,#e8f8f5 0%,#a8d8cf 60%,#07c799 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero-sub { font-size:19px; color:var(--text-md); max-width:740px; font-weight:400; line-height:1.65; }
+.hero-tags { display:flex; gap:10px; margin-top:32px; flex-wrap:wrap; }
+.hero-tag { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; }
+.hero-tag.green  { background:rgba(7,199,153,0.18); border:1px solid rgba(7,199,153,0.5);  color:#0ef5be; }
+.hero-tag.red    { background:rgba(255,90,53,0.18);  border:1px solid rgba(255,90,53,0.5);  color:#ff7a5a; }
+.hero-tag.orange { background:rgba(255,163,47,0.18); border:1px solid rgba(255,163,47,0.5); color:#ffc05e; }
+.hero-tag.purple { background:rgba(158,54,241,0.18); border:1px solid rgba(158,54,241,0.5); color:#c06dff; }
+
+.exec-summary { background:linear-gradient(135deg,rgba(7,199,153,0.04) 0%,rgba(255,90,53,0.03) 100%); border-bottom:1px solid var(--border); padding:64px 56px; }
+.exec-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:340px 1fr; gap:64px; align-items:start; }
+.exec-left h2 { font-size:26px; font-weight:800; letter-spacing:-0.8px; line-height:1.2; margin-bottom:18px; color:var(--text-hi); }
+.exec-left p { font-size:14px; color:var(--text-md); line-height:1.75; margin-bottom:14px; }
+.exec-right { display:flex; flex-direction:column; gap:12px; }
+.exec-link-card { display:flex; align-items:center; gap:18px; padding:18px 22px; background:var(--card); border:1px solid var(--border); border-radius:12px; text-decoration:none; transition:border-color 0.15s, background 0.15s, transform 0.1s; }
+.exec-link-card:hover { border-color:var(--border-lt); background:var(--card-2); transform:translateX(3px); }
+.exec-link-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.exec-link-text h4 { font-size:13px; font-weight:700; color:var(--text-hi); margin-bottom:2px; }
+.exec-link-text p { font-size:12px; color:var(--text-md); line-height:1.4; }
+.exec-link-arrow { margin-left:auto; color:var(--text-lo); font-size:16px; flex-shrink:0; transition:color 0.15s; }
+.exec-link-card:hover .exec-link-arrow { color:var(--fs-green); }
+
+.page-content { max-width:1200px; margin:0 auto; padding:72px 56px; }
+.section { margin-bottom:88px; }
+.section-label { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--text-lo); font-weight:700; margin-bottom:10px; }
+.section-title { font-size:30px; font-weight:800; letter-spacing:-0.9px; margin-bottom:10px; color:var(--text-hi); }
+.section-desc { color:var(--text-md); font-size:16px; max-width:760px; line-height:1.7; margin-bottom:40px; }
+
+.callout { background:rgba(7,199,153,0.04); border:1px solid rgba(7,199,153,0.14); border-left:3px solid var(--fs-green); border-radius:8px; padding:15px 20px; font-size:13px; color:var(--text-md); line-height:1.65; margin-bottom:28px; }
+.callout strong { color:var(--fs-green); }
+.callout.red { background:rgba(255,90,53,0.04); border-color:rgba(255,90,53,0.14); border-left-color:var(--issue); }
+.callout.red strong { color:var(--issue); }
+.callout.orange { background:rgba(255,163,47,0.04); border-color:rgba(255,163,47,0.14); border-left-color:var(--fs-orange); }
+.callout.orange strong { color:var(--fs-orange); }
+.callout.purple { background:rgba(158,54,241,0.04); border-color:rgba(158,54,241,0.14); border-left-color:var(--fs-purple); }
+.callout.purple strong { color:var(--fs-purple); }
+
+/* Top-line stat grid */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:40px; }
+.kpi-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:22px 24px; }
+.kpi-label { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--text-lo); font-weight:700; margin-bottom:14px; }
+.kpi-value-row { display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
+.kpi-value { font-size:30px; font-weight:800; letter-spacing:-1px; color:var(--text-hi); line-height:1; }
+.kpi-unit { font-size:12px; color:var(--text-lo); font-weight:600; }
+.kpi-meta-row { display:flex; align-items:center; gap:12px; font-size:12px; color:var(--text-md); }
+.kpi-meta-row .lw { color:var(--text-lo); }
+.kpi-delta { font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:0.3px; }
+.kpi-delta.green { background:rgba(7,199,153,0.14); color:#0ef5be; border:1px solid rgba(7,199,153,0.3); }
+.kpi-delta.red   { background:rgba(255,90,53,0.14);  color:#ff7a5a; border:1px solid rgba(255,90,53,0.3); }
+.kpi-delta.orange{ background:rgba(255,163,47,0.14); color:#ffc05e; border:1px solid rgba(255,163,47,0.3); }
+.kpi-delta.neutral{ background:rgba(255,255,255,0.04); color:var(--text-md); border:1px solid var(--border); }
+
+/* Friction signal table (Macy's-like row) */
+.signal-wrap { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.signal-header { padding:14px 24px; background:rgba(0,0,0,0.18); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+.signal-header .stripe { width:4px; height:18px; border-radius:2px; }
+.signal-header.rage   .stripe { background:var(--fs-orange); }
+.signal-header.error  .stripe { background:var(--issue); }
+.signal-header.dead   .stripe { background:var(--fs-purple); }
+.signal-header h3 { font-size:14px; font-weight:700; letter-spacing:-0.2px; color:var(--text-hi); }
+.signal-header .total { margin-left:auto; font-family:'SF Mono', monospace; font-size:11px; color:var(--text-lo); }
+.signal-table { width:100%; border-collapse:collapse; font-size:13px; }
+.signal-table th { text-align:left; padding:12px 24px; font-size:10px; letter-spacing:1.8px; text-transform:uppercase; color:var(--text-lo); font-weight:700; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.1); }
+.signal-table th.num { text-align:right; }
+.signal-table td { padding:12px 24px; border-bottom:1px solid rgba(26,80,80,0.4); vertical-align:middle; color:var(--text-md); line-height:1.5; }
+.signal-table td.num { text-align:right; font-family:'SF Mono', monospace; font-size:12px; color:var(--text-md); white-space:nowrap; }
+.signal-table td.signal-name { color:var(--text-hi); font-weight:600; max-width:540px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.signal-table td.signal-name.long { white-space:normal; line-height:1.4; font-size:12px; max-width:540px; }
+.signal-table tr:last-child td { border-bottom:none; }
+.signal-table tr:hover td { background:rgba(255,255,255,0.015); }
+.delta-pill { display:inline-block; padding:1px 7px; border-radius:3px; font-size:10px; font-weight:700; letter-spacing:0.2px; }
+.delta-pill.green   { background:rgba(7,199,153,0.14);  color:#0ef5be; border:1px solid rgba(7,199,153,0.3); }
+.delta-pill.red     { background:rgba(255,90,53,0.14);  color:#ff7a5a; border:1px solid rgba(255,90,53,0.3); }
+.delta-pill.orange  { background:rgba(255,163,47,0.14); color:#ffc05e; border:1px solid rgba(255,163,47,0.3); }
+.delta-pill.neutral { background:rgba(255,255,255,0.04); color:var(--text-md); border:1px solid var(--border); }
+.delta-pill.new     { background:rgba(158,54,241,0.14); color:#c06dff; border:1px solid rgba(158,54,241,0.3); }
+.delta-pill.gone    { background:rgba(255,255,255,0.04); color:var(--text-lo); border:1px solid var(--border); }
+
+/* Recommendation card */
+.rec-card { background:linear-gradient(135deg,rgba(7,199,153,0.06) 0%,rgba(255,90,53,0.03) 100%); border:1px solid rgba(7,199,153,0.18); border-radius:18px; padding:44px; }
+.rec-card > h3 { font-size:24px; font-weight:800; letter-spacing:-0.7px; margin-bottom:14px; color:var(--text-hi); }
+.rec-card > p { color:var(--text-md); font-size:15px; line-height:1.7; max-width:780px; margin-bottom:0; }
+.rec-tiers { display:flex; flex-direction:column; gap:14px; margin-top:28px; }
+.rec-tier { display:flex; gap:20px; align-items:flex-start; padding:20px 24px; background:rgba(0,0,0,0.22); border-radius:12px; border:1px solid var(--border); }
+.tier-badge { flex-shrink:0; padding:4px 11px; border-radius:6px; font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-top:2px; }
+.t-p1 { background:rgba(255,90,53,0.18); color:#ff7a5a; }
+.t-p2 { background:rgba(255,163,47,0.15); color:#ffc05e; }
+.t-p3 { background:rgba(158,54,241,0.15); color:#c06dff; }
+.rec-tier-content h4 { font-size:14px; font-weight:700; margin-bottom:4px; letter-spacing:-0.2px; color:var(--text-hi); }
+.rec-tier-content p { font-size:13px; color:var(--text-md); line-height:1.6; }
+.rec-tier-content code { background:rgba(7,199,153,0.08); color:var(--fs-green); padding:1px 6px; border-radius:3px; font-size:11px; font-family:'SF Mono', monospace; }
+
+/* Integrity callout list */
+.integrity-list { list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.integrity-list li { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; background:rgba(255,255,255,0.02); border-radius:8px; border-left:2px solid var(--fs-orange); font-size:12px; color:var(--text-md); line-height:1.55; }
+.integrity-list li code { font-family:'SF Mono', monospace; font-size:11px; color:var(--fs-orange); background:rgba(255,163,47,0.08); padding:1px 5px; border-radius:3px; }
+
+.doc-footer { border-top:1px solid var(--border); padding:30px 56px; display:flex; justify-content:space-between; align-items:center; color:var(--text-lo); font-size:12px; gap:24px; flex-wrap:wrap; }
+
+@media (max-width: 960px) {
+  .topbar { padding:12px 20px; } .topbar-nav { display:none; }
+  .hero { padding:56px 20px 48px; } .hero h1 { font-size:32px; }
+  .exec-inner { grid-template-columns:1fr; gap:32px; }
+  .exec-summary { padding:40px 20px; }
+  .page-content { padding:48px 20px; }
+  .kpi-grid { grid-template-columns:1fr 1fr; }
+  .doc-footer { flex-direction:column; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logos">
+    <div class="topbar-logo-fs"><img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" /></div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-badge">CarGo · Weekly Friction</div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#executive-summary">Summary</a>
+    <a href="#site-topline">Site Top-Line</a>
+    <a href="#site-friction">Friction</a>
+    <a href="#friction-hotspots">Hotspots</a>
+    <a href="#recommendations">Recommendations</a>
+    <a href="#integrity">Source Integrity</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-eyebrow">Weekly Friction Report</div>
+  <div class="hero-meta-row">
+    <div class="hero-logo-fs"><img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" /></div>
+    <div class="hero-report-badge">CarGo</div>
+    <div class="hero-report-badge">TW · Apr 20–26, 2026</div>
+    <div class="hero-report-badge">LW · Apr 13–19, 2026</div>
+  </div>
+  <h1>Sign-up surface generates more dead clicks than every other friction signal combined</h1>
+  <p class="hero-sub">
+    The element labeled "Sign Up" (and its parent "Join CarGo" card) accounted for <strong>113K dead clicks</strong> this week — 99.8% of all dead-click volume on the site. Page load time regressed sharply WoW. Site-wide friction-clicker counts dropped, but only because traffic dropped with them.
+  </p>
+  <div class="hero-tags">
+    <span class="hero-tag red">Sign Up · 113K dead clicks/wk</span>
+    <span class="hero-tag red">Page Load avg +388% WoW</span>
+    <span class="hero-tag orange">Add to cart · 122 error clicks</span>
+    <span class="hero-tag orange">Total Users −15.7% WoW</span>
+    <span class="hero-tag green">Fullstory MCP · org 18PNWR</span>
+  </div>
+</section>
+
+<section class="exec-summary" id="executive-summary">
+  <div class="exec-inner">
+    <div class="exec-left">
+      <div class="section-label">TL;DR</div>
+      <h2>One UX bug eclipses every other friction signal on the site.</h2>
+      <p>The "Sign Up" / "Join CarGo" sign-up card on the homepage is generating <strong>60,583 dead clicks</strong> on the parent card and <strong>52,838 dead clicks</strong> on the "Sign Up" word itself this week alone. Two orders of magnitude larger than the next signal. Users are clicking text styled like an action — and nothing is happening.</p>
+      <p>Page load time regressed from <strong>3.7s to 18.2s</strong> week-over-week. That's the second headline. Could be data quality (small sample on slow pages) or a real performance regression worth a separate engineering investigation.</p>
+      <p>Friction-clicker counts <em>dropped</em>, but so did total users. Per-user friction rates held roughly steady. Net: no improvement, less traffic.</p>
+    </div>
+    <div class="exec-right">
+      <a href="#site-topline" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">📊</div>
+        <div class="exec-link-text"><h4>Site Top-Line</h4><p>Traffic, page load, FID, CLS, scroll depth</p></div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#site-friction" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">⚡</div>
+        <div class="exec-link-text"><h4>Site Friction Summary</h4><p>Rage / error clicker counts WoW</p></div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#friction-hotspots" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,90,53,0.1);">🎯</div>
+        <div class="exec-link-text"><h4>Friction Hotspots</h4><p>Top elements by rage / error / dead click</p></div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#recommendations" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">✅</div>
+        <div class="exec-link-text"><h4>Recommendations</h4><p>What to fix this week</p></div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#integrity" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(158,54,241,0.1);">🛠</div>
+        <div class="exec-link-text"><h4>Source Data Integrity</h4><p>Defects in the source manifest</p></div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="page-content">
+
+<!-- ── SITE TOP-LINE ─────────────────────────────────────── -->
+<section class="section" id="site-topline">
+  <div class="section-label">Site Top-Line</div>
+  <div class="section-title">Traffic, performance, and engagement</div>
+  <p class="section-desc">
+    Site-wide measurements covering all three CarGo properties (cargorentalsfs.com, cargomerch.myshopify.com, catformalwear.myshopify.com).
+    All comparisons are this-week (TW: Apr 20–26) vs last-week (LW: Apr 13–19), Mon–Sun.
+  </p>
+
+  <div class="callout orange">
+    <strong>Page Load regressed 388% WoW.</strong> TW averaged 18,168ms vs LW's 3,723ms. This is a 5× jump on the same metric definition — investigate as a possible CDN, asset, or third-party regression. Could also reflect a sampling artifact on a small number of slow sessions; correlate with session count by URL before concluding.
+  </div>
+
+  <div class="kpi-grid">
+
+    <div class="kpi-card">
+      <div class="kpi-label">Total Users</div>
+      <div class="kpi-value-row"><div class="kpi-value">23,219</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 27,545</span><span class="kpi-delta orange">−15.7%</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Page Load Time (avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value">18,168</div><div class="kpi-unit">ms</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 3,723 ms</span><span class="kpi-delta red">+388%</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">First Input Delay (avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value">2.91</div><div class="kpi-unit">ms</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 1.90 ms</span><span class="kpi-delta orange">+53.2%</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Cumulative Layout Shift (avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value">0.00191</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 0.00221</span><span class="kpi-delta green">−13.8%</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Active Time on Page (avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value">5.0</div><div class="kpi-unit">sec</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 3.7 sec</span><span class="kpi-delta neutral">+35.3%</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Inactive Time on Page (avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value">11.5</div><div class="kpi-unit">sec</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 9.8 sec</span><span class="kpi-delta neutral">+17.0%</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Scroll Depth (avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value">65.9</div><div class="kpi-unit">%</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 66.3%</span><span class="kpi-delta neutral">−0.6%</span></div>
+    </div>
+
+    <div class="kpi-card" style="background:rgba(255,255,255,0.02); border-style:dashed;">
+      <div class="kpi-label">Time on Page (Avg)</div>
+      <div class="kpi-value-row"><div class="kpi-value" style="color:var(--text-lo);">—</div></div>
+      <div class="kpi-meta-row"><span class="lw">Skipped — see Source Integrity</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SITE FRICTION SUMMARY ─────────────────────────────── -->
+<section class="section" id="site-friction">
+  <div class="section-label">Site Friction Summary</div>
+  <div class="section-title">Site-wide friction counts</div>
+  <p class="section-desc">
+    Unique users who experienced each friction event type, anywhere on the site, in each week.
+    Read these in the context of total user count — a drop in raw count means little if traffic dropped proportionally.
+  </p>
+
+  <div class="callout red">
+    <strong>Apparent friction improvement is a traffic effect, not a UX win.</strong> Rage Clickers fell 58.1% and Error Clickers fell 56.7% — but Total Users fell 15.7% and the friction-per-user rate held roughly steady (rage: 0.87% TW vs 1.76% LW; error: 0.31% TW vs 0.60% LW). Reset expectations before reporting "friction down."
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr);">
+
+    <div class="kpi-card" style="border-top:3px solid var(--fs-orange);">
+      <div class="kpi-label">Rage Clickers (unique users)</div>
+      <div class="kpi-value-row"><div class="kpi-value">203</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 484</span><span class="kpi-delta green">−58.1%</span></div>
+    </div>
+
+    <div class="kpi-card" style="border-top:3px solid var(--issue);">
+      <div class="kpi-label">Error Clickers (unique users)</div>
+      <div class="kpi-value-row"><div class="kpi-value">71</div></div>
+      <div class="kpi-meta-row"><span class="lw">LW 164</span><span class="kpi-delta green">−56.7%</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FRICTION HOTSPOTS ─────────────────────────────────── -->
+<section class="section" id="friction-hotspots">
+  <div class="section-label">Friction Hotspots</div>
+  <div class="section-title">Top elements driving friction</div>
+  <p class="section-desc">
+    Each row is a distinct element (grouped by visible text) where users rage-clicked, error-clicked, or dead-clicked.
+    Δ column shows week-over-week change; "new" means the element wasn't in last week's top 25; "gone" means it was last week but not this week.
+  </p>
+
+  <!-- Top Dead Clicks (the headline) -->
+  <div class="signal-wrap" style="margin-bottom:28px;">
+    <div class="signal-header dead">
+      <div class="stripe"></div>
+      <h3>Top Dead-Click Targets — by element text</h3>
+      <div class="total">TW total: 121,634 events · LW total: 127,355</div>
+    </div>
+    <table class="signal-table">
+      <thead>
+        <tr><th style="width:60%;">Element text</th><th class="num">TW</th><th class="num">LW</th><th class="num">Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="signal-name long">Join CarGo Create your account to get started Login Sign Up</td>
+          <td class="num">60,583</td><td class="num">53,609</td><td class="num"><span class="delta-pill red">+13.0%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name">Sign Up</td>
+          <td class="num">52,838</td><td class="num">61,685</td><td class="num"><span class="delta-pill green">−14.3%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name long">Add to cart Buy it now This item is a deferred, subscription, or recurring purchase…</td>
+          <td class="num">5,785</td><td class="num">8,198</td><td class="num"><span class="delta-pill green">−29.4%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name long">Sold out Buy it now This item is a deferred, subscription, or recurring purchase…</td>
+          <td class="num">1,453</td><td class="num">2,041</td><td class="num"><span class="delta-pill green">−28.8%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name">(empty text)</td>
+          <td class="num">190</td><td class="num">453</td><td class="num"><span class="delta-pill green">−58.1%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name long">Home Catalog Contact Log in Search cargomerch Home Catalog Contact Search</td>
+          <td class="num">177</td><td class="num">318</td><td class="num"><span class="delta-pill green">−44.3%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name">Available</td>
+          <td class="num">34</td><td class="num">29</td><td class="num"><span class="delta-pill orange">+17.2%</span></td>
+        </tr>
+        <tr>
+          <td class="signal-name">Edit</td>
+          <td class="num">28</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Top Rage Clicks -->
+  <div class="signal-wrap" style="margin-bottom:28px;">
+    <div class="signal-header rage">
+      <div class="stripe"></div>
+      <h3>Top Rage-Click Targets — by element text</h3>
+      <div class="total">TW total: 6,670 events · LW total: 17,307</div>
+    </div>
+    <table class="signal-table">
+      <thead>
+        <tr><th style="width:60%;">Element text</th><th class="num">TW</th><th class="num">LW</th><th class="num">Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="signal-name">Available</td><td class="num">1,418</td><td class="num">2,971</td><td class="num"><span class="delta-pill green">−52.3%</span></td></tr>
+        <tr><td class="signal-name">Edit</td><td class="num">692</td><td class="num">1,747</td><td class="num"><span class="delta-pill green">−60.4%</span></td></tr>
+        <tr><td class="signal-name">Billing</td><td class="num">332</td><td class="num">999</td><td class="num"><span class="delta-pill green">−66.8%</span></td></tr>
+        <tr><td class="signal-name">Payment</td><td class="num">271</td><td class="num">849</td><td class="num"><span class="delta-pill green">−68.1%</span></td></tr>
+        <tr><td class="signal-name">Unavailable</td><td class="num">149</td><td class="num">558</td><td class="num"><span class="delta-pill green">−73.3%</span></td></tr>
+        <tr><td class="signal-name">$ 1200</td><td class="num">72</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+        <tr><td class="signal-name">$ 180</td><td class="num">54</td><td class="num">162</td><td class="num"><span class="delta-pill green">−66.7%</span></td></tr>
+        <tr><td class="signal-name">$ 240</td><td class="num">54</td><td class="num">108</td><td class="num"><span class="delta-pill green">−50.0%</span></td></tr>
+        <tr><td class="signal-name">$ 400</td><td class="num">54</td><td class="num">144</td><td class="num"><span class="delta-pill green">−62.5%</span></td></tr>
+        <tr><td class="signal-name">$ 750</td><td class="num">54</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Top Error Clicks -->
+  <div class="signal-wrap">
+    <div class="signal-header error">
+      <div class="stripe"></div>
+      <h3>Top Error-Click Targets — by element text</h3>
+      <div class="total">TW total: 158 events · LW total: 318</div>
+    </div>
+    <table class="signal-table">
+      <thead>
+        <tr><th style="width:60%;">Element text</th><th class="num">TW</th><th class="num">LW</th><th class="num">Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="signal-name">Add to cart</td><td class="num">122</td><td class="num">181</td><td class="num"><span class="delta-pill green">−32.6%</span></td></tr>
+        <tr><td class="signal-name">Login</td><td class="num">5</td><td class="num">70</td><td class="num"><span class="delta-pill green">−92.9%</span></td></tr>
+        <tr><td class="signal-name">Confirm &amp; Submit</td><td class="num">4</td><td class="num">25</td><td class="num"><span class="delta-pill green">−84.0%</span></td></tr>
+        <tr><td class="signal-name">Sign In</td><td class="num">4</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+        <tr><td class="signal-name">Start Your Journey</td><td class="num">—</td><td class="num">25</td><td class="num"><span class="delta-pill gone">gone</span></td></tr>
+        <tr><td class="signal-name">All Smart Tips</td><td class="num">1</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+        <tr><td class="signal-name">Continue to the next tour</td><td class="num">1</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+        <tr><td class="signal-name">Mercedes SL-Class</td><td class="num">1</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+        <tr><td class="signal-name">Search Cars</td><td class="num">1</td><td class="num">—</td><td class="num"><span class="delta-pill new">new</span></td></tr>
+        <tr><td class="signal-name">Sign Up</td><td class="num">1</td><td class="num">4</td><td class="num"><span class="delta-pill green">−75.0%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout purple" style="margin-top:24px;">
+    <strong>Session evidence step skipped this run.</strong> The skill's session-investigation subagent (<code>fullstory:session-context</code>) was unavailable in this environment. The next run should pull 3 sessions per top hotspot via <code>get_sessions(metric_id, limit=3)</code> and delegate per-session narrative to the subagent. Findings would be inlined as one-line takeaways under each hotspot row.
+  </div>
+</section>
+
+<!-- ── RECOMMENDATIONS ───────────────────────────────────── -->
+<section class="section" id="recommendations">
+  <div class="rec-card">
+    <div class="section-label" style="margin-bottom:10px;">Recommendations</div>
+    <h3>Three things to fix this week</h3>
+    <p>Ranked by user impact and ease of resolution. Each links to the underlying Fullstory metric for verification.</p>
+
+    <div class="rec-tiers">
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Make the "Sign Up" / "Join CarGo" surface a real button</h4>
+          <p>Combined volume across both row variants: <strong>113,421 dead clicks this week</strong> — 99.8% of all dead clicks on the site. Users see an action-styled card and click; nothing happens. Either wire the entire card to <code>onClick → /signup</code>, or visually de-emphasize it so users stop reading it as a CTA.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Investigate the +388% page-load regression</h4>
+          <p>TW avg <strong>18.2s</strong> vs LW <strong>3.7s</strong>, same metric definition both weeks. Likely candidates: a slow new third-party tag, a CDN issue, or a sampling artifact from a small number of pathological sessions. Slice by URL_PATH and by browser to isolate.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2</div>
+        <div class="rec-tier-content">
+          <h4>Fix the "Add to cart" JS error</h4>
+          <p><strong>122 error clicks this week</strong> on elements labeled "Add to cart" — almost certainly on <code>cargomerch.myshopify.com</code> or <code>catformalwear.myshopify.com</code>. A single bug fix could clear the entire error-click signal on this site.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p3">P3</div>
+        <div class="rec-tier-content">
+          <h4>Audit the "Available" status badge for clickability</h4>
+          <p>Top rage-click target both weeks (<strong>1,418 TW</strong>, 2,971 LW). Users are clicking a status word on a car listing expecting it to start the booking flow. Either make it a real CTA or remove it from the click target hierarchy. The price-amount pattern ("$1200", "$180", etc.) directly underneath shows the same behavior — users click prices expecting action.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOURCE INTEGRITY ──────────────────────────────────── -->
+<section class="section" id="integrity">
+  <div class="section-label">Source Data Integrity</div>
+  <div class="section-title">Defects and skips in this run</div>
+  <p class="section-desc">
+    The skill validates the input manifest (<code>cargo/metrics.json</code>) before computing.
+    Metrics with definitional defects, duplicates, or translation issues are surfaced here rather than silently dropped.
+  </p>
+
+  <div class="callout orange">
+    <strong>6 of 19 metrics in the source manifest were skipped or repaired</strong> due to defects in the saved definitions or in the build_metric NL→definition translator. Below is the audit.
+  </div>
+
+  <ul class="integrity-list">
+    <li><strong>Skipped — definitional bug.</strong>&nbsp; <code>1jL9Tvy0Tug6</code> "Dead Clickers (copy)" is wired to <code>errorClick</code>, not <code>deadClick</code>. Identical to <code>uwVtDGMYkr9j</code> "Error Clickers". Re-author the saved metric to fire on <code>deadClick.any</code>.</li>
+    <li><strong>Skipped — definitional bug.</strong>&nbsp; <code>EyPwGbMoXIgF</code> "Friction during Session (copy)" fires on a single button click (element id <code>7RRb7BncJyuJ</code>), not session-level friction. Name and definition disagree. Re-author or rename.</li>
+    <li><strong>Skipped — definitional bug.</strong>&nbsp; <code>N3nkg4lA132y</code> "Users w/the Most Friction (copy)" has time range <code>NOW/DAY..NOW/DAY+1DAY</code> (only today) and references segment <code>NnH2bvKXS6gd</code> not present in the manifest. Re-author with a 7-day window and a resolvable segment.</li>
+    <li><strong>Skipped — duplicate.</strong>&nbsp; <code>YCzO1PmhHm7y</code> "First Input Delay (Avg) (copy)" is identical to <code>CYxtMYSwAG3x</code>. Used <code>CYxtMYSwAG3x</code>. Delete one.</li>
+    <li><strong>Skipped — duplicate.</strong>&nbsp; <code>6ysUW2KJMxn7</code> "Avg. Page Load Time (copy)" (trend output) is the same definition as <code>9XRMgfDYnmFe</code> "Page Load Time (Avg) (copy)" (single-number output). Used the single-number version. Consolidate.</li>
+    <li><strong>Skipped — naming-vs-definition mismatch.</strong>&nbsp; <code>ufvc6MWQxwZN</code> "Page Load Time by Browser (Avg) (copy)" has no browser dimension defined — same definition as plain Page Load Time. Re-author with <code>dimension = builtInProperty 27 (Browser)</code>.</li>
+    <li><strong>Repaired — translator divergence.</strong>&nbsp; "Average page load time" came back from build_metric as <code>pageLoad.atLeast 0s</code> for TW and <code>pageLoad.greaterThan 0s</code> for LW on identical NL queries. Repaired LW via <code>update_metric(TW, segment_id="everyone", LW dates)</code>. Both weeks now use the same definition.</li>
+    <li><strong>Skipped — translator translation error.</strong>&nbsp; "Time on Page (Avg)" came back from build_metric as <code>visitedUrl + PAGE_DURATION</code> (returned 0 — wrong event/property pairing). Source defined it as <code>visitedPage + builtIn 17</code>. Hardening: skill should refuse build_metric output that returns 0 on broad time-on-page queries and fall back to the structured definition.</li>
+  </ul>
+</section>
+
+</div><!-- /page-content -->
+
+<footer class="doc-footer">
+  <div>
+    <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" style="height:16px; filter:brightness(0) invert(1); opacity:0.4; vertical-align:middle;" />
+    &nbsp; CarGo Weekly Friction Report — generated 2026-04-28
+  </div>
+  <div>Org 18PNWR &nbsp;·&nbsp; TW Apr 20–26 &nbsp;·&nbsp; LW Apr 13–19 &nbsp;·&nbsp; All times Mon–Sun</div>
+</footer>
+
+</body>
+</html>

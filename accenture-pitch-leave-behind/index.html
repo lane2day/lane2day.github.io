@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fullstory × Adobe × Accenture — Leave-Behind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── Design system: field-kit/fullstory-deck-design-system.md ── */
+:root {
+  --bg:        #030e0e;
+  --card:      #091e1e;
+  --card-2:    #0c2828;
+  --border:    #1c4e4e;
+  --border-lt: #225858;
+  --text-hi:   #e8f8f5;
+  --text-md:   #8ec8bf;
+  --text-lo:   #3d7a76;
+  --fs-green:  #07c799;
+  --fs-pink:   #ff6f94;
+  --fs-orange: #ffa12f;
+  --fs-purple: #9e36f1;
+  --fs-gold:   #ffca4b;
+  --bronze:    #b8763e;
+  --silver:    #9aa7b0;
+  --adobe-red: #e34b4b;
+  --acn-pur:   #a100ff;
+  --sf-blue:   #00a1e0;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@media screen {
+  body {
+    background: var(--bg); color: var(--text-hi);
+    font-family: 'Manrope', system-ui, sans-serif;
+    padding: 40px 24px; min-height: 100vh;
+    display: flex; align-items: flex-start; justify-content: center;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 10% 90%, rgba(158,54,241,.10) 0%, transparent 55%),
+      radial-gradient(ellipse 55% 45% at 88% 12%, rgba(7,199,153,.08) 0%, transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+  .page { max-width: 860px; width: 100%; position: relative; z-index: 1; }
+}
+
+@media print {
+  body {
+    background: #fff; color: #111;
+    font-family: 'Manrope', system-ui, sans-serif;
+    padding: 32px;
+  }
+  .page { max-width: 100%; }
+  :root {
+    --bg: #fff; --card: #f4faf8; --card-2: #e8f5f0;
+    --border: #b0d4cc; --border-lt: #90c4ba;
+    --text-hi: #0a1a18; --text-md: #3d6b64; --text-lo: #7a9e99;
+    --fs-green: #05a07d; --fs-gold: #c9920a; --fs-pink: #c94470;
+    --fs-purple: #7620c9; --adobe-red: #b82e2e; --acn-pur: #7a00cc;
+    --sf-blue: #006899;
+  }
+}
+
+/* ── Header ── */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 22px;
+}
+.header-logo { font-size: 18px; font-weight: 800; color: var(--fs-green); letter-spacing: -0.5px; }
+.partner-tags { display: flex; gap: 8px; }
+.ptag { font-size: 10px; font-weight: 800; letter-spacing: 1px; padding: 4px 10px; border-radius: 12px; border: 1px solid; }
+.ptag.adobe { border-color: var(--adobe-red); color: var(--adobe-red); }
+.ptag.acn   { border-color: var(--acn-pur);  color: var(--acn-pur); }
+.ptag.sf    { border-color: var(--sf-blue);  color: var(--sf-blue); }
+
+/* ── Thesis ── */
+.thesis { font-size: 22px; font-weight: 800; color: var(--text-hi); line-height: 1.18; letter-spacing: -0.5px; margin-bottom: 7px; }
+.thesis em { color: var(--fs-green); font-style: normal; }
+.thesis-sub { font-size: 13px; color: var(--text-md); line-height: 1.65; margin-bottom: 20px; max-width: 700px; }
+.thesis-sub strong { color: var(--text-hi); }
+
+/* ── Section labels ── */
+.slabel { font-size: 9px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--fs-green); margin-bottom: 9px; display: block; }
+.slabel.gold   { color: var(--fs-gold); }
+.slabel.adobe  { color: var(--adobe-red); }
+.slabel.acn    { color: var(--acn-pur); }
+.slabel.sf     { color: var(--sf-blue); }
+.slabel.purple { color: var(--fs-purple); }
+
+/* ── Medallion row ── */
+.medallion-row { display: flex; gap: 0; margin-bottom: 18px; }
+.med { flex: 1; padding: 11px 14px; border: 1px solid var(--border); }
+.med:first-child { border-radius: 9px 0 0 9px; }
+.med:last-child  { border-radius: 0 9px 9px 0; }
+.med.bronze { border-color: rgba(184,118,62,.50); background: rgba(184,118,62,.05); }
+.med.silver { border-color: rgba(154,167,176,.30); background: rgba(154,167,176,.04); }
+.med.gold   { border-color: rgba(255,202,75,.50);  background: rgba(255,202,75,.06); }
+.med-label { font-size: 9px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+.med.bronze .med-label { color: var(--bronze); }
+.med.silver .med-label { color: var(--silver); }
+.med.gold   .med-label { color: var(--fs-gold); }
+.med-title { font-size: 12px; font-weight: 800; color: var(--text-hi); margin-bottom: 3px; }
+.med-body  { font-size: 11px; color: var(--text-md); line-height: 1.5; }
+
+/* ── Three-column playbooks ── */
+.playbooks { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.playbook { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.playbook.adobe { border-color: rgba(227,75,75,.40); }
+.playbook.acn   { border-color: rgba(161,0,255,.40); }
+.playbook.sf    { border-color: rgba(0,161,224,.40); }
+.playbook-title { font-size: 13px; font-weight: 800; color: var(--text-hi); margin-bottom: 7px; }
+.playbook-body  { font-size: 11.5px; color: var(--text-md); line-height: 1.6; }
+.playbook-body strong { color: var(--text-hi); }
+
+/* ── Data strip ── */
+.data-strip { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; }
+.data-row { display: flex; gap: 0; align-items: stretch; }
+.data-cell { flex: 1; padding: 4px 14px; border-right: 1px solid var(--border); }
+.data-cell:first-child { padding-left: 0; }
+.data-cell:last-child  { border-right: none; padding-right: 0; }
+.data-num   { font-size: 22px; font-weight: 900; letter-spacing: -1.5px; color: var(--fs-green); line-height: 1; margin-bottom: 3px; }
+.data-num.gold { color: var(--fs-gold); }
+.data-label { font-size: 10.5px; color: var(--text-lo); line-height: 1.4; }
+
+/* ── Ask strip ── */
+.ask-strip { background: var(--card); border: 1px solid rgba(7,199,153,.35); border-radius: 10px; padding: 14px 16px; margin-bottom: 18px; }
+.ask-title { font-size: 13.5px; font-weight: 800; color: var(--text-hi); margin-bottom: 10px; }
+.ask-items { display: flex; gap: 10px; }
+.ask-item { flex: 1; display: flex; align-items: flex-start; gap: 9px; }
+.ask-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(7,199,153,.12); border: 1px solid rgba(7,199,153,.38); font-size: 11px; font-weight: 900; color: var(--fs-green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.ask-text { font-size: 11.5px; color: var(--text-md); line-height: 1.55; }
+.ask-text strong { color: var(--text-hi); }
+
+/* ── Footer ── */
+.footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 14px; }
+.footer-l, .footer-r { font-size: 11px; color: var(--text-lo); line-height: 1.5; }
+.footer-r { text-align: right; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-logo">Fullstory</div>
+    <div class="partner-tags">
+      <span class="ptag adobe">Adobe</span>
+      <span class="ptag acn">Accenture</span>
+      <span class="ptag sf">Salesforce</span>
+    </div>
+  </div>
+
+  <div class="thesis">Agentic systems are only as good as their <em>ground truth.</em><br>Fullstory is the ground truth.</div>
+  <div class="thesis-sub">
+    Adobe Experience Platform Agents, Salesforce Agentforce, and every agent fleet Accenture delivers run on top of CDP and Data Cloud data.
+    The quality of what those agents do — and the trustworthiness of the decisions they make — is bounded entirely by the behavioral data underneath them.
+    <strong>Fullstory automatically captures, structures, and activates that behavioral data layer. No event instrumentation. No sampling. No six-month setup.</strong>
+  </div>
+
+  <span class="slabel gold">The Behavioral Data Stack — Databricks Medallion Model</span>
+  <div class="medallion-row">
+    <div class="med bronze">
+      <div class="med-label">Bronze</div>
+      <div class="med-title">Raw Capture — Fullcapture</div>
+      <div class="med-body">Every click, navigation, form change, error, and network event. Zero sampling. Zero tagging required.</div>
+    </div>
+    <div class="med silver">
+      <div class="med-label">Silver</div>
+      <div class="med-title">Structured Events</div>
+      <div class="med-body">Analytically precise, privacy-filtered, indexed behavioral data. Powers session replay, analytics, and Fullstory Anywhere.</div>
+    </div>
+    <div class="med gold">
+      <div class="med-label">Gold</div>
+      <div class="med-title">Semantic Facts</div>
+      <div class="med-body">Behavioral sequences and episode clusters mined from Silver and written back as first-class events. Meaning computed once — inherited by every downstream agent for free.</div>
+    </div>
+  </div>
+
+  <span class="slabel">The Three Partner Playbooks</span>
+  <div class="playbooks">
+    <div class="playbook adobe">
+      <span class="slabel adobe" style="margin-bottom:5px;">Adobe</span>
+      <div class="playbook-title">Speed-to-agentic-readiness</div>
+      <div class="playbook-body">
+        Fullstory streams all click attribution and page-visit data into AEP automatically. <strong>Six months of event instrumentation, day one.</strong>
+        Session Summary API generates the exact JSON payload Adobe Journey Optimizer needs — no embedding required.<br><br>
+        CJA shows what happened. <strong>Fullstory shows why.</strong> Adobe is already a Fullstory customer.
+      </div>
+    </div>
+    <div class="playbook acn">
+      <span class="slabel acn" style="margin-bottom:5px;">Accenture</span>
+      <div class="playbook-title">Architecturally trustworthy agents</div>
+      <div class="playbook-body">
+        The Fullstory behavioral layer becomes the observe-only evidence source in any agent fleet Accenture delivers. <strong>Agents can prove a failure happened — architecturally forbidden from asserting cause without corroboration.</strong>
+        Two independent sources must reconcile. Citation contracts on every claim. Abstention as success. <strong>Governance Accenture's enterprise clients can sign off on.</strong>
+      </div>
+    </div>
+    <div class="playbook sf">
+      <span class="slabel sf" style="margin-bottom:5px;">Salesforce</span>
+      <div class="playbook-title">Composite intent — what Data Cloud can't supply</div>
+      <div class="playbook-body">
+        Agentforce resolves cases grounded by Data Cloud's transactional record. <strong>But Data Cloud doesn't know who a user behaviorally is</strong> — whether they're purchase-ready or a chronic window-shopper.<br><br>
+        Fullstory's behavioral archetype per user — ingested into Data Cloud — is the composite intent layer that makes Agentforce decisioning meaningfully smarter.
+      </div>
+    </div>
+  </div>
+
+  <span class="slabel purple">Proof — 91K Users · 20 Behavioral Archetypes · Zero Event Preconfiguration</span>
+  <div class="data-strip">
+    <div class="data-row">
+      <div class="data-cell">
+        <div class="data-num">91K</div>
+        <div class="data-label">Users clustered — national QSR brand, 30-day behavioral window</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-num gold">20</div>
+        <div class="data-label">Behavioral archetypes emerged — no segment rules configured</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-num">12</div>
+        <div class="data-label">Enrichment signals per user — channel, intent, promo sensitivity, funnel depth</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-num gold">71%</div>
+        <div class="data-label">Lost revenue recovered at Chipotle from behavioral-led friction fixes</div>
+      </div>
+      <div class="data-cell">
+        <div class="data-num">145%</div>
+        <div class="data-label">Conversion rate increase at TBC Bank after behavioral-led changes</div>
+      </div>
+    </div>
+  </div>
+
+  <span class="slabel">The Ask — Three Asks. One Follow-Up.</span>
+  <div class="ask-strip">
+    <div class="ask-title">What needs to happen before we leave this room.</div>
+    <div class="ask-items">
+      <div class="ask-item">
+        <div class="ask-num">1</div>
+        <div class="ask-text"><strong>Name 2–3 overlap accounts</strong> as pilot candidates — shared clients where the trust-layer architecture and/or the Adobe data pipeline story would resonate. Friendly environments, existing relationships.</div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-num">2</div>
+        <div class="ask-text"><strong>Name a champion</strong> on each side — a named person from Adobe and from Accenture who owns carrying this forward internally. Not a to-do item. An owner.</div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-num">3</div>
+        <div class="ask-text"><strong>Agree on the vehicle</strong> — a joint solution brief, co-presented workshop, or shared POC proposal. The goal: a deliverable with all three logos on it, not a one-sided sell.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-l"><strong>Lane Greer</strong> · Fullstory<br>lane@fullstory.com</div>
+    <div class="footer-r">Confidential · October 2026<br>fullstory.com</div>
+  </div>
+
+</div>
+</body>
+</html>

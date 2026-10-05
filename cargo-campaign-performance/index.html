@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fullstory — CarGo Campaign Performance: Traffic to ProductPage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fs-deep:      #0a2828;
+  --fs-dark:      #0e3c3c;
+  --fs-mid:       #135050;
+  --fs-green:     #07c799;
+  --fs-green-dk:  #059573;
+  --fs-mint:      #c1f1e6;
+  --fs-pink:      #ff6f94;
+  --fs-pink-dk:   #ff2059;
+  --fs-orange:    #ffa12f;
+  --fs-purple:    #9e36f1;
+  --fs-purple-lt: #e9ccff;
+  --bg:           #081f1f;
+  --card:         #0d3333;
+  --card-2:       #0f3c3c;
+  --border:       #1a5050;
+  --border-lt:    #1e5c5c;
+  --text-hi:      #e8f8f5;
+  --text-md:      #8ec8bf;
+  --text-lo:      #3d7a76;
+  --issue:        #ff5a35;
+  --issue-dk:     #d93f1a;
+  --issue-lt:     #fff0eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text-hi); line-height: 1.6; font-size: 15px; }
+
+/* Topbar */
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(8,31,31,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 56px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.topbar-logos { display: flex; align-items: center; gap: 14px; }
+.topbar-logo-fs img { height: 22px; filter: brightness(0) invert(1); opacity: 0.9; }
+.topbar-divider { width: 1px; height: 20px; background: var(--border-lt); }
+.topbar-badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; background: rgba(7,199,153,0.12); border: 1px solid rgba(7,199,153,0.25); color: var(--fs-green); }
+.topbar-nav { display: flex; align-items: center; gap: 4px; }
+.topbar-nav a { color: var(--text-md); text-decoration: none; font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 6px; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.topbar-nav a:hover { background: rgba(7,199,153,0.1); color: var(--fs-green); }
+
+/* Hero */
+.hero { background: linear-gradient(160deg, #081f1f 0%, #0b2e2e 45%, #0a2525 100%); border-bottom: 1px solid var(--border); padding: 88px 56px 72px; position: relative; overflow: hidden; }
+.hero-glow-1 { position: absolute; top: -180px; right: -120px; width: 640px; height: 640px; background: radial-gradient(circle, rgba(7,199,153,0.07) 0%, transparent 65%); pointer-events: none; }
+.hero-glow-2 { position: absolute; bottom: -200px; left: -80px; width: 560px; height: 560px; background: radial-gradient(circle, rgba(255,90,53,0.05) 0%, transparent 65%); pointer-events: none; }
+.hero-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin-bottom: 28px; color: var(--fs-green); }
+.hero-badge-row { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+.hero-badge-row img { height: 34px; filter: brightness(0) invert(1); }
+.hero-report-badge { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-lo); padding: 5px 12px; border: 1px solid var(--border-lt); border-radius: 6px; }
+.hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -1.8px; line-height: 1.1; max-width: 860px; margin-bottom: 22px; background: linear-gradient(130deg, #e8f8f5 0%, #a8d8cf 60%, #07c799 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-sub { font-size: 19px; color: var(--text-md); max-width: 720px; font-weight: 400; line-height: 1.65; }
+.hero-tags { display: flex; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
+.hero-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.hero-tag.green  { background: rgba(7,199,153,0.18); border: 1px solid rgba(7,199,153,0.5);  color: #0ef5be; }
+.hero-tag.red    { background: rgba(255,90,53,0.18);  border: 1px solid rgba(255,90,53,0.5);  color: #ff7a5a; }
+.hero-tag.orange { background: rgba(255,163,47,0.18); border: 1px solid rgba(255,163,47,0.5); color: #ffc05e; }
+.hero-tag.purple { background: rgba(158,54,241,0.18); border: 1px solid rgba(158,54,241,0.5); color: #c06dff; }
+
+/* Stats Strip */
+.stats-strip { background: var(--fs-deep); border-bottom: 1px solid var(--border); padding: 0 56px; display: flex; }
+.stat-block { flex: 1; padding: 32px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative; }
+.stat-block + .stat-block::before { content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 1px; background: var(--border); }
+.stat-num { font-size: 52px; font-weight: 800; letter-spacing: -2.5px; line-height: 1; }
+.stat-num.s-green  { color: var(--fs-green); }
+.stat-num.s-red    { color: var(--issue); }
+.stat-num.s-orange { color: var(--fs-orange); }
+.stat-num.s-purple { color: #c06dff; }
+.stat-label { font-size: 12px; color: var(--text-lo); font-weight: 600; letter-spacing: 0.2px; text-align: center; max-width: 180px; line-height: 1.4; }
+.stat-sublabel { font-size: 10px; color: var(--text-lo); opacity: 0.6; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+
+/* Executive Summary */
+.exec-summary { background: linear-gradient(135deg, rgba(7,199,153,0.04) 0%, rgba(255,90,53,0.03) 100%); border-bottom: 1px solid var(--border); padding: 64px 56px; }
+.exec-inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 340px 1fr; gap: 64px; align-items: start; }
+.exec-left h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 18px; color: var(--text-hi); }
+.exec-left p { font-size: 14px; color: var(--text-md); line-height: 1.75; margin-bottom: 14px; }
+.exec-right { display: flex; flex-direction: column; gap: 12px; }
+.exec-link-card { display: flex; align-items: center; gap: 18px; padding: 18px 22px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
+.exec-link-card:hover { border-color: var(--border-lt); background: var(--card-2); transform: translateX(3px); }
+.exec-link-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.exec-link-text h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 2px; }
+.exec-link-text p { font-size: 12px; color: var(--text-md); line-height: 1.4; }
+.exec-link-arrow { margin-left: auto; color: var(--text-lo); font-size: 16px; flex-shrink: 0; transition: color 0.15s; }
+.exec-link-card:hover .exec-link-arrow { color: var(--fs-green); }
+
+/* Layout */
+.page-content { max-width: 1200px; margin: 0 auto; padding: 72px 56px; }
+.section { margin-bottom: 88px; }
+.section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; margin-bottom: 10px; }
+.section-title { font-size: 30px; font-weight: 800; letter-spacing: -0.9px; margin-bottom: 10px; color: var(--text-hi); }
+.section-desc { color: var(--text-md); font-size: 16px; max-width: 820px; line-height: 1.7; margin-bottom: 40px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+/* Callout */
+.callout { background: rgba(7,199,153,0.04); border: 1px solid rgba(7,199,153,0.14); border-left: 3px solid var(--fs-green); border-radius: 8px; padding: 15px 20px; font-size: 13px; color: var(--text-md); line-height: 1.65; margin-bottom: 28px; }
+.callout strong { color: var(--fs-green); }
+.callout.red { background: rgba(255,90,53,0.04); border-color: rgba(255,90,53,0.14); border-left-color: var(--issue); }
+.callout.red strong { color: var(--issue); }
+.callout.orange { background: rgba(255,163,47,0.04); border-color: rgba(255,163,47,0.14); border-left-color: var(--fs-orange); }
+.callout.orange strong { color: var(--fs-orange); }
+
+/* Comparison Table */
+.compare-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compare-table thead tr { background: rgba(0,0,0,0.2); }
+.compare-table th { padding: 13px 20px; text-align: left; font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; border-bottom: 1px solid var(--border); }
+.compare-table th.right { text-align: right; }
+.compare-table td { padding: 13px 20px; border-bottom: 1px solid rgba(26,80,80,0.4); vertical-align: middle; color: var(--text-md); line-height: 1.5; }
+.compare-table td.right { text-align: right; font-variant-numeric: tabular-nums; }
+.compare-table td.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: var(--text-hi); }
+.compare-table td:first-child { color: var(--text-hi); font-weight: 600; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+.compare-table tfoot td { background: rgba(0,0,0,0.25); font-weight: 800; color: var(--text-hi); border-top: 1px solid var(--border); border-bottom: none; }
+
+/* Conversion rate cell colors */
+.conv-high  { color: #0ef5be; font-weight: 700; }
+.conv-mid   { color: var(--fs-orange); font-weight: 700; }
+.conv-low   { color: var(--text-md); font-weight: 600; }
+.conv-poor  { color: #ff7a5a; font-weight: 700; }
+
+/* Delta badges */
+.delta-pill { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.delta-pill.down { background: rgba(255,90,53,0.12); border: 1px solid rgba(255,90,53,0.3); color: #ff7a5a; }
+.delta-pill.up   { background: rgba(7,199,153,0.12); border: 1px solid rgba(7,199,153,0.3); color: #0ef5be; }
+.delta-pill.flat { background: rgba(158,54,241,0.1); border: 1px solid rgba(158,54,241,0.25); color: #c06dff; }
+
+/* Metric Tile */
+.tile-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+.metric-tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.metric-tile-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.metric-tile-label { font-size: 11px; font-weight: 700; color: var(--text-lo); text-transform: uppercase; letter-spacing: 1px; line-height: 1.3; }
+.metric-tile-num { font-size: 34px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; }
+.metric-tile-sub { font-size: 11px; color: var(--text-lo); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.metric-tile-footer { font-size: 11px; color: var(--text-lo); line-height: 1.4; }
+.metric-tile-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+.badge-red    { background: rgba(255,90,53,0.12);  border: 1px solid rgba(255,90,53,0.3);  color: #ff7a5a; }
+.badge-orange { background: rgba(255,163,47,0.12); border: 1px solid rgba(255,163,47,0.3); color: #ffc05e; }
+.badge-green  { background: rgba(7,199,153,0.12);  border: 1px solid rgba(7,199,153,0.3);  color: #0ef5be; }
+.badge-purple { background: rgba(158,54,241,0.12); border: 1px solid rgba(158,54,241,0.3); color: #c06dff; }
+
+/* Daily trend chart */
+.trend-chart { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 28px; }
+.trend-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; gap: 16px; flex-wrap: wrap; }
+.trend-title { font-size: 15px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.2px; }
+.trend-legend { display: flex; gap: 16px; font-size: 11px; color: var(--text-lo); }
+.trend-legend-item { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; }
+.trend-legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
+.trend-bars { display: flex; align-items: stretch; gap: 2px; height: 160px; position: relative; border-bottom: 1px solid var(--border-lt); margin-bottom: 8px; }
+.trend-bars::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(to top, transparent 0, transparent calc(25% - 1px), rgba(26,80,80,0.35) calc(25% - 1px), rgba(26,80,80,0.35) 25%); pointer-events: none; }
+.trend-bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; height: 100%; }
+.trend-bar-fill { width: 100%; border-radius: 2px 2px 0 0; min-height: 2px; }
+.trend-bar-fill.prior   { background: linear-gradient(180deg, rgba(158,54,241,0.55) 0%, rgba(158,54,241,0.22) 100%); border: 1px solid rgba(158,54,241,0.45); border-bottom: none; }
+.trend-bar-fill.current { background: linear-gradient(180deg, rgba(7,199,153,0.55) 0%, rgba(7,199,153,0.22) 100%); border: 1px solid rgba(7,199,153,0.45); border-bottom: none; }
+.trend-bar-fill.partial { background: linear-gradient(180deg, rgba(7,199,153,0.25) 0%, rgba(7,199,153,0.10) 100%); border: 1px dashed rgba(7,199,153,0.45); border-bottom: none; }
+.trend-xaxis { display: flex; gap: 2px; font-size: 9px; color: var(--text-lo); font-family: 'SF Mono', monospace; margin-top: 4px; }
+.trend-xaxis-tick { flex: 1; text-align: center; min-width: 0; letter-spacing: -0.2px; }
+.trend-xaxis-tick.label { color: var(--text-md); font-weight: 600; }
+.trend-divider { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border-lt); z-index: 5; }
+.trend-divider-label { position: absolute; top: 6px; transform: translateX(-50%); font-size: 9px; color: var(--text-lo); font-family: 'SF Mono', monospace; white-space: nowrap; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; padding: 2px 6px; background: var(--card); border: 1px solid var(--border-lt); border-radius: 3px; }
+
+/* Window summary row under chart */
+.window-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border-lt); }
+.window-cell { display: flex; flex-direction: column; gap: 4px; }
+.window-cell-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-lo); font-weight: 700; }
+.window-cell-num { font-size: 22px; font-weight: 800; color: var(--text-hi); letter-spacing: -0.6px; font-variant-numeric: tabular-nums; }
+.window-cell-sub { font-size: 11px; color: var(--text-lo); }
+
+/* Recommendation card */
+.rec-card { background: linear-gradient(135deg, rgba(7,199,153,0.06) 0%, rgba(255,90,53,0.03) 100%); border: 1px solid rgba(7,199,153,0.18); border-radius: 18px; padding: 44px; }
+.rec-card > h3 { font-size: 24px; font-weight: 800; letter-spacing: -0.7px; margin-bottom: 14px; color: var(--text-hi); }
+.rec-card > p { color: var(--text-md); font-size: 15px; line-height: 1.7; max-width: 760px; margin-bottom: 0; }
+.rec-tiers { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+.rec-tier { display: flex; gap: 20px; align-items: flex-start; padding: 20px 24px; background: rgba(0,0,0,0.22); border-radius: 12px; border: 1px solid var(--border); }
+.tier-badge { flex-shrink: 0; padding: 4px 11px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+.t-p1   { background: rgba(255,90,53,0.15);  color: var(--issue); }
+.t-p2   { background: rgba(255,163,47,0.12); color: var(--fs-orange); }
+.t-p3   { background: rgba(158,54,241,0.12); color: #c06dff; }
+.t-p4   { background: rgba(7,199,153,0.12);  color: var(--fs-green); }
+.rec-tier-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.2px; color: var(--text-hi); }
+.rec-tier-content p { font-size: 13px; color: var(--text-md); line-height: 1.6; }
+
+/* Strength Cards */
+.strength-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.strength-card-header { padding: 20px 26px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.strength-card-header.issue { border-top: 3px solid var(--issue); }
+.strength-card-header.fix   { border-top: 3px solid var(--fs-green); }
+.strength-card-header.warn  { border-top: 3px solid var(--fs-orange); }
+.strength-card-header h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-hi); }
+.strength-card-body { padding: 22px 26px; display: flex; flex-direction: column; gap: 14px; }
+.strength-item { display: flex; align-items: flex-start; gap: 12px; }
+.strength-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.si-green  { background: rgba(7,199,153,0.1); }
+.si-red    { background: rgba(255,90,53,0.1); }
+.si-orange { background: rgba(255,163,47,0.1); }
+.si-purple { background: rgba(158,54,241,0.1); }
+.strength-text h4 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 3px; }
+.strength-text p  { font-size: 12px; color: var(--text-md); line-height: 1.6; }
+
+/* Evidence chips / links */
+.evidence-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.evidence-chips.bordered { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(26,80,80,0.35); }
+.evidence-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-lo); font-weight: 600; text-decoration: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 9px; letter-spacing: 0.3px; transition: color 0.12s, border-color 0.12s; }
+.evidence-chip:hover { color: var(--fs-green); border-color: rgba(7,199,153,0.3); }
+.session-link { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--fs-green); font-weight: 700; text-decoration: none; padding: 6px 14px; border: 1px solid rgba(7,199,153,0.25); border-radius: 6px; background: rgba(7,199,153,0.04); transition: background 0.15s, border-color 0.15s; }
+.session-link:hover { background: rgba(7,199,153,0.12); border-color: rgba(7,199,153,0.4); }
+
+/* ══════════════════════════════════════════════════════════════
+   FUNNEL — Vertical Bar Chart (design-system component)
+   ══════════════════════════════════════════════════════════════ */
+.vbar-chart {
+  display: flex;
+  align-items: flex-end;
+  height: 260px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.vbar-chart::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to top,
+    transparent 0px,
+    transparent calc(25% - 1px),
+    rgba(26,80,80,0.35) calc(25% - 1px),
+    rgba(26,80,80,0.35) 25%
+  );
+  pointer-events: none;
+}
+.vbar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+.vbar-col:not(:last-child)::after {
+  content: attr(data-drop);
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--issue);
+  background: var(--card);
+  border: 1px solid rgba(255,90,53,0.3);
+  border-radius: 3px;
+  padding: 3px 7px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.vbar-col[data-drop-type="pass"]::after {
+  color: var(--fs-orange);
+  border-color: rgba(255,163,47,0.3);
+}
+.vbar-col[data-drop-type="gain"]::after {
+  color: var(--fs-green);
+  border-color: rgba(7,199,153,0.3);
+}
+.vbar-spacer { flex: 1; }
+.vbar-bar {
+  position: relative;
+  width: calc(100% - 14px);
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vbar-bar.entry   { background: linear-gradient(180deg, rgba(7,199,153,0.55)  0%, rgba(7,199,153,0.22) 100%); border: 1px solid rgba(7,199,153,0.4);  border-bottom: none; justify-content: flex-start; padding-top: 12px; overflow: hidden; }
+.vbar-bar.survive { background: linear-gradient(180deg, rgba(255,163,47,0.6)  0%, rgba(255,163,47,0.22) 100%); border: 1px solid rgba(255,163,47,0.4); border-bottom: none; min-height: 28px; }
+.vbar-bar.wall    { background: linear-gradient(180deg, rgba(255,90,53,0.62)  0%, rgba(255,90,53,0.26) 100%); border: 1px solid rgba(255,90,53,0.4);   border-bottom: none; min-height: 22px; }
+.vbar-bar.convert { background: linear-gradient(180deg, rgba(7,199,153,0.55)  0%, rgba(7,199,153,0.2) 100%);  border: 1px solid rgba(7,199,153,0.38); border-bottom: none; min-height: 18px; }
+
+/* Labels inside entry bar (always tall enough) */
+.vbar-bar.entry .vbar-val { font-size: 13px; font-weight: 800; letter-spacing: -0.3px; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; }
+.vbar-bar.entry .vbar-pct { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+/* Labels floated above shorter bars — readable regardless of bar height */
+.vbar-bar.survive .vbar-val,
+.vbar-bar.wall .vbar-val,
+.vbar-bar.convert .vbar-val {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--text-hi);
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  z-index: 6;
+}
+.vbar-bar.survive .vbar-pct,
+.vbar-bar.wall .vbar-pct,
+.vbar-bar.convert .vbar-pct {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 22px);
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-md);
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 6;
+}
+.vbar-label { text-align: center; padding: 12px 4px 0; font-size: 11px; font-weight: 600; color: var(--text-lo); line-height: 1.35; }
+.vbar-label strong { display: block; font-weight: 800; color: var(--text-md); font-size: 11px; margin-bottom: 2px; }
+.vbar-labels { display: flex; margin-top: 0; }
+
+/* Mini share bar inside table cells */
+.share-bar-track { display: inline-block; width: 64px; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; vertical-align: middle; margin-right: 8px; }
+.share-bar-fill { height: 100%; border-radius: 3px; background: var(--fs-green); }
+.share-bar-fill.top    { background: linear-gradient(90deg, var(--fs-green) 0%, #0ef5be 100%); }
+.share-bar-fill.mid    { background: var(--fs-orange); }
+.share-bar-fill.low    { background: var(--fs-purple); }
+
+/* Doc Footer */
+.doc-footer { border-top: 1px solid var(--border); padding: 30px 56px; display: flex; justify-content: space-between; align-items: center; color: var(--text-lo); font-size: 12px; gap: 24px; flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 960px) {
+  .topbar { padding: 12px 20px; }
+  .topbar-nav { display: none; }
+  .hero { padding: 56px 20px 48px; }
+  .hero h1 { font-size: 32px; }
+  .exec-inner { grid-template-columns: 1fr; gap: 32px; }
+  .exec-summary { padding: 40px 20px; }
+  .page-content { padding: 48px 20px; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .window-summary { grid-template-columns: 1fr; }
+  .stats-strip { flex-direction: column; padding: 0 20px; }
+  .stat-block + .stat-block::before { display: none; }
+  .stat-block { border-top: 1px solid var(--border); }
+  .doc-footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logos">
+    <div class="topbar-logo-fs">
+      <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" />
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-badge">CarGo Campaign Performance</div>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#window-compare">2w Comparison</a>
+    <a href="#campaigns">Campaigns</a>
+    <a href="#funnel">Revenue Funnel</a>
+    <a href="#sources">Source &amp; Medium</a>
+    <a href="#winners">Winners &amp; Laggards</a>
+    <a href="#friction">Product Friction</a>
+    <a href="#recommendations">Recommendations</a>
+    <a href="./field-guide/" style="color:var(--fs-orange);border:1px solid rgba(255,163,47,0.3);">▸ Field Guide</a>
+  </nav>
+</div>
+
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-eyebrow">Marketing Analytics — 2026-04-04 → 2026-04-17</div>
+  <div class="hero-badge-row">
+    <img src="https://www.fullstory.com/images/fs_logo.svg" alt="Fullstory" />
+    <div class="hero-report-badge">Campaign → ProductPage Report</div>
+  </div>
+  <h1>UTM campaigns are<br>holding up better than the site.</h1>
+  <p class="hero-sub">
+    ProductPage traffic dropped 38% in the last two weeks, but UTM-tagged campaigns only lost 26%. Paid channels are gaining share — the decline is coming from non-campaign traffic. This report ranks every active UTM campaign by its ability to put users in front of a car.
+  </p>
+  <div class="hero-tags">
+    <span class="hero-tag red">ProductPage views −38%</span>
+    <span class="hero-tag orange">UTM landings −26%</span>
+    <span class="hero-tag green">UTM users · 7.3× revenue rate</span>
+    <span class="hero-tag green">vip_launch_2025 · 27.6% pay</span>
+    <span class="hero-tag purple">Newsletter &gt; Google end-to-end</span>
+  </div>
+</section>
+
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-block">
+    <div class="stat-sublabel">Current 2w</div>
+    <div class="stat-num s-red">12,237</div>
+    <div class="stat-label">ProductPage views<br>(Apr 4 → Apr 17)</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-sublabel">Δ vs Prior 2w</div>
+    <div class="stat-num s-red">−38%</div>
+    <div class="stat-label">Overall ProductPage<br>traffic decline</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-sublabel">Campaign Traffic</div>
+    <div class="stat-num s-orange">−26%</div>
+    <div class="stat-label">UTM landings<br>Δ vs prior 2w</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-sublabel">UTM Share of PDP</div>
+    <div class="stat-num s-green">13.0%</div>
+    <div class="stat-label">Up from 10.9%<br>prior 2w</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-sublabel">Revenue Lift</div>
+    <div class="stat-num s-green">7.3×</div>
+    <div class="stat-label">UTM vs non-UTM<br>revenue conversion</div>
+  </div>
+</div>
+
+
+<!-- EXECUTIVE SUMMARY -->
+<section class="exec-summary" id="executive-summary">
+  <div class="exec-inner">
+    <div class="exec-left">
+      <div class="section-label">TL;DR</div>
+      <h2>Campaigns gained share while the funnel shrank.</h2>
+      <p>Between Apr 4 and Apr 17, CarGo's ProductPage served 12,237 views — a 38% drop from the prior two weeks. Over the same window, UTM-tagged landings fell only 26%. Net effect: campaigns now account for 13.0% of ProductPage reach, up from 10.9%, meaning paid and owned channels held up better than organic/direct traffic.</p>
+      <p>Not all campaigns held up equally. <strong style="color:var(--fs-green);">vip_launch_2025</strong> converts 37.9% of its traffic onto ProductPage — the best rate of any active campaign. <strong style="color:var(--fs-green);">summer_sale_2024</strong> is second at 29.1%. Four campaigns (holiday_promo_2025, affiliate_2025, seasonal, electric_rental) convert below 20% and are candidates for creative or landing-page review.</p>
+      <p>On the channel side, <strong>email beats CPC</strong> for PDP reach: newsletter has a 30.0% PDP-reach rate against google's 25.1%, even though google drives more absolute volume. Email medium outperforms CPC (29.1% vs 24.1%).</p>
+      <p>The story extends all the way through revenue. UTM-tagged users complete the funnel at <strong style="color:var(--fs-green);">7.3× the rate of non-UTM traffic</strong> (14.6% vs 2.0% landing-to-revenue). Campaigns account for only 8.6% of total traffic but <strong style="color:var(--fs-green);">62% of all Revenue Events</strong>. <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">vip_launch_2025</code> lands 27.6% of its users at Revenue; newsletter source converts end-to-end at 19.8% vs google's 14.4%.</p>
+    </div>
+    <div class="exec-right">
+      <a href="#window-compare" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,90,53,0.1);">📉</div>
+        <div class="exec-link-text">
+          <h4>Two-Week Comparison</h4>
+          <p>ProductPage and campaign trends, current 2w vs prior 2w, day by day.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#campaigns" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">🎯</div>
+        <div class="exec-link-text">
+          <h4>Campaign Leaderboard</h4>
+          <p>All active UTM campaigns ranked by ProductPage-reach rate.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#funnel" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">💰</div>
+        <div class="exec-link-text">
+          <h4>Revenue Funnel</h4>
+          <p>Full drop-off through Revenue Event, UTM users vs everyone.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#sources" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(158,54,241,0.1);">📡</div>
+        <div class="exec-link-text">
+          <h4>Source &amp; Medium</h4>
+          <p>Which channels and mediums deliver qualified ProductPage traffic.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#winners" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,163,47,0.1);">🏆</div>
+        <div class="exec-link-text">
+          <h4>Winners &amp; Laggards</h4>
+          <p>Where to double down vs where to pull budget or rework creative.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#friction" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(255,90,53,0.1);">🛠️</div>
+        <div class="exec-link-text">
+          <h4>Product Friction (non-campaign)</h4>
+          <p>New regressions and ongoing product issues capping every campaign's ceiling.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+      <a href="#recommendations" class="exec-link-card">
+        <div class="exec-link-icon" style="background:rgba(7,199,153,0.1);">✅</div>
+        <div class="exec-link-text">
+          <h4>Recommendations</h4>
+          <p>Concrete actions for the marketing team for the next cycle.</p>
+        </div>
+        <div class="exec-link-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-content">
+
+<!-- SECTION 1: WINDOW COMPARISON -->
+<section class="section" id="window-compare">
+  <div class="section-label">Section 01</div>
+  <div class="section-title">Two-Week Comparison</div>
+  <p class="section-desc">ProductPage traffic and UTM-tagged landings, Apr 4–17 (current 2w, green) against Mar 21–Apr 3 (prior 2w, purple). The last bar in each current-window series is Apr 17, a partial day — totals are reported both raw and excluding the partial day.</p>
+
+  <div class="callout red">
+    <strong>Headline:</strong> Both ProductPage traffic and UTM-tagged traffic fell, but UTM held up better. Organic/direct traffic is driving the overall decline — campaigns are a smaller share of a shrinking pie, but a larger share of what remains.
+    <div class="evidence-chips" style="margin-top:12px;">
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/907915089?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ ProductPage daily trend</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1495863321?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ UTM landings daily trend</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/930550905?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ UTM landings among PDP visitors</a>
+    </div>
+  </div>
+
+  <!-- KPI Tiles: 2w comparison -->
+  <div class="tile-row" style="margin-bottom: 36px;">
+
+    <div class="metric-tile" style="border-top: 2px solid var(--issue);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">ProductPage Views</div>
+        <div class="metric-tile-badge badge-red">−38%</div>
+      </div>
+      <div class="metric-tile-num" style="color: var(--issue);">12,237</div>
+      <div class="metric-tile-sub">vs 19,719 prior 2w</div>
+      <div class="metric-tile-footer">874/day avg (vs 1,409/day prior)</div>
+    </div>
+
+    <div class="metric-tile" style="border-top: 2px solid var(--fs-orange);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">All UTM Landings</div>
+        <div class="metric-tile-badge badge-orange">−26%</div>
+      </div>
+      <div class="metric-tile-num" style="color: var(--fs-orange);">6,434</div>
+      <div class="metric-tile-sub">vs 8,742 prior 2w</div>
+      <div class="metric-tile-footer">460/day (vs 624/day prior)</div>
+    </div>
+
+    <div class="metric-tile" style="border-top: 2px solid var(--fs-orange);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">UTM → ProductPage</div>
+        <div class="metric-tile-badge badge-orange">−26%</div>
+      </div>
+      <div class="metric-tile-num" style="color: var(--fs-orange);">1,594</div>
+      <div class="metric-tile-sub">vs 2,154 prior 2w</div>
+      <div class="metric-tile-footer">UTM landings that reach PDP</div>
+    </div>
+
+    <div class="metric-tile" style="border-top: 2px solid var(--fs-green);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">UTM Share of PDP</div>
+        <div class="metric-tile-badge badge-green">+2.1pp</div>
+      </div>
+      <div class="metric-tile-num" style="color: var(--fs-green);">13.0%</div>
+      <div class="metric-tile-sub">up from 10.9%</div>
+      <div class="metric-tile-footer">Campaigns gained share of a smaller pool</div>
+    </div>
+
+    <div class="metric-tile" style="border-top: 2px solid var(--fs-green);">
+      <div class="metric-tile-top">
+        <div class="metric-tile-label">UTM → PDP Rate</div>
+        <div class="metric-tile-badge badge-green">+0.0pp</div>
+      </div>
+      <div class="metric-tile-num" style="color: var(--fs-green);">24.8%</div>
+      <div class="metric-tile-sub">24.6% prior 2w</div>
+      <div class="metric-tile-footer">UTM landings → PDP — stable</div>
+    </div>
+
+  </div>
+
+  <!-- Daily Trend: ProductPage -->
+  <div class="trend-chart">
+    <div class="trend-header">
+      <div class="trend-title">ProductPage — daily views, last 28 days</div>
+      <div class="trend-legend">
+        <span class="trend-legend-item"><span class="trend-legend-swatch" style="background:#9e36f1;"></span> Prior 2w</span>
+        <span class="trend-legend-item"><span class="trend-legend-swatch" style="background:#07c799;"></span> Current 2w</span>
+        <span class="trend-legend-item"><span class="trend-legend-swatch" style="background:#07c799;opacity:0.5;border:1px dashed #07c799;"></span> Partial day</span>
+      </div>
+    </div>
+    <div class="trend-bars" id="pdp-trend">
+      <!-- Prior 2w: 2026-03-21 to 2026-04-03. Values normalized to max 1744. -->
+      <div class="trend-bar" title="2026-03-21: 1,672"><div class="trend-bar-fill prior" style="height:95.9%;"></div></div>
+      <div class="trend-bar" title="2026-03-22: 1,681"><div class="trend-bar-fill prior" style="height:96.4%;"></div></div>
+      <div class="trend-bar" title="2026-03-23: 1,744"><div class="trend-bar-fill prior" style="height:100%;"></div></div>
+      <div class="trend-bar" title="2026-03-24: 1,044"><div class="trend-bar-fill prior" style="height:59.9%;"></div></div>
+      <div class="trend-bar" title="2026-03-25: 1,291"><div class="trend-bar-fill prior" style="height:74.0%;"></div></div>
+      <div class="trend-bar" title="2026-03-26: 1,556"><div class="trend-bar-fill prior" style="height:89.2%;"></div></div>
+      <div class="trend-bar" title="2026-03-27: 1,417"><div class="trend-bar-fill prior" style="height:81.2%;"></div></div>
+      <div class="trend-bar" title="2026-03-28: 1,354"><div class="trend-bar-fill prior" style="height:77.6%;"></div></div>
+      <div class="trend-bar" title="2026-03-29: 1,181"><div class="trend-bar-fill prior" style="height:67.7%;"></div></div>
+      <div class="trend-bar" title="2026-03-30: 1,342"><div class="trend-bar-fill prior" style="height:76.9%;"></div></div>
+      <div class="trend-bar" title="2026-03-31: 1,379"><div class="trend-bar-fill prior" style="height:79.1%;"></div></div>
+      <div class="trend-bar" title="2026-04-01: 1,535"><div class="trend-bar-fill prior" style="height:88.0%;"></div></div>
+      <div class="trend-bar" title="2026-04-02: 1,442"><div class="trend-bar-fill prior" style="height:82.7%;"></div></div>
+      <div class="trend-bar" title="2026-04-03: 1,081"><div class="trend-bar-fill prior" style="height:62.0%;"></div></div>
+      <!-- Current 2w: 2026-04-04 to 2026-04-17 -->
+      <div class="trend-bar" title="2026-04-04: 1,355"><div class="trend-bar-fill current" style="height:77.7%;"></div></div>
+      <div class="trend-bar" title="2026-04-05: 1,195"><div class="trend-bar-fill current" style="height:68.5%;"></div></div>
+      <div class="trend-bar" title="2026-04-06: 924"><div class="trend-bar-fill current" style="height:53.0%;"></div></div>
+      <div class="trend-bar" title="2026-04-07: 1,024"><div class="trend-bar-fill current" style="height:58.7%;"></div></div>
+      <div class="trend-bar" title="2026-04-08: 1,457"><div class="trend-bar-fill current" style="height:83.5%;"></div></div>
+      <div class="trend-bar" title="2026-04-09: 1,584"><div class="trend-bar-fill current" style="height:90.8%;"></div></div>
+      <div class="trend-bar" title="2026-04-10: 897"><div class="trend-bar-fill current" style="height:51.4%;"></div></div>
+      <div class="trend-bar" title="2026-04-11: 945"><div class="trend-bar-fill current" style="height:54.2%;"></div></div>
+      <div class="trend-bar" title="2026-04-12: 636"><div class="trend-bar-fill current" style="height:36.5%;"></div></div>
+      <div class="trend-bar" title="2026-04-13: 251"><div class="trend-bar-fill current" style="height:14.4%;"></div></div>
+      <div class="trend-bar" title="2026-04-14: 690"><div class="trend-bar-fill current" style="height:39.6%;"></div></div>
+      <div class="trend-bar" title="2026-04-15: 673"><div class="trend-bar-fill current" style="height:38.6%;"></div></div>
+      <div class="trend-bar" title="2026-04-16: 432"><div class="trend-bar-fill current" style="height:24.8%;"></div></div>
+      <div class="trend-bar" title="2026-04-17: 174 (partial)"><div class="trend-bar-fill partial" style="height:10.0%;"></div></div>
+      <div class="trend-divider" style="left: 50%;"></div>
+    </div>
+    <div class="trend-xaxis">
+      <div class="trend-xaxis-tick label">Mar 21</div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick label">Apr 4</div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick label">Apr 17</div>
+    </div>
+    <div class="window-summary">
+      <div class="window-cell">
+        <div class="window-cell-label">Prior 2w</div>
+        <div class="window-cell-num" style="color:#c06dff;">19,719</div>
+        <div class="window-cell-sub">1,409 / day</div>
+      </div>
+      <div class="window-cell">
+        <div class="window-cell-label">Current 2w</div>
+        <div class="window-cell-num" style="color:var(--fs-green);">12,237</div>
+        <div class="window-cell-sub">874 / day · <span style="color:var(--text-md);">ex. partial: 928 / day</span></div>
+      </div>
+      <div class="window-cell">
+        <div class="window-cell-label">Delta</div>
+        <div class="window-cell-num" style="color:var(--issue);">−37.9%</div>
+        <div class="window-cell-sub">−34.1% on daily-avg basis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Trend: UTM Landings -->
+  <div class="trend-chart">
+    <div class="trend-header">
+      <div class="trend-title">UTM-tagged landings — daily count, last 28 days</div>
+      <div class="trend-legend">
+        <span class="trend-legend-item"><span class="trend-legend-swatch" style="background:#9e36f1;"></span> Prior 2w</span>
+        <span class="trend-legend-item"><span class="trend-legend-swatch" style="background:#07c799;"></span> Current 2w</span>
+        <span class="trend-legend-item"><span class="trend-legend-swatch" style="background:#07c799;opacity:0.5;border:1px dashed #07c799;"></span> Partial day</span>
+      </div>
+    </div>
+    <div class="trend-bars">
+      <!-- Prior 2w: max 889 -->
+      <div class="trend-bar" title="2026-03-21: 806"><div class="trend-bar-fill prior" style="height:90.7%;"></div></div>
+      <div class="trend-bar" title="2026-03-22: 889"><div class="trend-bar-fill prior" style="height:100%;"></div></div>
+      <div class="trend-bar" title="2026-03-23: 792"><div class="trend-bar-fill prior" style="height:89.1%;"></div></div>
+      <div class="trend-bar" title="2026-03-24: 487"><div class="trend-bar-fill prior" style="height:54.8%;"></div></div>
+      <div class="trend-bar" title="2026-03-25: 653"><div class="trend-bar-fill prior" style="height:73.5%;"></div></div>
+      <div class="trend-bar" title="2026-03-26: 828"><div class="trend-bar-fill prior" style="height:93.1%;"></div></div>
+      <div class="trend-bar" title="2026-03-27: 630"><div class="trend-bar-fill prior" style="height:70.9%;"></div></div>
+      <div class="trend-bar" title="2026-03-28: 479"><div class="trend-bar-fill prior" style="height:53.9%;"></div></div>
+      <div class="trend-bar" title="2026-03-29: 292"><div class="trend-bar-fill prior" style="height:32.8%;"></div></div>
+      <div class="trend-bar" title="2026-03-30: 597"><div class="trend-bar-fill prior" style="height:67.2%;"></div></div>
+      <div class="trend-bar" title="2026-03-31: 528"><div class="trend-bar-fill prior" style="height:59.4%;"></div></div>
+      <div class="trend-bar" title="2026-04-01: 733"><div class="trend-bar-fill prior" style="height:82.5%;"></div></div>
+      <div class="trend-bar" title="2026-04-02: 643"><div class="trend-bar-fill prior" style="height:72.3%;"></div></div>
+      <div class="trend-bar" title="2026-04-03: 385"><div class="trend-bar-fill prior" style="height:43.3%;"></div></div>
+      <!-- Current 2w -->
+      <div class="trend-bar" title="2026-04-04: 548"><div class="trend-bar-fill current" style="height:61.6%;"></div></div>
+      <div class="trend-bar" title="2026-04-05: 352"><div class="trend-bar-fill current" style="height:39.6%;"></div></div>
+      <div class="trend-bar" title="2026-04-06: 176"><div class="trend-bar-fill current" style="height:19.8%;"></div></div>
+      <div class="trend-bar" title="2026-04-07: 339"><div class="trend-bar-fill current" style="height:38.1%;"></div></div>
+      <div class="trend-bar" title="2026-04-08: 703"><div class="trend-bar-fill current" style="height:79.1%;"></div></div>
+      <div class="trend-bar" title="2026-04-09: 829"><div class="trend-bar-fill current" style="height:93.2%;"></div></div>
+      <div class="trend-bar" title="2026-04-10: 430"><div class="trend-bar-fill current" style="height:48.4%;"></div></div>
+      <div class="trend-bar" title="2026-04-11: 783"><div class="trend-bar-fill current" style="height:88.1%;"></div></div>
+      <div class="trend-bar" title="2026-04-12: 493"><div class="trend-bar-fill current" style="height:55.5%;"></div></div>
+      <div class="trend-bar" title="2026-04-13: 234"><div class="trend-bar-fill current" style="height:26.3%;"></div></div>
+      <div class="trend-bar" title="2026-04-14: 520"><div class="trend-bar-fill current" style="height:58.5%;"></div></div>
+      <div class="trend-bar" title="2026-04-15: 560"><div class="trend-bar-fill current" style="height:63.0%;"></div></div>
+      <div class="trend-bar" title="2026-04-16: 370"><div class="trend-bar-fill current" style="height:41.6%;"></div></div>
+      <div class="trend-bar" title="2026-04-17: 97 (partial)"><div class="trend-bar-fill partial" style="height:10.9%;"></div></div>
+      <div class="trend-divider" style="left: 50%;"></div>
+    </div>
+    <div class="trend-xaxis">
+      <div class="trend-xaxis-tick label">Mar 21</div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick label">Apr 4</div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div><div class="trend-xaxis-tick"></div>
+      <div class="trend-xaxis-tick label">Apr 17</div>
+    </div>
+    <div class="window-summary">
+      <div class="window-cell">
+        <div class="window-cell-label">Prior 2w</div>
+        <div class="window-cell-num" style="color:#c06dff;">8,742</div>
+        <div class="window-cell-sub">624 / day</div>
+      </div>
+      <div class="window-cell">
+        <div class="window-cell-label">Current 2w</div>
+        <div class="window-cell-num" style="color:var(--fs-green);">6,434</div>
+        <div class="window-cell-sub">460 / day</div>
+      </div>
+      <div class="window-cell">
+        <div class="window-cell-label">Delta</div>
+        <div class="window-cell-num" style="color:var(--fs-orange);">−26.4%</div>
+        <div class="window-cell-sub">Campaigns lost less ground</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout orange">
+    <strong>What this means:</strong> The bigger the gap between ProductPage decline (−38%) and UTM landings decline (−26%), the more evidence that <em>organic and direct channels</em> are where traffic is leaking. Either SEO/PR-driven traffic is softening, repeat visitors are slowing down, or referral traffic has shifted. Campaigns are not the problem — but they also aren't growing absolute volume right now.
+  </div>
+</section>
+
+
+<!-- SECTION 2: CAMPAIGN LEADERBOARD -->
+<section class="section" id="campaigns">
+  <div class="section-label">Section 02</div>
+  <div class="section-title">Campaign Leaderboard</div>
+  <p class="section-desc">Every active UTM campaign, ranked by how many of its landers reached ProductPage. Reach volume is the 30-day ProductPage-visitor count; reach rate is that volume divided by total landings for the campaign over the same window.</p>
+
+  <div class="callout">
+    <strong>Methodology:</strong> "Reach" counts users who landed with <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">?utm_campaign=X</code> and visited the ProductPage anywhere in their session. Totals span a 30-day window because 2-week cells are too sparse for smaller campaigns. Rates are stable week-over-week; the trends in Section 01 apply uniformly.
+    <div class="evidence-chips" style="margin-top:12px;">
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/841406979?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ All UTM landings by campaign</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1495697180?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ PDP-visitor landings by campaign</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:P2WW49fGt3C4" target="_blank" class="evidence-chip">↗ ProductPage visitors segment</a>
+    </div>
+  </div>
+
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Campaign</th>
+          <th class="right">Total Landings (30d)</th>
+          <th class="right">Reached PDP (30d)</th>
+          <th class="right">Reach Rate</th>
+          <th class="right">Share of PDP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">vip_launch_2025</td>
+          <td class="right">2,401</td>
+          <td class="right">909</td>
+          <td class="right conv-high">37.9% ▲</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill top" style="width:58%"></span></span>22.1%</td>
+        </tr>
+        <tr>
+          <td class="mono">summer_sale_2024</td>
+          <td class="right">2,158</td>
+          <td class="right">629</td>
+          <td class="right conv-high">29.1% ▲</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill top" style="width:40%"></span></span>15.3%</td>
+        </tr>
+        <tr>
+          <td class="mono">back_to_school_2025</td>
+          <td class="right">401</td>
+          <td class="right">92</td>
+          <td class="right conv-mid">22.9%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:6%"></span></span>2.2%</td>
+        </tr>
+        <tr>
+          <td class="mono">spring_collection_2025</td>
+          <td class="right">456</td>
+          <td class="right">103</td>
+          <td class="right conv-mid">22.6%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:7%"></span></span>2.5%</td>
+        </tr>
+        <tr>
+          <td class="mono">display_2025</td>
+          <td class="right">1,520</td>
+          <td class="right">338</td>
+          <td class="right conv-mid">22.2%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill mid" style="width:22%"></span></span>8.2%</td>
+        </tr>
+        <tr>
+          <td class="mono">flash_sale_2025</td>
+          <td class="right">452</td>
+          <td class="right">99</td>
+          <td class="right conv-mid">21.9%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:6%"></span></span>2.4%</td>
+        </tr>
+        <tr>
+          <td class="mono">cargo_rental_2025</td>
+          <td class="right">4,677</td>
+          <td class="right">1,020</td>
+          <td class="right conv-mid">21.8%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill top" style="width:65%"></span></span>24.8%</td>
+        </tr>
+        <tr>
+          <td class="mono">content_2025</td>
+          <td class="right">1,532</td>
+          <td class="right">322</td>
+          <td class="right conv-low">21.0%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill mid" style="width:20%"></span></span>7.8%</td>
+        </tr>
+        <tr>
+          <td class="mono">weekend_special_2025</td>
+          <td class="right">464</td>
+          <td class="right">93</td>
+          <td class="right conv-low">20.0%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:6%"></span></span>2.3%</td>
+        </tr>
+        <tr>
+          <td class="mono">electric_rental</td>
+          <td class="right">440</td>
+          <td class="right">88</td>
+          <td class="right conv-low">20.0%</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:5%"></span></span>2.1%</td>
+        </tr>
+        <tr>
+          <td class="mono">seasonal</td>
+          <td class="right">247</td>
+          <td class="right">48</td>
+          <td class="right conv-poor">19.4% ▼</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:3%"></span></span>1.2%</td>
+        </tr>
+        <tr>
+          <td class="mono">affiliate_2025</td>
+          <td class="right">1,528</td>
+          <td class="right">296</td>
+          <td class="right conv-poor">19.4% ▼</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill mid" style="width:19%"></span></span>7.2%</td>
+        </tr>
+        <tr>
+          <td class="mono">holiday_promo_2025</td>
+          <td class="right">414</td>
+          <td class="right">79</td>
+          <td class="right conv-poor">19.1% ▼</td>
+          <td class="right"><span class="share-bar-track"><span class="share-bar-fill low" style="width:5%"></span></span>1.9%</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>All campaigns</td>
+          <td class="right">16,690</td>
+          <td class="right">4,116</td>
+          <td class="right">24.7%</td>
+          <td class="right">100%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="callout orange">
+    <strong>Read the table two ways.</strong> <em>Reach rate</em> measures creative/targeting quality — high means the people clicking your ads actually intend to rent. <em>Share of PDP</em> measures total contribution — high means the campaign is moving the needle on absolute traffic. A campaign can be a star on one and not the other (see cargo_rental_2025 — largest share, only mediocre rate).
+  </div>
+</section>
+
+
+<!-- SECTION 3: REVENUE FUNNEL -->
+<section class="section" id="funnel">
+  <div class="section-label">Section 03</div>
+  <div class="section-title">Full Funnel — Landing → Revenue</div>
+  <p class="section-desc">The Campaign Leaderboard stops at ProductPage. This section follows the same users all the way through checkout to the Revenue Event, and compares UTM-tagged users against the rest of the site.</p>
+
+  <div class="callout">
+    <strong>The payoff.</strong> UTM-tagged users fire a Revenue Event at <strong style="color:var(--fs-green);">14.6%</strong> of their landing rate — versus <strong style="color:var(--issue);">2.0%</strong> for non-UTM users. That's a <strong style="color:var(--fs-green);">7.3× lift</strong>. Campaigns are 8.6% of traffic but 62% of Revenue Events (1,933 of 3,117 in 30 days).
+    <div class="evidence-chips" style="margin-top:12px;">
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/491581852?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ Revenue Event (unique users)</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1674246945?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ Checkout (unique users)</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/446496413?utm_source=fullstory-mcp" target="_blank" class="evidence-chip">↗ ProductPage (unique users)</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:grROgoOxfAsi" target="_blank" class="evidence-chip">↗ UTM-tagged users segment</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo?completed=true&completeSessions=false" target="_blank" class="evidence-chip">↗ Managed: Purchase Funnel</a>
+    </div>
+  </div>
+
+  <!-- Funnel comparison: UTM-tagged vs All -->
+  <div class="two-col" style="margin-bottom: 36px;">
+
+    <!-- UTM-tagged funnel -->
+    <div style="background:var(--card);border:1px solid var(--border);border-top:3px solid var(--fs-green);border-radius:16px;padding:28px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <h3 style="font-size:15px;font-weight:700;color:var(--text-hi);letter-spacing:-0.2px;">UTM-tagged users</h3>
+        <div class="metric-tile-badge badge-green">7.3× revenue rate</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-lo);margin-bottom:24px;">Users who landed with any utm_campaign in the last 30d</div>
+
+      <div class="vbar-chart">
+        <!-- Entry: 13,272 = 100% -->
+        <div class="vbar-col" data-drop="−76.2%" data-drop-type="loss">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar entry" style="height:100%;">
+            <div class="vbar-val">13,272</div>
+            <div class="vbar-pct">100%</div>
+          </div>
+        </div>
+        <!-- PDP: 3,159 = 23.8% -->
+        <div class="vbar-col" data-drop="−34.8%" data-drop-type="loss">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar survive" style="height:23.8%;">
+            <div class="vbar-val">3,159</div>
+            <div class="vbar-pct">23.8%</div>
+          </div>
+        </div>
+        <!-- Checkout: 2,060 = 15.5% -->
+        <div class="vbar-col" data-drop="−6.2%" data-drop-type="pass">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar survive" style="height:15.5%;">
+            <div class="vbar-val">2,060</div>
+            <div class="vbar-pct">15.5%</div>
+          </div>
+        </div>
+        <!-- Revenue: 1,933 = 14.6% -->
+        <div class="vbar-col">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar convert" style="height:14.6%;">
+            <div class="vbar-val">1,933</div>
+            <div class="vbar-pct">14.6%</div>
+          </div>
+        </div>
+      </div>
+      <div class="vbar-labels">
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--fs-green);">Landing</strong>UTM entry</div>
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--fs-orange);">PDP</strong>Reached product</div>
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--fs-orange);">Checkout</strong>Reached cart</div>
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--fs-green);">Revenue</strong>14.6% landing→rev</div>
+      </div>
+    </div>
+
+    <!-- All users funnel -->
+    <div style="background:var(--card);border:1px solid var(--border);border-top:3px solid var(--issue);border-radius:16px;padding:28px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <h3 style="font-size:15px;font-weight:700;color:var(--text-hi);letter-spacing:-0.2px;">All users (non-UTM baseline)</h3>
+        <div class="metric-tile-badge badge-red">Reference</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-lo);margin-bottom:24px;">Every user with any session activity in the last 30d (154,141 total)</div>
+
+      <div class="vbar-chart">
+        <!-- Total: 154,141 = 100% -->
+        <div class="vbar-col" data-drop="−91.7%" data-drop-type="loss">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar entry" style="height:100%;">
+            <div class="vbar-val">154,141</div>
+            <div class="vbar-pct">100%</div>
+          </div>
+        </div>
+        <!-- PDP: 12,749 = 8.3% -->
+        <div class="vbar-col" data-drop="−72.2%" data-drop-type="loss">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar wall" style="height:8.3%;">
+            <div class="vbar-val">12,749</div>
+            <div class="vbar-pct">8.3%</div>
+          </div>
+        </div>
+        <!-- Checkout: 3,544 = 2.3% -->
+        <div class="vbar-col" data-drop="−12.1%" data-drop-type="pass">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar wall" style="height:2.3%;">
+            <div class="vbar-val">3,544</div>
+            <div class="vbar-pct">2.3%</div>
+          </div>
+        </div>
+        <!-- Revenue: 3,117 = 2.0% -->
+        <div class="vbar-col">
+          <div class="vbar-spacer"></div>
+          <div class="vbar-bar convert" style="height:2.0%;">
+            <div class="vbar-val">3,117</div>
+            <div class="vbar-pct">2.0%</div>
+          </div>
+        </div>
+      </div>
+      <div class="vbar-labels">
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--fs-green);">Entry</strong>Any user</div>
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--issue);">PDP</strong>Huge drop</div>
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--issue);">Checkout</strong>Cart reached</div>
+        <div class="vbar-label" style="flex:1"><strong style="color:var(--fs-green);">Revenue</strong>2.0% site-wide</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Stage conversion comparison -->
+  <div class="callout orange" style="margin-bottom: 36px;">
+    <strong>Where UTM users pull ahead.</strong> UTM-tagged users get to ProductPage at 2.9× the rate of baseline (23.8% vs 8.3%). That gap widens through the funnel: 6.7× better Checkout reach (15.5% vs 2.3%), 7.3× better landing-to-revenue (14.6% vs 2.0%). The <em>narrowest</em> gap is the last step — once anyone reaches Checkout, the complete rate is roughly comparable (93.8% UTM vs 87.9% baseline). The message: <strong style="color:var(--fs-green);">qualified top-of-funnel traffic is the whole game</strong>; the checkout flow itself is not the bottleneck.
+  </div>
+
+  <!-- Per-campaign revenue -->
+  <div style="margin-bottom: 36px;">
+    <h3 style="font-size:18px;font-weight:800;color:var(--text-hi);letter-spacing:-0.4px;margin-bottom:14px;">Revenue by campaign &mdash; top 3</h3>
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th class="right">Unique Users (30d)</th>
+            <th class="right">Reached PDP</th>
+            <th class="right">Revenue Users</th>
+            <th class="right">Landing → Revenue</th>
+            <th class="right">Share of UTM Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">vip_launch_2025</td>
+            <td class="right">2,340</td>
+            <td class="right">909</td>
+            <td class="right">646</td>
+            <td class="right conv-high">27.6% ▲</td>
+            <td class="right"><span class="share-bar-track"><span class="share-bar-fill top" style="width:55%"></span></span>33.4%</td>
+          </tr>
+          <tr>
+            <td class="mono">summer_sale_2024</td>
+            <td class="right">1,992</td>
+            <td class="right">629</td>
+            <td class="right">387</td>
+            <td class="right conv-mid">19.4%</td>
+            <td class="right"><span class="share-bar-track"><span class="share-bar-fill mid" style="width:33%"></span></span>20.0%</td>
+          </tr>
+          <tr>
+            <td class="mono">cargo_rental_2025</td>
+            <td class="right">3,934</td>
+            <td class="right">1,020</td>
+            <td class="right">425</td>
+            <td class="right conv-poor">10.8% ▼</td>
+            <td class="right"><span class="share-bar-track"><span class="share-bar-fill mid" style="width:36%"></span></span>22.0%</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Top 3 combined</td>
+            <td class="right">8,266</td>
+            <td class="right">2,558</td>
+            <td class="right">1,458</td>
+            <td class="right">17.6%</td>
+            <td class="right">75.4%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div style="font-size:11px;color:var(--text-lo);margin-top:8px;line-height:1.5;">Per-campaign segments built via URL substring match on <code style="font-family:monospace;font-size:11px;color:var(--fs-green);">utm_campaign=&lt;value&gt;</code>. "Share of UTM Revenue" is % of the 1,933 UTM-driven Revenue Events attributable to each top campaign.</div>
+  </div>
+
+  <!-- Per-source revenue -->
+  <div style="margin-bottom: 36px;">
+    <h3 style="font-size:18px;font-weight:800;color:var(--text-hi);letter-spacing:-0.4px;margin-bottom:14px;">Revenue by source &mdash; newsletter vs google</h3>
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th class="right">Unique Users (30d)</th>
+            <th class="right">Reached PDP</th>
+            <th class="right">Revenue Users</th>
+            <th class="right">Landing → Revenue</th>
+            <th class="right">Lift vs site avg (2.0%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">newsletter</td>
+            <td class="right">4,137</td>
+            <td class="right">1,375</td>
+            <td class="right">820</td>
+            <td class="right conv-high">19.8% ▲</td>
+            <td class="right" style="color:#0ef5be;font-weight:700;">9.9×</td>
+          </tr>
+          <tr>
+            <td class="mono">google</td>
+            <td class="right">4,873</td>
+            <td class="right">1,367</td>
+            <td class="right">702</td>
+            <td class="right conv-mid">14.4%</td>
+            <td class="right" style="color:var(--fs-orange);font-weight:700;">7.2×</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:11px;color:var(--text-lo);margin-top:8px;line-height:1.5;">Newsletter delivers 17% more Revenue Events than Google despite 15% fewer users. Email is the highest-leverage acquisition channel in the current portfolio.</div>
+  </div>
+
+  <!-- Key findings -->
+  <div class="two-col">
+    <div class="strength-card">
+      <div class="strength-card-header fix">
+        <h3>💰 What this unlocks</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-green">📈</div>
+          <div class="strength-text">
+            <h4>Campaign ROI is clearer than it looks</h4>
+            <p>The per-campaign revenue rates (27.6% / 19.4% / 10.8% for the top 3) are real end-to-end conversion rates, not proxy metrics. This is the number to use for media-mix and budget decisions.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🎯</div>
+          <div class="strength-text">
+            <h4>vip_launch_2025 &mdash; 2.6× cargo_rental_2025 on revenue</h4>
+            <p>Both drive comparable absolute revenue (646 vs 425 users), but vip_launch_2025 does it on 40% fewer sessions. Scaling vip_launch spend (or cloning its approach) has much higher marginal ROI than scaling cargo_rental.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">📧</div>
+          <div class="strength-text">
+            <h4>Newsletter is a 9.9× revenue multiplier</h4>
+            <p>Against the site-wide 2.0% revenue rate, newsletter delivers 19.8% &mdash; a 9.9× lift. This is the single highest-leverage channel the marketing team controls. A 20% cadence increase likely outperforms a 20% CPC budget increase.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header warn">
+        <h3>⚠ What the funnel hides</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-orange">🔁</div>
+          <div class="strength-text">
+            <h4>Revenue &gt; Checkout?</h4>
+            <p>1,933 UTM-tagged users fired Revenue Event; only 2,060 reached a URL with "checkout" in the path. That's 93.8% — very tight, likely because Revenue Event fires server-side or from a confirmation page outside the checkout URL pattern. Sanity-check the event definition before using landing-to-revenue as a primary KPI.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-orange">📊</div>
+          <div class="strength-text">
+            <h4>Attribution model is last-UTM-in-URL</h4>
+            <p>A user who landed with utm_campaign=X and later revisited with utm_campaign=Y counts toward both segments. This overstates combined totals by a small amount. For precise attribution, model in a warehouse using first-touch or multi-touch.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-orange">🗓️</div>
+          <div class="strength-text">
+            <h4>Revenue Event may include test/demo firings</h4>
+            <p>CarGo is a demo environment. The 2.0% site-wide revenue rate is high for a live rental product — some of the volume likely comes from internal demos, scripted bots, or QA. Real-world rates would differ; the <em>relative</em> ratios between campaigns should still hold.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- SECTION 4: SOURCE & MEDIUM -->
+<section class="section" id="sources">
+  <div class="section-label">Section 04</div>
+  <div class="section-title">Source &amp; Medium Performance</div>
+  <p class="section-desc">Campaign-level results, zoomed out. Top referrer sources and mediums driving qualified ProductPage traffic. Same methodology as Section 02 — 30-day window, PDP-reach filter applied via segment.</p>
+
+  <div class="two-col" style="margin-bottom: 32px;">
+
+    <!-- TOP SOURCES -->
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th colspan="4" style="padding: 16px 20px; font-size: 12px; letter-spacing: 1.5px; color: var(--text-hi);">Top utm_source (by PDP reach)</th>
+          </tr>
+          <tr>
+            <th>Source</th>
+            <th class="right">Landings</th>
+            <th class="right">PDP Reach</th>
+            <th class="right">Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">newsletter</td>
+            <td class="right">4,588</td>
+            <td class="right">1,375</td>
+            <td class="right conv-high">30.0%</td>
+          </tr>
+          <tr>
+            <td class="mono">google</td>
+            <td class="right">5,456</td>
+            <td class="right">1,367</td>
+            <td class="right conv-mid">25.1%</td>
+          </tr>
+          <tr>
+            <td class="mono">bing</td>
+            <td class="right">1,379</td>
+            <td class="right">282</td>
+            <td class="right conv-mid">20.4%</td>
+          </tr>
+          <tr>
+            <td class="mono">facebook</td>
+            <td class="right">500</td>
+            <td class="right">99</td>
+            <td class="right conv-low">19.8%</td>
+          </tr>
+          <tr>
+            <td class="mono">cargo_email</td>
+            <td class="right">440</td>
+            <td class="right">88</td>
+            <td class="right conv-low">20.0%</td>
+          </tr>
+          <tr>
+            <td class="mono">instagram</td>
+            <td class="right">484</td>
+            <td class="right">86</td>
+            <td class="right conv-low">17.8%</td>
+          </tr>
+          <tr>
+            <td class="mono">youtube_tutorial</td>
+            <td class="right">315</td>
+            <td class="right">71</td>
+            <td class="right conv-mid">22.5%</td>
+          </tr>
+          <tr>
+            <td class="mono">guest_post</td>
+            <td class="right">332</td>
+            <td class="right">70</td>
+            <td class="right conv-low">21.1%</td>
+          </tr>
+          <tr>
+            <td class="mono">blog</td>
+            <td class="right">291</td>
+            <td class="right">63</td>
+            <td class="right conv-mid">21.6%</td>
+          </tr>
+          <tr>
+            <td class="mono">infographic</td>
+            <td class="right">306</td>
+            <td class="right">60</td>
+            <td class="right conv-low">19.6%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOP MEDIUMS -->
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th colspan="4" style="padding: 16px 20px; font-size: 12px; letter-spacing: 1.5px; color: var(--text-hi);">utm_medium (by PDP reach)</th>
+          </tr>
+          <tr>
+            <th>Medium</th>
+            <th class="right">Landings</th>
+            <th class="right">PDP Reach</th>
+            <th class="right">Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">cpc</td>
+            <td class="right">6,835</td>
+            <td class="right">1,649</td>
+            <td class="right conv-mid">24.1%</td>
+          </tr>
+          <tr>
+            <td class="mono">email</td>
+            <td class="right">5,028</td>
+            <td class="right">1,463</td>
+            <td class="right conv-high">29.1%</td>
+          </tr>
+          <tr>
+            <td class="mono">display</td>
+            <td class="right">1,520</td>
+            <td class="right">338</td>
+            <td class="right conv-mid">22.2%</td>
+          </tr>
+          <tr>
+            <td class="mono">content</td>
+            <td class="right">1,532</td>
+            <td class="right">322</td>
+            <td class="right conv-low">21.0%</td>
+          </tr>
+          <tr>
+            <td class="mono">referral</td>
+            <td class="right">1,375</td>
+            <td class="right">266</td>
+            <td class="right conv-low">19.3%</td>
+          </tr>
+          <tr>
+            <td class="mono">social</td>
+            <td class="right">1,219</td>
+            <td class="right">243</td>
+            <td class="right conv-low">19.9%</td>
+          </tr>
+          <tr>
+            <td class="mono">paid</td>
+            <td class="right">247</td>
+            <td class="right">48</td>
+            <td class="right conv-poor">19.4%</td>
+          </tr>
+          <tr>
+            <td class="mono">affiliate</td>
+            <td class="right">153</td>
+            <td class="right">30</td>
+            <td class="right conv-poor">19.6%</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>All</td>
+            <td class="right">17,909</td>
+            <td class="right">4,359</td>
+            <td class="right">24.3%</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <strong>Email punches above its weight.</strong> Newsletter drives 84% as many landings as Google but <em>more</em> absolute PDP reach (1,375 vs 1,367). The email medium converts at 29.1% vs CPC's 24.1%. In a cycle where paid volume is harder to come by, every newsletter send is worth disproportionate attention.
+  </div>
+</section>
+
+
+<!-- SECTION 5: WINNERS & LAGGARDS -->
+<section class="section" id="winners">
+  <div class="section-label">Section 05</div>
+  <div class="section-title">Winners &amp; Laggards</div>
+  <p class="section-desc">Where to lean in and where to cut. The table in Section 02 is dense — this section tells the story.</p>
+
+  <div class="two-col">
+
+    <div class="strength-card">
+      <div class="strength-card-header fix">
+        <h3>🏆 Winners — double down</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-green">⭐</div>
+          <div class="strength-text">
+            <h4>vip_launch_2025 — 37.9% reach rate</h4>
+            <p>Best ratio in the portfolio. 909 of 2,401 landers reach ProductPage. Creative and targeting are clearly aligned — the people clicking through show rental intent. Extending this campaign or lifting its budget is a high-confidence bet.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">☀️</div>
+          <div class="strength-text">
+            <h4>summer_sale_2024 — 29.1% reach rate</h4>
+            <p>Still running into 2026 and still outperforming most newer campaigns. Likely strong seasonal audience fit. Consider spinning a summer_sale_2026 variant with the same creative DNA.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">📧</div>
+          <div class="strength-text">
+            <h4>Newsletter &gt; Google for PDP reach</h4>
+            <p>Newsletter delivers 1,375 PDP visits vs Google's 1,367, on 16% fewer landings. Email medium hits 29.1% overall vs 24.1% for CPC. Email list is a high-leverage channel right now.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🚙</div>
+          <div class="strength-text">
+            <h4>cargo_rental_2025 — largest contributor</h4>
+            <p>Only a 21.8% reach rate, but sheer volume (4,677 landings) makes it the single biggest source of campaign-driven PDP traffic (24.8% of all UTM-driven PDP visits). Keep it running at current spend; investigate whether rate can be lifted without volume loss.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header issue">
+        <h3>⚠ Laggards — review or cut</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-red">🎁</div>
+          <div class="strength-text">
+            <h4>holiday_promo_2025 — 19.1% reach rate</h4>
+            <p>Lowest rate of any active campaign. 414 landings, only 79 reach PDP. Off-season (we're in April) — likely a stale campaign still funded. Candidate to pause or refresh for a summer angle.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">🤝</div>
+          <div class="strength-text">
+            <h4>affiliate_2025 — 19.4% reach rate</h4>
+            <p>1,528 landings produce only 296 PDP visits. Meaningful volume but poor conversion — affiliates may be sending low-intent traffic. Audit top affiliate sources; consider cap-per-affiliate or renegotiate payout structure.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-red">📅</div>
+          <div class="strength-text">
+            <h4>seasonal — 19.4% reach rate</h4>
+            <p>Small campaign (247 landings) and the worst rate tie. Unclear what "seasonal" maps to in 2026-04. Either clarify targeting or sunset.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-orange">⚡</div>
+          <div class="strength-text">
+            <h4>electric_rental — 20.0% reach rate</h4>
+            <p>Niche product, small volume (440). Low rate suggests the landing experience isn't matching ad expectations — users arriving from EV-focused ads may not find an obvious EV subset on the search page.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECTION 6: NON-CAMPAIGN FRICTION -->
+<section class="section" id="friction">
+  <div class="section-label">Section 06</div>
+  <div class="section-title">Non-Campaign Friction in the Funnel</div>
+  <p class="section-desc">Product issues, errors, and UX friction that are holding the funnel back independently of any campaign. A product fix here lifts every campaign's conversion simultaneously — this is the common-denominator ceiling on everything in Sections 02–05.</p>
+
+  <div class="callout red">
+    <strong>Why this is in the report.</strong> The campaign-level numbers describe how much traffic campaigns deliver and what share converts. They don't explain why any given campaign's ceiling is 37.9% and not 60%. The issues below are the ceiling. Fix them and every conversion rate in this report moves up.
+    <div class="evidence-chips" style="margin-top:12px;">
+      <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo" target="_blank" class="evidence-chip">↗ Purchase Funnel (managed)</a>
+      <a href="../cargo-ux-report/" target="_blank" class="evidence-chip">↗ Full CarGo UX Report</a>
+      <a href="https://app.fullstory.com/ui/18PNWR/pages/2" target="_blank" class="evidence-chip">↗ ProductPage detail</a>
+    </div>
+  </div>
+
+  <!-- NEW REGRESSIONS -->
+  <div style="margin-bottom: 36px;">
+    <h3 style="font-size:18px;font-weight:800;color:var(--text-hi);letter-spacing:-0.4px;margin-bottom:6px;">🆕 New regressions — current 2w only</h3>
+    <p style="font-size:13px;color:var(--text-md);margin-bottom:16px;line-height:1.65;">These signals spiked in the current 2-week window vs the prior. Anything with <em>delta_pct &gt; 100%</em> is effectively brand new.</p>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Category</th>
+            <th class="right">Users (2w)</th>
+            <th class="right">Δ vs prior 2w</th>
+            <th>Why it matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">TypeError: n is not a function</td>
+            <td>JS error · <code style="font-family:monospace;font-size:11px;color:var(--fs-green);">main.000620b5.js</code></td>
+            <td class="right">48</td>
+            <td class="right"><span class="delta-pill down">+345%</span></td>
+            <td>Brand-new exception in the main bundle. Strongly suggests a recent deploy regression. Line numbers map to a minified function — needs source-map lookup.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">Error clicks on [SH] Purchase Complete</td>
+            <td>Terminal checkout button</td>
+            <td class="right">26</td>
+            <td class="right"><span class="delta-pill down">+100%</span></td>
+            <td>Users reach the final "complete purchase" button and it errors. Direct revenue loss. Zero prior-2w occurrences.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">City API: St. Louis</td>
+            <td>Network error · <code style="font-family:monospace;font-size:11px;color:var(--fs-green);">/v2/cars/getAllCarsInOrgInCity</code></td>
+            <td class="right">151</td>
+            <td class="right"><span class="delta-pill down">+176%</span></td>
+            <td>City inventory API degraded. Was 3.0% of funnel users prior 2w, now 8.2%. Users in this city dead-ended in search.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">City API: Austin</td>
+            <td>Network error · same path</td>
+            <td class="right">146</td>
+            <td class="right"><span class="delta-pill down">+107%</span></td>
+            <td>Same failure mode. 8.0% of funnel users now affected (up from 3.8%).</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">City API: Raleigh</td>
+            <td>Network error · same path</td>
+            <td class="right">120</td>
+            <td class="right"><span class="delta-pill down">+94%</span></td>
+            <td>6.5% of funnel users now affected.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">iOS SwiftUI <code style="font-family:monospace;font-size:11px;">addToCartButton</code> error clicks</td>
+            <td>Mobile · 3 controller hashes</td>
+            <td class="right">16</td>
+            <td class="right"><span class="delta-pill down">+100%</span></td>
+            <td>New mobile regression in CarSelectionViewController. Three distinct controller memory-address hashes suggest a re-instantiation pattern — likely a fresh build with broken action binding.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">error Insufficient Funds</td>
+            <td>Console · Payment-side</td>
+            <td class="right">7</td>
+            <td class="right"><span class="delta-pill down">+134%</span></td>
+            <td>Small absolute count but climbing fast. Could indicate payment-processor contract change or a new class of declines.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">error Transaction Denied</td>
+            <td>Console · Payment-side</td>
+            <td class="right">18</td>
+            <td class="right"><span class="delta-pill down">+100%</span></td>
+            <td>Payment rejections doubled. Silent-failure pattern from the prior UX report may still apply — users may not see the error.</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#ff7a5a;">Cannot read properties of undefined (reading 'firstname')</td>
+            <td>Uncaught exception</td>
+            <td class="right">3</td>
+            <td class="right"><span class="delta-pill down">new</span></td>
+            <td>Likely a checkout personalization bug — code assumes a user object that isn't always present. Small count but a pure-crash signature.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ONGOING FRICTION -->
+  <div style="margin-bottom: 36px;">
+    <h3 style="font-size:18px;font-weight:800;color:var(--text-hi);letter-spacing:-0.4px;margin-bottom:6px;">⏳ Ongoing friction — stable, still costly</h3>
+    <p style="font-size:13px;color:var(--text-md);margin-bottom:16px;line-height:1.65;">These issues are not new, but they're affecting large user counts and putting a ceiling on the entire funnel. Documented in the prior <a href="../cargo-ux-report/" target="_blank" style="color:var(--fs-green);text-decoration:none;">CarGo UX Report</a>; restated here because they directly cap campaign ROI.</p>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Stage</th>
+            <th class="right">Users (2w)</th>
+            <th class="right">Δ</th>
+            <th>Fix complexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono" style="color:var(--fs-orange);">"Car is not available" error on Add to Cart</td>
+            <td>PDP → Cart</td>
+            <td class="right">2,346</td>
+            <td class="right"><span class="delta-pill flat">−5% (flat)</span></td>
+            <td>Hard · inventory data quality · 88% of funnel entrants</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:var(--fs-orange);">Share button dead clicks (SVG line intercepts)</td>
+            <td>PDP</td>
+            <td class="right">968</td>
+            <td class="right"><span class="delta-pill down">+22%</span></td>
+            <td>Trivial · single CSS rule (<code style="font-family:monospace;font-size:11px;color:var(--fs-green);">pointer-events: none</code> on svg&gt;line)</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:var(--fs-orange);">Pickup Location dead clicks</td>
+            <td>Home / Search</td>
+            <td class="right">322</td>
+            <td class="right"><span class="delta-pill down">+32%</span></td>
+            <td>Medium · field appears interactive but isn't; needs focus behavior</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:var(--fs-orange);">Total Price dead clicks (users expect detail)</td>
+            <td>PDP sidebar</td>
+            <td class="right">341</td>
+            <td class="right"><span class="delta-pill down">+28%</span></td>
+            <td>Medium · add price breakdown modal or tooltip</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:var(--fs-orange);">FAQ Item dead clicks</td>
+            <td>Support / Info</td>
+            <td class="right">253</td>
+            <td class="right"><span class="delta-pill down">+58%</span></td>
+            <td>Small · FAQ accordion not expanding — JS handler bug</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:var(--fs-orange);">Login modal dead clicks</td>
+            <td>PDP</td>
+            <td class="right">17</td>
+            <td class="right"><span class="delta-pill down">+121%</span></td>
+            <td>Medium · modal appears but click handlers mis-wired</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- IMPROVING -->
+  <div style="margin-bottom: 36px;">
+    <h3 style="font-size:18px;font-weight:800;color:var(--text-hi);letter-spacing:-0.4px;margin-bottom:6px;">✅ Improving — what's getting better</h3>
+    <p style="font-size:13px;color:var(--text-md);margin-bottom:16px;line-height:1.65;">Good news worth naming — these indicate that something in the product pipeline is working.</p>
+
+    <div class="two-col">
+      <div class="metric-tile" style="border-top:2px solid var(--fs-green);">
+        <div class="metric-tile-top">
+          <div class="metric-tile-label">JSON syntax errors</div>
+          <div class="metric-tile-badge badge-green">−48%</div>
+        </div>
+        <div class="metric-tile-num" style="color:var(--fs-green);">11</div>
+        <div class="metric-tile-sub">users (down from 21 prior 2w)</div>
+        <div class="metric-tile-footer"><code style="font-family:monospace;font-size:11px;color:var(--fs-green);">Failed to execute 'json' on 'Response'</code> — the HTML-returned-instead-of-JSON issue. Someone shipped a fix.</div>
+      </div>
+      <div class="metric-tile" style="border-top:2px solid var(--fs-green);">
+        <div class="metric-tile-top">
+          <div class="metric-tile-label">Car image rage clicks</div>
+          <div class="metric-tile-badge badge-green">−10%</div>
+        </div>
+        <div class="metric-tile-num" style="color:var(--fs-green);">302</div>
+        <div class="metric-tile-sub">users (down from ~334)</div>
+        <div class="metric-tile-footer">Still high, but directional improvement. Car Title Link is also down 8%. Someone wired up navigation that wasn't there before.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout orange">
+    <strong>The unifying story.</strong> UTM-tagged users already fire Revenue Events at a 7.3× multiple of baseline, which means <em>campaigns are the single highest-leverage acquisition channel</em>. But UTM users still hit every product bug on the way through. The compounding effect of the fixes above: every campaign on the leaderboard in Section 02 has an artificially depressed conversion rate — the vip_launch_2025 ceiling is higher than 27.6%, the newsletter source ceiling is higher than 19.8%. Product fixes move every row in those tables simultaneously.
+  </div>
+</section>
+
+
+<!-- SECTION 7: RECOMMENDATIONS -->
+<section class="section" id="recommendations">
+  <div class="section-label">Section 07</div>
+  <div class="section-title">Recommendations</div>
+  <p class="section-desc">Prioritized by impact on revenue over the next cycle. Product fixes listed separately from marketing moves — different owners, different cadences.</p>
+
+  <!-- PRODUCT FIXES -->
+  <div class="rec-card" style="margin-bottom:24px;background:linear-gradient(135deg, rgba(255,90,53,0.06) 0%, rgba(255,163,47,0.03) 100%);border-color:rgba(255,90,53,0.2);">
+    <h3 style="color:var(--issue);">Product fixes — lift the ceiling for every channel</h3>
+    <p>These are engineering/product items, not marketing. Every one of them raises the conversion rate on every row in the Campaign Leaderboard simultaneously. Owners: engineering, product, design.</p>
+
+    <div class="rec-tiers">
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Investigate the new <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">TypeError: n is not a function</code> regression</h4>
+          <p>+345% in 2 weeks in <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">main.000620b5.js</code>. Brand-new signature. Correlate to deploy history. If it maps to a known release, this is a hotfix candidate; if not, attach a source map and traceback. 48 users per 2w is small but climbing fast.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Fix the Purchase Complete error-click regression</h4>
+          <p>26 users clicked the final terminal checkout button and got an error — zero occurrences in the prior 2w. Terminal-step failures directly cost revenue. Investigate the click-handler or the API call behind it; this one rolls up to the Wall 2 payment issues from the prior UX report and may be related.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Investigate city inventory API degradation (Austin, St. Louis, Raleigh)</h4>
+          <p>Three cities jumped 94–176% in network-error rate this 2w. 417 users across just these three cities hit the error. Known issue from the prior UX report but it got worse — suggests either a new deploy touched this endpoint or an upstream data source changed. Start with server-side logs on <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">/v2/cars/getAllCarsInOrgInCity</code>.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2</div>
+        <div class="rec-tier-content">
+          <h4>iOS SwiftUI Add to Cart error-click regression</h4>
+          <p>16 users across three distinct controller memory-address hashes. Only 16 users but every one is abandoning on mobile. If a mobile release shipped in the last 2 weeks, that's the regression window. Correlate to App Store/TestFlight deploy timestamps.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2</div>
+        <div class="rec-tier-content">
+          <h4>Fix the share-button dead-click — trivial, 968 users</h4>
+          <p>SVG <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">&lt;line&gt;</code> inside the share button is intercepting clicks. One CSS rule: <code style="font-family:monospace;font-size:12px;color:var(--fs-green);">button#share-button svg * { pointer-events: none; }</code>. Ships in a 5-minute PR. Affects 28% of ProductPage users.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p3">P3</div>
+        <div class="rec-tier-content">
+          <h4>Monitor payment-side signals — Transaction Denied +100%, Insufficient Funds +134%</h4>
+          <p>Payment-processor anomalies are doubling. Not campaign-related but could reflect a gateway contract change, a fraud rule update, or a new customer segment. Loop in whoever owns the payment integration.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKETING MOVES -->
+  <div class="rec-card">
+    <h3>Marketing moves — reallocate toward what's working</h3>
+    <p>Owners: marketing team. Assumes the product fixes above ship in parallel — the upside numbers below compound with those fixes.</p>
+
+    <div class="rec-tiers">
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Pause or rework the bottom four (holiday, affiliate, seasonal, electric_rental)</h4>
+          <p>All converting below 20% to PDP. Combined budget is likely non-trivial. Auditing these four alone could free budget for vip_launch extension or a summer variant. Start with holiday_promo_2025 — it's temporally off.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p1">P1</div>
+        <div class="rec-tier-content">
+          <h4>Extend vip_launch_2025 or clone its creative brief</h4>
+          <p>27.6% of landers fire Revenue Event — the highest rate in the portfolio and 2.6× cargo_rental_2025's revenue rate despite similar absolute volume. Whatever targeting, copy, and landing experience this campaign uses, document it and apply to a second parallel campaign. Biggest upside lever in the portfolio.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2</div>
+        <div class="rec-tier-content">
+          <h4>Increase newsletter send cadence or segmentation testing</h4>
+          <p>Email already converts at 29.1% to PDP and 19.8% to Revenue — 9.9× the site baseline. A second weekly send, or a segmentation A/B, is low-effort experimentation with a known-good channel.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p2">P2</div>
+        <div class="rec-tier-content">
+          <h4>Investigate the organic/direct decline separately</h4>
+          <p>ProductPage −38% vs UTM −26% means 12pp of the gap lives outside campaigns. Before judging marketing alone, someone should look at: SEO rankings on core rental keywords, referrer drop-off from partner sites, and repeat-visit behavior (is session frequency dropping, or just new-visitor acquisition?).</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p3">P3</div>
+        <div class="rec-tier-content">
+          <h4>Audit cargo_rental_2025 landing experience for rate lift</h4>
+          <p>It's the largest single source of campaign PDP traffic (24.8% of all UTM PDP reach), but its 21.8% PDP rate and 10.8% Revenue rate are both below portfolio average. Even a 5pp rate lift here would add ~235 PDP visits and ~115 revenue conversions/month without any budget change.</p>
+        </div>
+      </div>
+      <div class="rec-tier">
+        <div class="tier-badge t-p4">P4</div>
+        <div class="rec-tier-content">
+          <h4>Instrument the utm_campaign page variable for accurate per-PDP-visit attribution</h4>
+          <p>Right now the report relies on landing-page URL detection; once the user SPA-navigates to the PDP the UTM leaves the URL. Pushing utm_campaign into the Fullstory page variable on every route (and adding a server-side capture) would unlock per-campaign PDP conversion trends at the day level — which would let us do exact 2w comparisons per campaign, not just per-portfolio.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- APPENDIX: METHODOLOGY -->
+<section class="section" id="methodology">
+  <div class="section-label">Appendix</div>
+  <div class="section-title">Methodology &amp; Data Sources</div>
+  <p class="section-desc">Every metric in this report is computed via the Fullstory MCP on the CarGo demo org. Click through for live data.</p>
+
+  <div class="three-col">
+    <div class="strength-card">
+      <div class="strength-card-header warn">
+        <h3>Windowing</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-orange">📅</div>
+          <div class="strength-text">
+            <h4>Current 2w</h4>
+            <p>2026-04-04 → 2026-04-17. Apr 17 is a partial day (report was generated mid-day); totals are reported raw and with the partial day excluded.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">📅</div>
+          <div class="strength-text">
+            <h4>Prior 2w</h4>
+            <p>2026-03-21 → 2026-04-03. 14 complete days.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">📅</div>
+          <div class="strength-text">
+            <h4>Campaign breakdowns</h4>
+            <p>Campaign/source/medium tables use a 30-day window (Mar 19 → Apr 17) because 2-week cells are too sparse for smaller campaigns. Rates are stable within noise across the two windows.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header warn">
+        <h3>Definitions</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-green">🎯</div>
+          <div class="strength-text">
+            <h4>Landing</h4>
+            <p>A page view whose URL contains the relevant UTM substring (<code style="font-family:monospace;font-size:11px;">utm_campaign=</code>, etc.).</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🏁</div>
+          <div class="strength-text">
+            <h4>PDP Reach</h4>
+            <p>A landing event from a user whose session also included a visit to page_id 2 (ProductPage). Implemented as a Fullstory segment attached to the landing metric.</p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">📊</div>
+          <div class="strength-text">
+            <h4>Reach Rate</h4>
+            <p>PDP-reach landings ÷ total landings for the same campaign/source/medium. Read as: "Of the users who came in with this UTM, what % reached the ProductPage."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strength-card">
+      <div class="strength-card-header warn">
+        <h3>Saved Fullstory Objects</h3>
+      </div>
+      <div class="strength-card-body">
+        <div class="strength-item">
+          <div class="strength-icon si-purple">🧭</div>
+          <div class="strength-text">
+            <h4>Segment: ProductPage visitors (30d)</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:P2WW49fGt3C4" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ P2WW49fGt3C4</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">📈</div>
+          <div class="strength-text">
+            <h4>Metric: ProductPage daily</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/metrics/create/907915089" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ 907915089</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">📈</div>
+          <div class="strength-text">
+            <h4>Metric: UTM landings by campaign (PDP-scoped)</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1495697180" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ 1495697180</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">📈</div>
+          <div class="strength-text">
+            <h4>Metric: UTM landings by source (PDP-scoped)</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1747194976" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ 1747194976</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">📈</div>
+          <div class="strength-text">
+            <h4>Metric: UTM landings by medium (PDP-scoped)</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/metrics/create/175375997" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ 175375997</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">💰</div>
+          <div class="strength-text">
+            <h4>Metric: Revenue Event (unique users)</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/metrics/create/491581852" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ 491581852</a> &middot; Event ID <code style="font-family:monospace;font-size:11px;color:var(--fs-green);">KSNijoJTTEpe</code></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">🛒</div>
+          <div class="strength-text">
+            <h4>Metric: Unique Checkout visitors</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1674246945" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ 1674246945</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-green">👥</div>
+          <div class="strength-text">
+            <h4>Segment: UTM-tagged users</h4>
+            <p><a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:grROgoOxfAsi" target="_blank" style="color:var(--fs-green);text-decoration:none;">↗ grROgoOxfAsi</a></p>
+          </div>
+        </div>
+        <div class="strength-item">
+          <div class="strength-icon si-purple">🏷️</div>
+          <div class="strength-text">
+            <h4>Campaign cohorts (per-campaign revenue)</h4>
+            <p>
+              vip_launch_2025: <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:qwpqkP6FLbZE" target="_blank" style="color:var(--fs-green);text-decoration:none;">qwpqkP6FLbZE</a><br>
+              cargo_rental_2025: <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:ykGRcuQPPUKm" target="_blank" style="color:var(--fs-green);text-decoration:none;">ykGRcuQPPUKm</a><br>
+              summer_sale_2024: <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:8kIAWmrDUVSm" target="_blank" style="color:var(--fs-green);text-decoration:none;">8kIAWmrDUVSm</a><br>
+              newsletter source: <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:xoQDSVtbZ2BE" target="_blank" style="color:var(--fs-green);text-decoration:none;">xoQDSVtbZ2BE</a><br>
+              google source: <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:LkepNzd0GxRX" target="_blank" style="color:var(--fs-green);text-decoration:none;">LkepNzd0GxRX</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page-content -->
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <div>Fullstory · CarGo Campaign Performance · Generated 2026-04-17</div>
+  <div>Data source: Fullstory MCP · Org: 18PNWR</div>
+</footer>
+
+</body>
+</html>

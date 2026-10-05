@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[INTERNAL] FS vs Noibu — Sales Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080808;
+    --bg-2:      #0f0f0f;
+    --bg-3:      #141414;
+    --bg-4:      #1a1a1a;
+    --border:    #222222;
+    --border-hi: #333333;
+    --amber:     #f59e0b;
+    --amber-dk:  #d97706;
+    --amber-lt:  #fde68a;
+    --green:     #22c55e;
+    --green-dk:  #16a34a;
+    --red:       #ef4444;
+    --red-dk:    #dc2626;
+    --blue:      #60a5fa;
+    --purple:    #a78bfa;
+    --text-hi:   #f1f5f9;
+    --text-md:   #94a3b8;
+    --text-lo:   #475569;
+    --text-dim:  #334155;
+    --banner-bg: #451a03;
+    --banner-border: #92400e;
+    --banner-text: #fde68a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', monospace;
+    background: var(--bg);
+    color: var(--text-hi);
+    font-size: 12.5px;
+    line-height: 1.75;
+  }
+
+  /* ═══════════════════════════════════════
+     INTERNAL BANNER
+  ═══════════════════════════════════════ */
+  .internal-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    background: var(--banner-bg);
+    border-bottom: 1px solid var(--banner-border);
+    padding: 7px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--banner-text);
+  }
+
+  .banner-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .banner-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  .banner-right a {
+    color: var(--banner-text);
+    text-decoration: none;
+    border: 1px solid var(--banner-border);
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: background 0.1s;
+  }
+
+  .banner-right a:hover {
+    background: rgba(245,158,11,0.15);
+  }
+
+  /* ═══════════════════════════════════════
+     TOPBAR
+  ═══════════════════════════════════════ */
+  .topbar {
+    position: sticky;
+    top: 35px;
+    z-index: 200;
+    background: rgba(8,8,8,0.96);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    backdrop-filter: blur(8px);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-lo);
+  }
+
+  .topbar-prompt {
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .topbar-title {
+    color: var(--text-md);
+  }
+
+  .topbar-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border: 1px solid var(--amber-dk);
+    color: var(--amber);
+    border-radius: 2px;
+  }
+
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .topbar-nav a {
+    color: var(--text-lo);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    transition: color 0.12s, background 0.12s;
+  }
+
+  .topbar-nav a:hover {
+    color: var(--amber);
+    background: rgba(245,158,11,0.07);
+  }
+
+  /* ═══════════════════════════════════════
+     HERO
+  ═══════════════════════════════════════ */
+  .hero {
+    padding: 56px 32px 44px;
+    border-bottom: 1px solid var(--border);
+    margin-top: 35px; /* banner height */
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .hero-eyebrow::before { content: '> '; color: var(--green); }
+
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: var(--text-hi);
+    margin-bottom: 14px;
+  }
+
+  .hero h1 .cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.1em;
+    background: var(--amber);
+    vertical-align: middle;
+    margin-left: 4px;
+    animation: blink 1s step-end infinite;
+  }
+
+  .hero-sub {
+    font-size: 13px;
+    color: var(--text-md);
+    max-width: 680px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--text-lo);
+  }
+
+  .hero-meta span::before { content: '# '; }
+
+  /* ═══════════════════════════════════════
+     PAGE LAYOUT
+  ═══════════════════════════════════════ */
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION HEADERS
+  ═══════════════════════════════════════ */
+  .section {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    margin-bottom: 28px;
+  }
+
+  .section-cmd {
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .section-cmd::before { content: '$ '; }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-hi);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+
+  .section-desc {
+    font-size: 12px;
+    color: var(--text-md);
+    max-width: 640px;
+    line-height: 1.75;
+  }
+
+  /* ═══════════════════════════════════════
+     TALK TRACK FRAMES
+  ═══════════════════════════════════════ */
+  .frame-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .frame-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 20px 22px;
+  }
+
+  .frame-card:first-child {
+    grid-column: 1 / -1;
+    background: rgba(245,158,11,0.05);
+    border-color: rgba(245,158,11,0.25);
+  }
+
+  .frame-num {
+    font-size: 10px;
+    color: var(--amber);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .frame-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .frame-card p, .frame-card li {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.75;
+  }
+
+  .frame-card ul {
+    list-style: none;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .frame-card ul li::before {
+    content: '→ ';
+    color: var(--amber);
+  }
+
+  .one-liner {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--amber);
+    padding: 10px 0 6px;
+    line-height: 1.4;
+  }
+
+  /* ═══════════════════════════════════════
+     DISCOVERY QUESTIONS
+  ═══════════════════════════════════════ */
+  .discovery-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .dq-item {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border-hi);
+  }
+
+  .dq-item.open { border-left-color: var(--amber); }
+
+  .dq-header {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 28px 1fr 90px;
+    gap: 12px;
+    align-items: start;
+    cursor: pointer;
+  }
+
+  .dq-num {
+    font-size: 11px;
+    color: var(--amber);
+    font-weight: 700;
+    padding-top: 1px;
+  }
+
+  .dq-tag {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .tag-capture  { color: var(--green); }
+  .tag-data     { color: var(--blue); }
+  .tag-workflow { color: var(--purple); }
+  .tag-strategy { color: var(--amber); }
+
+  .dq-question {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-hi);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .dq-why {
+    font-size: 11px;
+    color: var(--text-md);
+    line-height: 1.65;
+    padding: 0 20px 16px 60px;
+  }
+
+  .dq-surface {
+    font-size: 11px;
+    color: var(--text-md);
+    line-height: 1.65;
+    padding: 0 20px 16px 60px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .dq-surface-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .dq-type {
+    font-size: 10px;
+    color: var(--text-lo);
+    text-align: right;
+    padding-top: 2px;
+  }
+
+  /* ═══════════════════════════════════════
+     OBJECTIONS
+  ═══════════════════════════════════════ */
+  .objection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .obj-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+  }
+
+  .obj-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(239,68,68,0.04);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .obj-quote {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-hi);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .obj-quote::before { content: '"'; color: var(--red); }
+  .obj-quote::after  { content: '"'; color: var(--red); }
+
+  .obj-persona {
+    font-size: 10px;
+    color: var(--text-lo);
+    white-space: nowrap;
+    padding-top: 3px;
+  }
+
+  .obj-body {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .obj-response-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .orl-response { color: var(--green); }
+  .orl-frame    { color: var(--amber); }
+
+  .obj-response {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.75;
+  }
+
+  .obj-response strong { color: var(--text-hi); }
+
+  .obj-frame {
+    background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.18);
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .obj-frame strong { color: var(--amber); }
+
+  /* ═══════════════════════════════════════
+     POSITIONING
+  ═══════════════════════════════════════ */
+  .pos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pos-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+  }
+
+  .pos-badge-col {
+    padding: 16px 18px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: var(--bg-3);
+  }
+
+  .pos-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .pb-win  { border-color: var(--green-dk); color: var(--green); background: rgba(34,197,94,0.08); }
+  .pb-hard { border-color: var(--amber-dk); color: var(--amber); background: rgba(245,158,11,0.08); }
+  .pb-coex { border-color: #6d28d9;         color: var(--purple); background: rgba(167,139,250,0.08); }
+
+  .pos-content {
+    padding: 16px 20px;
+  }
+
+  .pos-content h4 {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 5px;
+  }
+
+  .pos-content p {
+    font-size: 12px;
+    color: var(--text-md);
+    line-height: 1.7;
+  }
+
+  /* ═══════════════════════════════════════
+     DOC LINKS
+  ═══════════════════════════════════════ */
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: border-color 0.12s, background 0.12s;
+  }
+
+  .doc-link:hover {
+    border-color: var(--border-hi);
+    background: var(--bg-3);
+  }
+
+  .doc-link-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    width: 20px;
+    text-align: center;
+  }
+
+  .doc-link-body {}
+
+  .doc-link-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-hi);
+    margin-bottom: 2px;
+  }
+
+  .doc-link-desc {
+    font-size: 11px;
+    color: var(--text-lo);
+    line-height: 1.55;
+    margin-bottom: 4px;
+  }
+
+  .doc-link-url {
+    font-size: 10px;
+    color: var(--text-dim);
+    word-break: break-all;
+  }
+
+  .doc-link:hover .doc-link-url { color: var(--amber); }
+
+  .doc-section-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dsl-fs { color: var(--green); }
+  .dsl-nb { color: var(--red); }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+  .doc-footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .doc-footer a {
+    color: var(--amber);
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width: 860px) {
+    .topbar-nav { display: none; }
+    .frame-grid { grid-template-columns: 1fr; }
+    .obj-body { grid-template-columns: 1fr; }
+    .pos-row { grid-template-columns: 80px 1fr; }
+    .doc-grid { grid-template-columns: 1fr; }
+    .hero { padding: 40px 20px 32px; }
+    .page { padding: 0 20px 60px; }
+    .topbar { padding: 10px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     INTERNAL BANNER
+═══════════════════════════════════════ -->
+<div class="internal-banner">
+  <div class="banner-left">
+    <div class="banner-dot"></div>
+    <span>▓ INTERNAL — NOT FOR PROSPECT SHARING ▓</span>
+  </div>
+  <div class="banner-right">
+    <a href="https://fullstory-v-noibu.fullstorydemo.com/" target="_blank">View Prospect Page →</a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     TOPBAR
+═══════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-prompt">~/specops $</span>
+    <span class="topbar-title">fs-vs-noibu/sales-brief</span>
+    <span class="topbar-badge">Internal</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#talk-track">Talk Track</a>
+    <a href="#discovery">Discovery</a>
+    <a href="#objections">Objections</a>
+    <a href="#positioning">Positioning</a>
+    <a href="#fs-docs">FS Docs</a>
+    <a href="#noibu-docs">Noibu Docs</a>
+  </nav>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-eyebrow">Sales Brief — Internal Use Only</div>
+  <h1>FS vs Noibu: Talk Track<span class="cursor"></span></h1>
+  <p class="hero-sub">
+    This page is the internal companion to the prospect-facing comparison at
+    fullstory-v-noibu.fullstorydemo.com. It contains the discovery questions,
+    objection handlers, positioning guidance, and reference docs you need to run
+    the deal — none of which belongs in front of a prospect.
+  </p>
+  <div class="hero-meta">
+    <span>SpecOps · April 2026</span>
+    <span>Based on analysis of Noibu production JS</span>
+    <span>For AE / SE use only</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════
+     TALK TRACK
+═══════════════════════════════════════ -->
+<section class="section" id="talk-track">
+  <div class="section-header">
+    <div class="section-cmd">run talk-track --competitive=noibu</div>
+    <div class="section-title">The Core Frame</div>
+    <div class="section-desc">Lead with this. Everything else is supporting detail.</div>
+  </div>
+
+  <div class="frame-grid">
+
+    <div class="frame-card">
+      <div class="frame-num">// PRIMARY ARGUMENT</div>
+      <div class="one-liner">Noibu is session replay-supported error identification for engineering. That's it.</div>
+      <p style="margin-top:10px;">FullStory is a behavioral data platform that serves every team that touches the digital experience — product, UX, design, engineering, and data science. Noibu has a story for exactly one of those teams. Make sure the right people are in the room before you let the deal get defined by the engineering buyer alone.</p>
+    </div>
+
+    <div class="frame-card">
+      <div class="frame-num">// TECHNICAL ANCHOR</div>
+      <h3>Fullcapture vs. Sampled Sessions</h3>
+      <p>Noibu's <code style="color:var(--amber);font-size:11px;">collect-recording.js</code> (rrweb fork) has an explicit <code style="color:var(--amber);font-size:11px;">sampling</code> parameter on interaction handlers. Sessions are triggered by error detection — if nothing breaks, there may be no replay. FullStory captures 100% of sessions continuously. That's what makes retroactive queries possible.</p>
+      <ul>
+        <li>You can't analyze what wasn't captured</li>
+        <li>Noibu can't answer "what did users do last month before this drop"</li>
+        <li>This is a verified source finding, not marketing</li>
+      </ul>
+    </div>
+
+    <div class="frame-card">
+      <div class="frame-num">// BUYING MOTION</div>
+      <h3>Widen the Room</h3>
+      <p>Noibu's buyer is almost always an engineering lead or VP Commerce. FullStory's value multiplies with every additional stakeholder. Get product, analytics, or data science in the room. Each team has a problem Noibu cannot solve for them at all.</p>
+      <ul>
+        <li>Product → Opportunities, retroactive queries, Conversions</li>
+        <li>Data Science → Anywhere Warehouse (Snowflake/BigQuery)</li>
+        <li>Marketing → Anywhere Activation (real-time signal delivery)</li>
+        <li>Engineering → Subtext + FS Skills + MCP (better than a bug queue)</li>
+      </ul>
+    </div>
+
+    <div class="frame-card">
+      <div class="frame-num">// STOPPER</div>
+      <h3>Engineering-Only Deals on Standard Shopify</h3>
+      <p>If the sole buyer is a dev team on a standard Shopify store, Noibu's hardcoded funnel heuristics and zero-config bug queue create a fast time-to-value you can't match for pure error triage. Your options:</p>
+      <ul>
+        <li>Widen before the deal is defined — get product or analytics in</li>
+        <li>Compete on Fullcapture vs. sampling as a risk argument</li>
+        <li>Play the platform vision — Noibu can't grow with them</li>
+        <li>If none of these work, this may be a coexistence play</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     DISCOVERY QUESTIONS
+═══════════════════════════════════════ -->
+<section class="section" id="discovery">
+  <div class="section-header">
+    <div class="section-cmd">cat discovery-questions.txt</div>
+    <div class="section-title">Discovery Questions</div>
+    <div class="section-desc">These don't attack Noibu. They widen the conversation to territory where FullStory's breadth is the natural answer.</div>
+  </div>
+
+  <div class="discovery-list">
+
+    <div class="dq-item open">
+      <div class="dq-header">
+        <div class="dq-num">01</div>
+        <div>
+          <div class="dq-tag tag-capture">Capture Scope</div>
+          <div class="dq-question">What are you doing today when conversion drops but you can't find a specific bug?</div>
+        </div>
+        <div class="dq-type">opens: retroactive</div>
+      </div>
+      <div class="dq-why">
+        Noibu's model is reactive — it surfaces what errors it detected. If a conversion drop came from UX friction, a confusing layout, or a mobile issue that didn't throw a JS error, Noibu has nothing to show. This question surfaces that blind spot without naming it as a weakness.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We look at analytics" or "we guess" → that's the retroactive query + Opportunities story. "Noibu shows us" → ask how they know it wasn't a non-error friction issue. Either way you've opened the door.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">02</div>
+        <div>
+          <div class="dq-tag tag-data">Data Access</div>
+          <div class="dq-question">Do you have behavioral data in your warehouse today alongside your transaction data?</div>
+        </div>
+        <div class="dq-type">opens: warehouse</div>
+      </div>
+      <div class="dq-why">
+        Noibu has no warehouse export. Any retailer with a data team doing attribution modeling, churn prediction, or segmentation hits an immediate wall. Noibu data stays in Noibu's silo — it can't be joined to anything.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We have a data team building models" → Anywhere Warehouse is the story. "We'd love to but we can't" → that's a direct Noibu gap you can name. "Not yet" → plant the seed and come back.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">03</div>
+        <div>
+          <div class="dq-tag tag-workflow">Developer Workflow</div>
+          <div class="dq-question">When your dev team gets a session replay from Noibu, where does it go in their workflow?</div>
+        </div>
+        <div class="dq-type">opens: subtext</div>
+      </div>
+      <div class="dq-why">
+        Noibu's dev workflow is a triage inbox — replay is attached to the bug report. FullStory Subtext brings session context into Claude, Codex, and Cursor as ambient context while the developer is already writing code. Not a tool you switch to — data that's there when you need it.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "They look at it in Noibu then file a Jira" → the context-switching story. "We use Cursor/Claude" → Subtext is the immediate follow. Any answer shows friction in the handoff.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">04</div>
+        <div>
+          <div class="dq-tag tag-strategy">Breadth</div>
+          <div class="dq-question">Is checkout the only surface you care about, or is there more of the experience you wish you could understand?</div>
+        </div>
+        <div class="dq-type">opens: breadth</div>
+      </div>
+      <div class="dq-why">
+        Noibu's pitch is checkout-first. Their ecommerce heuristics (AddToCart, CheckoutStarted, etc.) are hardcoded to the checkout funnel on standard platforms. Any answer that goes beyond checkout is an opening for FullStory's platform breadth.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        Anything beyond "just checkout" — catalog, account, mobile, post-purchase — is your opening. "Noibu is a checkout error tool wearing a DX analytics costume" is the internal frame; deliver the prospect version.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">05</div>
+        <div>
+          <div class="dq-tag tag-capture">Historical Data</div>
+          <div class="dq-question">If a new product question came up today about something that happened six months ago — could you answer it?</div>
+        </div>
+        <div class="dq-type">opens: fullcapture</div>
+      </div>
+      <div class="dq-why">
+        The retroactive queryability question. Noibu's reactive capture means if the session wasn't error-triggered, it may not exist. FullStory captures everything — you can answer retrospective questions as far back as your retention window.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We'd have to look at what Noibu captured" is the tell. They're limited to investigating errors they already knew about. "No" is an even cleaner opening.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     OBJECTION HANDLING
+═══════════════════════════════════════ -->
+<section class="section" id="objections">
+  <div class="section-header">
+    <div class="section-cmd">grep -r "objection" ./competitive/noibu/</div>
+    <div class="section-title">Objection Handlers</div>
+    <div class="section-desc">The five pushbacks you'll hear when Noibu is in the deal.</div>
+  </div>
+
+  <div class="objection-list">
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">Noibu tells us exactly what's costing us revenue. FullStory is harder to interpret.</div>
+        </div>
+        <div class="obj-persona">// Engineering lead / VP Commerce</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            Noibu's revenue attribution is real — <strong>for the errors it detects.</strong> The question is what you're not seeing. Friction that isn't a JS error — a confusing UI, a mobile layout issue, hesitation patterns — doesn't appear in Noibu at all. StoryAI Opportunities does the same "here's what's costing you money" job across everything FullStory captures, not just exceptions.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Noibu tells you the revenue impact of bugs you already have. FullStory tells you the revenue impact of every friction point — including the ones nobody wrote a ticket for yet."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">We just need something for checkout monitoring. FullStory feels like overkill.</div>
+        </div>
+        <div class="obj-persona">// Mid-market ecommerce ops / IT</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            Checkout friction starts upstream. It starts on your PDP. On your mobile size selector. When a first-time buyer can't find the promo code field. <strong>If you only instrument checkout, you only see the last 20% of the journey.</strong> The sessions that abandoned before the cart are invisible.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Noibu is a smoke detector. FullStory is a security camera system. If the only thing you care about is fire — the smoke detector is faster to install. But you don't get to rewind and see what happened before the fire."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">Noibu is cheaper and the dev team already loves it.</div>
+        </div>
+        <div class="obj-persona">// Finance / cost-focused IT champion</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            If the only buyer in the room is the dev team, this is a hard fight. <strong>Widen the room.</strong> The product team, analytics team, and marketing team have a different problem — and they can't solve it with a bug queue. In a multi-stakeholder deal, FullStory's ROI surface is completely different.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Noibu's ROI is measured in bugs fixed. FullStory's ROI is measured in revenue influenced — which is a much larger number when product, analytics, and growth teams are in the calculation."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">We can use FullStory for replays and Noibu for error monitoring. Why not both?</div>
+        </div>
+        <div class="obj-persona">// Technical evaluator hedging</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            Two snippets. Two data silos. Two vendor relationships. Overlapping session replay coverage. <strong>FullStory does what Noibu does for error detection</strong> — JS errors, network failures, frustration signals — and adds the broader capture model, retroactive queries, Opportunities, warehouse export, and Subtext on top. The "both" play only makes sense if Noibu does something FullStory categorically cannot.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Walk us through what Noibu does that you couldn't get from FullStory. We'll show you where the gap is real and where it isn't."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">Noibu has ecommerce funnel detection built in. FullStory Conversions takes time to set up.</div>
+        </div>
+        <div class="obj-persona">// Commerce or product team evaluator</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            True — Noibu's hardcoded heuristics for Shopify/SFCC/Magento are fast to value. The trade-off is accuracy. <strong>Noibu infers checkout stages from CSS selectors and URL patterns.</strong> If your checkout doesn't match their patterns — or you've customized your platform — it breaks silently. FullStory Conversions is configured once against your actual implementation and is authoritative, not heuristic.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Noibu's funnel detection is a best guess based on your platform's defaults. FullStory's is based on how your site actually works. For a vanilla Shopify store the difference is small. For anything custom — it matters a lot."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     POSITIONING
+═══════════════════════════════════════ -->
+<section class="section" id="positioning">
+  <div class="section-header">
+    <div class="section-cmd">./positioning --deal-type=?</div>
+    <div class="section-title">When to Fight, When to Coexist</div>
+    <div class="section-desc">Match your motion to the deal. Lead with the capture architecture story. Widen the room to stakeholders beyond the dev team.</div>
+  </div>
+
+  <div class="pos-list">
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-win">FS<br>WINS</div></div>
+      <div class="pos-content">
+        <h4>Multi-stakeholder deal: Product + Analytics + Engineering</h4>
+        <p>When product and analytics teams are in the room alongside engineering, FullStory's breadth wins on total value. Noibu is a dev tool. FullStory is a platform. The ROI surface is larger, the use cases richer, and the warehouse export closes off any "we'll join the data ourselves" objection. Anchor on Fullcapture vs. sampled architecture.</p>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-win">FS<br>WINS</div></div>
+      <div class="pos-content">
+        <h4>Custom stack or non-standard platform</h4>
+        <p>Noibu's value degrades sharply outside Shopify, SFCC, Magento, BigCommerce. Their funnel heuristics are hardcoded to platform defaults. Custom-built ecommerce, headless commerce, or hybrid stacks break their out-of-the-box story. FullStory is platform-agnostic by design.</p>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-win">FS<br>WINS</div></div>
+      <div class="pos-content">
+        <h4>Mobile app is in scope</h4>
+        <p>Noibu supports React Native only. FullStory has native iOS and Android SDKs. If the retailer has a native mobile app — and most do — FullStory is the only option for unified web + mobile behavioral capture. Frame mobile parity as a hard requirement, not a nice-to-have.</p>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-hard">HARD<br>FIGHT</div></div>
+      <div class="pos-content">
+        <h4>Engineering-only buying committee on a standard Shopify store</h4>
+        <p>Noibu's zero-config funnel detection and bug queue create a fast, concrete win here. FullStory requires more setup to match Noibu's time-to-value for pure error triage. Best move: widen the room to product or analytics before the deal is defined. If you can't — Fullcapture vs. sampling as a risk argument, and the platform growth story.</p>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="pos-badge-col"><div class="pos-badge pb-coex">CO-<br>EXIST</div></div>
+      <div class="pos-content">
+        <h4>Noibu already deeply embedded in engineering culture</h4>
+        <p>If engineering has built workflows, alerting, and on-call runbooks around Noibu's bug queue, a rip-and-replace is a political fight you may not need to win. Position FullStory as the product and analytics layer alongside Noibu for engineering — then use warehouse export and Subtext to gradually pull the developer use case toward FullStory. Coexistence today, consolidation later.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FS DOCUMENTATION
+═══════════════════════════════════════ -->
+<section class="section" id="fs-docs">
+  <div class="section-header">
+    <div class="section-cmd">ls ./fullstory-docs/</div>
+    <div class="section-title">FullStory Reference Docs</div>
+    <div class="section-desc">Links to use in demos, follow-up emails, and discovery calls. Know these before Noibu does.</div>
+  </div>
+
+  <div class="doc-section-label dsl-fs"># FullStory Product Documentation</div>
+  <div class="doc-grid">
+
+    <a href="https://www.fullstory.com/blog/fullstory-mcp/" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🤖</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">FullStory MCP Server</div>
+        <div class="doc-link-desc">AI systems query behavioral data conversationally. Every team, any AI tool. The competitive differentiator no error monitor can match.</div>
+        <div class="doc-link-url">fullstory.com/blog/fullstory-mcp/</div>
+      </div>
+    </a>
+
+    <a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-activation" target="_blank" class="doc-link">
+      <div class="doc-link-icon">⚡</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Anywhere Activation</div>
+        <div class="doc-link-desc">Near real-time behavioral signal delivery — webhooks, campaign triggers, personalization. Rage click fires → campaign entry. Noibu has nothing like this.</div>
+        <div class="doc-link-url">developer.fullstory.com/anywhere/getting-started/#anywhere-activation</div>
+      </div>
+    </a>
+
+    <a href="https://developer.fullstory.com/anywhere/getting-started/#anywhere-warehouse" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🏗️</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Anywhere Warehouse</div>
+        <div class="doc-link-desc">Comprehensive behavioral data synced hourly to Snowflake, BigQuery, Redshift. Join to transactions, train models. Noibu has no warehouse export.</div>
+        <div class="doc-link-url">developer.fullstory.com/anywhere/getting-started/#anywhere-warehouse</div>
+      </div>
+    </a>
+
+    <a href="https://github.com/fullstorydev/fs-skills" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🏷️</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">FS Skills — Semantic Decoration</div>
+        <div class="doc-link-desc">One data-fs-element tag serves analytics, testing, AI agent nav, Adobe signaling. 25 skills across 4 categories. "When your experience is semantic, it's agentic."</div>
+        <div class="doc-link-url">github.com/fullstorydev/fs-skills</div>
+      </div>
+    </a>
+
+    <a href="https://subtext.fullstory.com" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🧑‍💻</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Subtext — FS in Your IDE</div>
+        <div class="doc-link-desc">MCP plugin for Claude Code, Codex, Cursor. Session behavior as ambient context while engineers code. Not a bug queue you switch to — already there.</div>
+        <div class="doc-link-url">subtext.fullstory.com</div>
+      </div>
+    </a>
+
+    <a href="https://adobe-value-stories.fullstorydemo.com/ajo-remarketing-value-story.html" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📨</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">AJO Remarketing Value Story</div>
+        <div class="doc-link-desc">FullStory signals personalize AJO recovery emails with intent, friction, and abandonment reason. "AJO sends the email. FullStory writes it." 2–4× conversion lift claim. Use in marketing/personalization conversations.</div>
+        <div class="doc-link-url">adobe-value-stories.fullstorydemo.com/ajo-remarketing-value-story.html</div>
+      </div>
+    </a>
+
+    <a href="https://adobe-value-stories.fullstorydemo.com/cja-signal-streams-value-story.html" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📊</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">CJA Signal Streams Value Story</div>
+        <div class="doc-link-desc">CJA tells you where users drop. FullStory explains why. Friction signals become CJA dimensions. Anomaly to root cause in seconds. Use when analytics/data team is in the room.</div>
+        <div class="doc-link-url">adobe-value-stories.fullstorydemo.com/cja-signal-streams-value-story.html</div>
+      </div>
+    </a>
+
+    <a href="https://adobe-value-stories.fullstorydemo.com/dev-experience-value-story.html" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🧑‍💻</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Dev Experience Value Story</div>
+        <div class="doc-link-desc">FS Skills semantic decoration: one tagging pass powers analytics, testing, monitoring, and AI agents. FS MCP lets devs diagnose frustration without leaving the IDE. Use for engineering + platform vision conversations.</div>
+        <div class="doc-link-url">adobe-value-stories.fullstorydemo.com/dev-experience-value-story.html</div>
+      </div>
+    </a>
+
+    <a href="https://www.fullstory.com/platform/" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📸</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">FullStory Fullcapture</div>
+        <div class="doc-link-desc">100% of sessions, always-on. Foundation for retroactive queries and AI insights. Use when Noibu's sampling behavior comes up — this is the core architectural differentiation.</div>
+        <div class="doc-link-url">fullstory.com/platform/</div>
+      </div>
+    </a>
+
+    <a href="https://www.fullstory.com/platform/" target="_blank" class="doc-link">
+      <div class="doc-link-icon">✦</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">StoryAI Opportunities</div>
+        <div class="doc-link-desc">AI proactively surfaces revenue-impacting friction — no funnel config required. Same job as Noibu's revenue attribution but across everything FS captures, not just errors.</div>
+        <div class="doc-link-url">fullstory.com/platform/</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     NOIBU DOCUMENTATION
+═══════════════════════════════════════ -->
+<section class="section" id="noibu-docs">
+  <div class="section-header">
+    <div class="section-cmd">curl -I https://help.noibu.com/hc/en-us/ | grep -i content</div>
+    <div class="section-title">Noibu Reference Docs</div>
+    <div class="section-desc">Know their product. These are Noibu's own docs and source files — the basis for the technical claims in the prospect page.</div>
+  </div>
+
+  <div class="doc-section-label dsl-nb"># Noibu Help Documentation</div>
+  <div class="doc-grid" style="margin-bottom:12px;">
+
+    <a href="https://help.noibu.com/hc/en-us/articles/16791050564237-Noibu-Overview" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📋</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Noibu Overview</div>
+        <div class="doc-link-desc">Their own product overview. Good for understanding how they position the product internally.</div>
+        <div class="doc-link-url">help.noibu.com/hc/en-us/articles/16791050564237</div>
+      </div>
+    </a>
+
+    <a href="https://help.noibu.com/hc/en-us/articles/360049432472-Deploying-the-Noibu-Script-Overview" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📦</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Deploying the Noibu Script</div>
+        <div class="doc-link-desc">How their snippet deploys. Shopify app, tag manager, or manual head injection. Single JS tag, no config required to start.</div>
+        <div class="doc-link-url">help.noibu.com/hc/en-us/articles/360049432472</div>
+      </div>
+    </a>
+
+    <a href="https://help.noibu.com/hc/en-us/articles/360049902571-Session-Replay-Overview" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🎬</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Session Replay Overview</div>
+        <div class="doc-link-desc">Their replay docs. rrweb-based. The sampling parameter is confirmed in collect-recording.js — this is their public-facing description of it.</div>
+        <div class="doc-link-url">help.noibu.com/hc/en-us/articles/360049902571</div>
+      </div>
+    </a>
+
+    <a href="https://help.noibu.com/hc/en-us/articles/21336588773517-HTTP-Data-Collection-Overview" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🌐</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">HTTP Data Collection</div>
+        <div class="doc-link-desc">Network capture requires manual URL config. 20 URL cap per domain. Use this when competing on capture breadth — FS captures network automatically.</div>
+        <div class="doc-link-url">help.noibu.com/hc/en-us/articles/21336588773517</div>
+      </div>
+    </a>
+
+    <a href="https://help.noibu.com/hc/en-us/articles/5150366162189-Noibu-JS-SDK" target="_blank" class="doc-link">
+      <div class="doc-link-icon">⚙️</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">Noibu JS SDK</div>
+        <div class="doc-link-desc">Their manual instrumentation API. Custom attributes capped at 10 per page view, strings only, 1024 char max. Shows the ceiling on their customization story.</div>
+        <div class="doc-link-url">help.noibu.com/hc/en-us/articles/5150366162189</div>
+      </div>
+    </a>
+
+    <a href="https://cdn.noibu.com/collect-core.js?shop=tommyjohn.myshopify.com" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🔍</div>
+      <div class="doc-link-body">
+        <div class="doc-link-title">collect-core.js (Production)</div>
+        <div class="doc-link-desc">178KB. Where the rrweb sampling, ecomm funnel heuristics (AddToCart, CheckoutStarted etc.), React/Vue error taxonomy, and PII scrubbing live. Source of the technical claims.</div>
+        <div class="doc-link-url">cdn.noibu.com/collect-core.js?shop=tommyjohn.myshopify.com</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+
+</div><!-- /page -->
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="doc-footer">
+  <div>Internal — FullStory SpecOps · April 2026 · Not for prospect sharing</div>
+  <div><a href="https://fullstory-v-noibu.fullstorydemo.com/" target="_blank">→ View Prospect Page</a></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[INTERNAL] Fullstory — CarGo Campaign Performance — Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #080808;
+  --bg-2:         #0f0f0f;
+  --bg-3:         #141414;
+  --bg-4:         #1a1a1a;
+  --border:       #222222;
+  --border-hi:    #333333;
+  --amber:        #f59e0b;
+  --amber-dk:     #d97706;
+  --amber-lt:     #fde68a;
+  --green:        #22c55e;
+  --green-dk:     #16a34a;
+  --red:          #ef4444;
+  --red-dk:       #dc2626;
+  --blue:         #60a5fa;
+  --purple:       #a78bfa;
+  --text-hi:      #f1f5f9;
+  --text-md:      #94a3b8;
+  --text-lo:      #475569;
+  --text-dim:     #334155;
+  --banner-bg:    #451a03;
+  --banner-border:#92400e;
+  --banner-text:  #fde68a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', monospace; background: var(--bg); color: var(--text-hi); font-size: 12.5px; line-height: 1.75; }
+
+.internal-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 300; background: var(--banner-bg); border-bottom: 1px solid var(--banner-border); padding: 7px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--banner-text); }
+.banner-left { display: flex; align-items: center; gap: 10px; }
+.banner-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); animation: blink 1.2s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.banner-right a { color: var(--banner-text); text-decoration: none; border: 1px solid var(--banner-border); padding: 3px 10px; border-radius: 3px; font-size: 10px; letter-spacing: 1px; transition: background 0.1s; }
+.banner-right a:hover { background: rgba(245,158,11,0.15); }
+
+.topbar { position: sticky; top: 35px; z-index: 200; background: rgba(8,8,8,0.96); border-bottom: 1px solid var(--border); padding: 10px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; backdrop-filter: blur(8px); }
+.topbar-left { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text-lo); }
+.topbar-prompt { color: var(--green); font-weight: 700; }
+.topbar-title  { color: var(--text-md); }
+.topbar-badge { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 7px; border: 1px solid var(--amber-dk); color: var(--amber); border-radius: 2px; }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.topbar-nav a { color: var(--text-lo); text-decoration: none; font-size: 10px; font-weight: 500; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 2px; transition: color 0.12s, background 0.12s; }
+.topbar-nav a:hover { color: var(--amber); background: rgba(245,158,11,0.07); }
+
+.hero { padding: 56px 32px 44px; border-bottom: 1px solid var(--border); margin-top: 35px; }
+.hero-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 20px; }
+.hero-eyebrow::before { content: '> '; color: var(--green); }
+.hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; color: var(--text-hi); margin-bottom: 14px; }
+.hero h1 .cursor { display: inline-block; width: 3px; height: 1.1em; background: var(--amber); vertical-align: middle; margin-left: 4px; animation: blink 1s step-end infinite; }
+.hero-sub { font-size: 13px; color: var(--text-md); max-width: 680px; line-height: 1.8; margin-bottom: 24px; }
+.hero-meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 11px; color: var(--text-lo); }
+.hero-meta span::before { content: '# '; }
+
+.page { max-width: 1100px; margin: 0 auto; padding: 0 32px 80px; }
+.section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+.section-header { margin-bottom: 28px; }
+.section-cmd { font-size: 10px; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
+.section-cmd::before { content: '$ '; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.3px; margin-bottom: 6px; }
+.section-desc { font-size: 12px; color: var(--text-md); max-width: 640px; line-height: 1.75; }
+
+.frame-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.frame-card { background: var(--bg-2); border: 1px solid var(--border); padding: 20px 22px; }
+.frame-card:first-child { grid-column: 1 / -1; background: rgba(245,158,11,0.05); border-color: rgba(245,158,11,0.25); }
+.frame-num { font-size: 10px; color: var(--amber); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.frame-card h3 { font-size: 13px; font-weight: 700; color: var(--text-hi); margin-bottom: 8px; line-height: 1.4; }
+.frame-card p, .frame-card li { font-size: 12px; color: var(--text-md); line-height: 1.75; }
+.frame-card ul { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.frame-card ul li::before { content: '→ '; color: var(--amber); }
+.one-liner { font-size: 15px; font-weight: 700; color: var(--amber); padding: 10px 0 6px; line-height: 1.4; }
+
+.presenter-notes { background: var(--bg-2); border: 1px solid var(--border); border-left: 3px solid var(--amber); padding: 20px 24px; margin-bottom: 24px; }
+.pn-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin-bottom: 12px; }
+.pn-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.pn-bullets li { font-size: 12px; color: var(--text-md); line-height: 1.7; padding-left: 18px; position: relative; }
+.pn-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--amber); font-weight: 700; }
+.pn-bullets li strong { color: var(--text-hi); }
+.pn-bullets li.fs::before { content: '✓'; color: var(--green); }
+.pn-bullets li.gap::before { content: '✗'; color: var(--red); }
+.pn-bullets li.note::before { content: '#'; color: var(--text-lo); }
+.pn-bullets li.stat::before { content: '▶'; color: var(--blue); }
+
+.discovery-list { display: flex; flex-direction: column; gap: 2px; }
+.dq-item { background: var(--bg-2); border: 1px solid var(--border); border-left: 3px solid var(--border-hi); }
+.dq-item.open { border-left-color: var(--amber); }
+.dq-header { padding: 16px 20px; display: grid; grid-template-columns: 28px 1fr 90px; gap: 12px; align-items: start; }
+.dq-num { font-size: 11px; color: var(--amber); font-weight: 700; padding-top: 1px; }
+.dq-tag { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+.tag-exec    { color: var(--green); }
+.tag-mktg    { color: var(--blue); }
+.tag-eng     { color: var(--red); }
+.tag-data    { color: var(--purple); }
+.tag-ux      { color: var(--amber); }
+.dq-question { font-size: 12.5px; font-weight: 600; color: var(--text-hi); line-height: 1.5; font-style: italic; }
+.dq-type { font-size: 10px; color: var(--text-lo); text-align: right; padding-top: 2px; }
+.dq-why { font-size: 11px; color: var(--text-md); line-height: 1.65; padding: 0 20px 16px 60px; }
+.dq-surface { font-size: 11px; color: var(--text-md); line-height: 1.65; padding: 12px 20px 16px 60px; border-top: 1px solid var(--border); }
+.dq-surface-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+
+.objection-list { display: flex; flex-direction: column; gap: 12px; }
+.obj-card { background: var(--bg-2); border: 1px solid var(--border); }
+.obj-header { padding: 14px 20px; border-bottom: 1px solid var(--border); background: rgba(239,68,68,0.04); display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+.obj-quote { font-size: 12.5px; font-weight: 600; color: var(--text-hi); line-height: 1.5; font-style: italic; }
+.obj-quote::before { content: '"'; color: var(--red); }
+.obj-quote::after  { content: '"'; color: var(--red); }
+.obj-persona { font-size: 10px; color: var(--text-lo); white-space: nowrap; padding-top: 3px; }
+.obj-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.obj-response-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.orl-response { color: var(--green); }
+.orl-frame    { color: var(--amber); }
+.obj-response { font-size: 12px; color: var(--text-md); line-height: 1.75; }
+.obj-response strong { color: var(--text-hi); }
+.obj-frame { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); padding: 12px 14px; font-size: 12px; color: var(--text-md); line-height: 1.7; font-style: italic; }
+.obj-frame strong { color: var(--amber); }
+
+.workflow-steps { display: flex; flex-direction: column; gap: 2px; }
+.workflow-step { background: var(--bg-2); border: 1px solid var(--border); display: grid; grid-template-columns: 48px 1fr; }
+.workflow-step-num { padding: 18px 16px; border-right: 1px solid var(--border); background: var(--bg-3); display: flex; align-items: flex-start; justify-content: center; }
+.wsn-inner { font-size: 14px; font-weight: 700; color: var(--amber); }
+.workflow-step-body { padding: 18px 20px; }
+.workflow-step-title { font-size: 12.5px; font-weight: 700; color: var(--text-hi); margin-bottom: 5px; }
+.workflow-step-desc { font-size: 12px; color: var(--text-md); line-height: 1.7; }
+.code-inline { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 3px; color: var(--green); border: 1px solid var(--border-hi); }
+.workflow-step-cmd { margin-top: 10px; background: var(--bg-3); border: 1px solid var(--border-hi); padding: 10px 14px; font-size: 11px; color: var(--green); line-height: 1.7; }
+.workflow-step-cmd .comment { color: var(--text-lo); }
+
+.doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+.doc-link { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; background: var(--bg-2); border: 1px solid var(--border); text-decoration: none; transition: border-color 0.12s, background 0.12s; }
+.doc-link:hover { border-color: var(--border-hi); background: var(--bg-3); }
+.doc-link-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; width: 20px; text-align: center; }
+.doc-link-title { font-size: 12px; font-weight: 700; color: var(--text-hi); margin-bottom: 2px; }
+.doc-link-desc  { font-size: 11px; color: var(--text-lo); line-height: 1.55; margin-bottom: 4px; }
+.doc-link-url   { font-size: 10px; color: var(--text-dim); word-break: break-all; }
+.doc-link:hover .doc-link-url { color: var(--amber); }
+.doc-section-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.dsl-fs { color: var(--green); }
+.dsl-mktg { color: var(--blue); }
+
+.callout { background: var(--bg-2); border: 1px solid var(--border); border-left: 3px solid var(--text-lo); padding: 12px 16px; font-size: 12px; color: var(--text-md); line-height: 1.7; margin-bottom: 20px; }
+.callout.amber { border-left-color: var(--amber); }
+.callout.amber strong { color: var(--amber); }
+.callout.green { border-left-color: var(--green); }
+.callout.green strong { color: var(--green); }
+.callout.red   { border-left-color: var(--red); }
+.callout.red   strong { color: var(--red); }
+.callout.blue  { border-left-color: var(--blue); }
+.callout.blue  strong { color: var(--blue); }
+
+/* Number cheatsheet */
+.cheatsheet { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 24px; }
+.cheat-card { background: var(--bg-2); border: 1px solid var(--border); padding: 16px 20px; }
+.cheat-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-lo); margin-bottom: 6px; font-weight: 700; }
+.cheat-num { font-size: 22px; font-weight: 700; color: var(--text-hi); letter-spacing: -0.5px; line-height: 1; margin-bottom: 6px; }
+.cheat-num.good { color: var(--green); }
+.cheat-num.bad  { color: var(--red); }
+.cheat-num.warn { color: var(--amber); }
+.cheat-caption { font-size: 11px; color: var(--text-md); line-height: 1.55; }
+
+.doc-footer { border-top: 1px solid var(--border); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--text-dim); flex-wrap: wrap; gap: 12px; }
+.doc-footer a { color: var(--amber); text-decoration: none; opacity: 0.7; }
+
+@media (max-width: 860px) {
+  .topbar-nav { display: none; }
+  .frame-grid { grid-template-columns: 1fr; }
+  .obj-body { grid-template-columns: 1fr; }
+  .doc-grid { grid-template-columns: 1fr; }
+  .cheatsheet { grid-template-columns: 1fr; }
+  .hero { padding: 40px 20px 32px; }
+  .page { padding: 0 20px 60px; }
+  .topbar { padding: 10px 20px; }
+  .dq-header { grid-template-columns: 24px 1fr; }
+  .dq-type { display: none; }
+  .workflow-step { grid-template-columns: 1fr; }
+  .workflow-step-num { border-right: none; border-bottom: 1px solid var(--border); justify-content: flex-start; padding: 10px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTERNAL BANNER -->
+<div class="internal-banner">
+  <div class="banner-left">
+    <div class="banner-dot"></div>
+    <span>▓ INTERNAL — NOT FOR SHARING OUTSIDE THE TEAM ▓</span>
+  </div>
+  <div class="banner-right">
+    <a href="../" target="_blank">View Full Report →</a>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-prompt">~/specops $</span>
+    <span class="topbar-title">cargo-campaign-performance/field-guide</span>
+    <span class="topbar-badge">Internal</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#talk-track">Talk Track</a>
+    <a href="#cheatsheet">Numbers</a>
+    <a href="#section-notes">Section Notes</a>
+    <a href="#discovery">Discovery Qs</a>
+    <a href="#pushback">Pushback</a>
+    <a href="#investigation">Investigation</a>
+    <a href="#docs">References</a>
+  </nav>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Field Guide — Internal Use Only</div>
+  <h1>CarGo Campaign Performance: Field Guide<span class="cursor"></span></h1>
+  <p class="hero-sub">
+    Internal companion for walking executives through the CarGo Campaign Performance Report. Contains the core frame and one-liner, the numbers you must have memorized, section-by-section presenter bullets with timing guidance, discovery questions for marketing and product leadership, responses to the most likely pushback, and the Fullstory MCP workflow that produced this analysis.
+  </p>
+  <div class="hero-meta">
+    <span>SpecOps · April 2026</span>
+    <span>Source: Fullstory MCP · Org 18PNWR</span>
+    <span>Windows: Apr 4–17 (current 2w) vs Mar 21–Apr 3 (prior 2w)</span>
+    <span>For internal team use only</span>
+  </div>
+</div>
+
+
+<div class="page">
+
+<!-- ══════════════════════ TALK TRACK ══════════════════════ -->
+<section class="section" id="talk-track">
+  <div class="section-header">
+    <div class="section-cmd">run talk-track --asset=cargo-campaign-performance</div>
+    <div class="section-title">The Core Frame</div>
+    <div class="section-desc">Lead with the structural argument, not the numbers. Executives will ask "so what" faster than you think — have the answer ready in one sentence.</div>
+  </div>
+
+  <div class="frame-grid">
+
+    <!-- PRIMARY ARGUMENT -->
+    <div class="frame-card">
+      <div class="frame-num">// PRIMARY ARGUMENT</div>
+      <div class="one-liner">Campaigns are 8.6% of traffic but 62% of revenue. They're not the problem — they're the multiplier. The real conversation is where to concentrate that multiplier and which product issues are capping its ceiling.</div>
+      <p style="margin-top:10px;">ProductPage traffic is down 38% in the last two weeks, but UTM-tagged traffic is only down 26%. Campaigns are actually holding up better than organic/direct. UTM-tagged users fire Revenue Events at 7.3× the rate of non-UTM traffic. The takeaway isn't "marketing is failing" — it's "marketing is the highest-leverage channel we have, and here's how to get more out of it."</p>
+    </div>
+
+    <!-- FRAME 1: THE NUMBERS -->
+    <div class="frame-card">
+      <div class="frame-num">// THE NUMBERS</div>
+      <h3>The three numbers that anchor the entire conversation</h3>
+      <ul>
+        <li><strong>7.3×</strong> — UTM users vs non-UTM users for revenue conversion</li>
+        <li><strong>62%</strong> — of Revenue Events come from UTM-tagged landings</li>
+        <li><strong>27.6%</strong> — top campaign (vip_launch_2025) landing → revenue rate</li>
+      </ul>
+    </div>
+
+    <!-- FRAME 2: WINNERS -->
+    <div class="frame-card">
+      <div class="frame-num">// WINNERS</div>
+      <h3>What's working — and deserves more budget</h3>
+      <ul>
+        <li>vip_launch_2025: 37.9% to PDP, 27.6% to revenue — best in class</li>
+        <li>Newsletter source: 19.8% landing-to-revenue, 9.9× site baseline</li>
+        <li>summer_sale_2024: still converting at 19.4% into 2026 — seasonal creative that has legs</li>
+      </ul>
+    </div>
+
+    <!-- FRAME 3: LAGGARDS -->
+    <div class="frame-card">
+      <div class="frame-num">// LAGGARDS</div>
+      <h3>What needs to be cut or reworked</h3>
+      <ul>
+        <li>holiday_promo_2025 — 19.1% PDP rate, temporally off in April</li>
+        <li>affiliate_2025 — 1,528 landings but only 19.4% convert to PDP</li>
+        <li>seasonal and electric_rental — both at ~20%, small and underperforming</li>
+      </ul>
+    </div>
+
+    <!-- FRAME 4: PRODUCT -->
+    <div class="frame-card">
+      <div class="frame-num">// PRODUCT CEILING</div>
+      <h3>The part nobody's talking about: the ceiling is product, not marketing</h3>
+      <ul>
+        <li>Brand-new JS regression (+345%) in main.js — deploy issue</li>
+        <li>Purchase Complete button errors (+100%, 26 users) — terminal failure</li>
+        <li>City inventory API worse in Austin (+107%), St. Louis (+176%), Raleigh (+94%)</li>
+        <li>Fix these and every campaign's conversion rate moves up simultaneously</li>
+      </ul>
+    </div>
+
+    <!-- STOPPER -->
+    <div class="frame-card">
+      <div class="frame-num">// STOPPER</div>
+      <h3>If leadership pushes back with "these rates seem low"</h3>
+      <ul>
+        <li>Baseline landing-to-revenue for all users is 2.0%. Campaigns are 14.6%.</li>
+        <li>Newsletter: 19.8% to revenue. Google CPC: 14.4%. These are strong numbers.</li>
+        <li>Numbers are currently <em>depressed</em> by product issues — real ceilings are higher</li>
+        <li>This is Fullstory MCP data, not a survey or a model — it's observed user behavior</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ CHEATSHEET ══════════════════════ -->
+<section class="section" id="cheatsheet">
+  <div class="section-header">
+    <div class="section-cmd">cat numbers-cheatsheet.txt</div>
+    <div class="section-title">Numbers Cheatsheet</div>
+    <div class="section-desc">Must-memorize before the meeting. Group by theme — if someone cuts you off, pivot to the next group.</div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--amber);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;"># 2-week comparison</div>
+  <div class="cheatsheet">
+    <div class="cheat-card">
+      <div class="cheat-label">ProductPage Views</div>
+      <div class="cheat-num bad">−38%</div>
+      <div class="cheat-caption">12,237 current vs 19,719 prior</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">All UTM landings</div>
+      <div class="cheat-num warn">−26%</div>
+      <div class="cheat-caption">6,434 current vs 8,742 prior. Campaigns holding up 12pp better than overall.</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">UTM share of PDP</div>
+      <div class="cheat-num good">+2.1pp</div>
+      <div class="cheat-caption">13.0% now vs 10.9% prior — campaigns gaining share</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;"># Full funnel (30d, unique users)</div>
+  <div class="cheatsheet">
+    <div class="cheat-card">
+      <div class="cheat-label">UTM users → PDP → Checkout → Revenue</div>
+      <div class="cheat-num good">13,272 → 3,159 → 2,060 → 1,933</div>
+      <div class="cheat-caption">100% → 23.8% → 15.5% → <strong style="color:var(--green);">14.6%</strong> landing to revenue</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">All users → PDP → Checkout → Revenue</div>
+      <div class="cheat-num warn">154,141 → 12,749 → 3,544 → 3,117</div>
+      <div class="cheat-caption">100% → 8.3% → 2.3% → <strong style="color:var(--red);">2.0%</strong> landing to revenue</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">UTM revenue lift</div>
+      <div class="cheat-num good">7.3×</div>
+      <div class="cheat-caption">14.6% UTM vs 2.0% baseline. 62% of Revenue from UTM.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;"># Campaign leaderboard (30d)</div>
+  <div class="cheatsheet">
+    <div class="cheat-card">
+      <div class="cheat-label">Top by reach rate</div>
+      <div class="cheat-num good">vip_launch_2025</div>
+      <div class="cheat-caption">37.9% to PDP · 27.6% to revenue · 909 / 646 users</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">Top by volume</div>
+      <div class="cheat-num warn">cargo_rental_2025</div>
+      <div class="cheat-caption">4,677 landings · 24.8% of UTM PDP share · only 10.8% to revenue</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">Bottom four (&lt;20% PDP rate)</div>
+      <div class="cheat-num bad">holiday / affiliate / seasonal / electric</div>
+      <div class="cheat-caption">Candidates for budget pull or creative rework</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--purple);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;"># Source &amp; medium winners</div>
+  <div class="cheatsheet">
+    <div class="cheat-card">
+      <div class="cheat-label">Newsletter (source)</div>
+      <div class="cheat-num good">30.0% / 19.8%</div>
+      <div class="cheat-caption">PDP rate / Revenue rate. 9.9× site baseline. Beats Google on both.</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">Google (source)</div>
+      <div class="cheat-num warn">25.1% / 14.4%</div>
+      <div class="cheat-caption">Higher volume (5,456 landings) but lower efficiency than newsletter</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">Email medium vs CPC</div>
+      <div class="cheat-num good">29.1% vs 24.1%</div>
+      <div class="cheat-caption">PDP reach rate. Email outperforms CPC across the board.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--red);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;"># Product regressions (non-campaign)</div>
+  <div class="cheatsheet">
+    <div class="cheat-card">
+      <div class="cheat-label">New JS error in main.js</div>
+      <div class="cheat-num bad">+345%</div>
+      <div class="cheat-caption">TypeError: n is not a function · 48 users · looks like a deploy regression</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">Purchase Complete error clicks</div>
+      <div class="cheat-num bad">+100%</div>
+      <div class="cheat-caption">26 users · terminal checkout button failing · direct revenue loss</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-label">City API worse in 3 markets</div>
+      <div class="cheat-num bad">+94% to +176%</div>
+      <div class="cheat-caption">Austin, St. Louis, Raleigh · 417 users total</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ SECTION NOTES ══════════════════════ -->
+<section class="section" id="section-notes">
+  <div class="section-header">
+    <div class="section-cmd">cat presenter-notes.md</div>
+    <div class="section-title">Section-by-Section Presenter Notes</div>
+    <div class="section-desc">Scripted bullets aligned to each section of the full report. Suggested timing in parentheses — adjust to audience appetite.</div>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Opening — Hero + Stats Strip (1 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Open with the paradox</strong> — "ProductPage traffic is down 38%, but UTM campaigns only lost 26%. Campaigns are holding up." This is the hook.</li>
+      <li class="stat"><strong>Stats strip</strong> — Point at "7.3×" first. That's the most compelling single number in the entire report. Everything else supports it.</li>
+      <li class="note">Don't read the hero tags aloud — they're redundant with what you'll say. Let them render.</li>
+      <li class="gap"><strong>Don't dwell on the decline</strong> — If you spend 5 minutes on the −38%, the meeting becomes about the decline, not the campaign decisions. Acknowledge it, pivot to "what's working."</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 01 — Two-Week Comparison (2 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="stat"><strong>The ProductPage daily chart tells the story</strong> — Purple (prior) bars are uniformly taller than green (current). The partial-day dashed bar at the far right is today — note it's a half-day.</li>
+      <li class="fs"><strong>The UTM chart is more encouraging</strong> — Much less degraded than PDP overall. This is visual proof of the "campaigns holding up" claim.</li>
+      <li class="gap"><strong>The 12-point gap</strong> — PDP −38% minus UTM −26% = 12pp gap. That gap is the non-campaign decline. Organic, direct, referral. Not the marketing team's lane.</li>
+      <li class="note">If asked "when did the decline start?" — point at the last week of the current window; bars go 636, 251, 690 — something happened around Apr 13. Worth a follow-up.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 02 — Campaign Leaderboard (3 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Read the table two ways</strong> — Reach Rate is creative/targeting quality. Share of PDP is volume contribution. Different campaigns win on each.</li>
+      <li class="stat"><strong>Spotlight vip_launch_2025</strong> — 37.9% is the best rate in the portfolio. 1.5× the portfolio average. Whatever this campaign is doing is the pattern to replicate.</li>
+      <li class="stat"><strong>Spotlight cargo_rental_2025</strong> — Biggest volume, mediocre rate. Not a failing campaign — a campaign with room to grow if we can lift its rate.</li>
+      <li class="gap"><strong>Call out the bottom four</strong> — All below 20% rate. Holiday campaign in April is the most obvious — acknowledge it and propose pausing.</li>
+      <li class="note">Don't read every row aloud. Scroll down the table pointing at the colored conv-rate cells. Green-orange-red tells the story visually.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 03 — Revenue Funnel (3 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="stat"><strong>This is the most important section</strong> — The side-by-side funnel is the single chart that reframes the whole conversation from "marketing performance" to "marketing ROI."</li>
+      <li class="fs"><strong>Walk through the UTM funnel step by step</strong> — 13,272 landed, 23.8% reached PDP, 65% of those reached Checkout, 94% of those fired Revenue. Each step is a smaller relative drop.</li>
+      <li class="gap"><strong>Compare to "All users"</strong> — Same structure, wildly different rates. The funnel shape is similar; the baseline is just much lower for non-campaign traffic.</li>
+      <li class="stat"><strong>The 7.3× multiplier</strong> — State it explicitly. "A UTM-tagged user is 7.3× more likely to complete a purchase than someone arriving without a UTM."</li>
+      <li class="note">Per-campaign revenue table: highlight vip_launch's 27.6% vs cargo_rental's 10.8%. Same absolute revenue count (646 vs 425), but vip_launch does it on 40% fewer users.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 04 — Source &amp; Medium (1.5 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>Newsletter beats Google</strong> — Same number of revenue conversions from 15% fewer users. Email medium 29.1% vs CPC 24.1%.</li>
+      <li class="stat">If leadership is email-skeptical, frame it as "we have an under-utilized owned channel that outperforms paid search."</li>
+      <li class="note">Keep this section short — it's a drill-down into channel mechanics. The executive takeaway is just "email is undervalued."</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 05 — Winners &amp; Laggards (1.5 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>This is the prose version of Section 02</strong> — Use it to slow down on the two campaigns leadership should remember: vip_launch (extend) and cargo_rental (audit).</li>
+      <li class="gap"><strong>The Laggards card is where you propose the budget cut</strong> — Four campaigns, sub-20% rate, all clear candidates for pause or rework. No debate needed if they agree on the methodology.</li>
+      <li class="note">Leadership will often want to defend cargo_rental because it's "performing" in absolute terms. Acknowledge that — then point out the rate ceiling.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 06 — Non-Campaign Friction (2.5 min)</div>
+  <div class="presenter-notes" style="margin-bottom:24px;">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="stat"><strong>Open with the frame</strong> — "These issues aren't marketing's problem, but every one of them caps marketing's ROI." This is how you avoid inter-team friction during the meeting.</li>
+      <li class="gap"><strong>New regressions table</strong> — Lead with the TypeError (+345%). Brand new, in main.js, suggests a recent deploy. This is the item that should get a specific engineering owner by end of meeting.</li>
+      <li class="gap"><strong>Purchase Complete button errors</strong> — 26 users hitting the terminal button and getting an error is pure lost revenue. Use the word "terminal" — it's more alarming than "checkout."</li>
+      <li class="fs"><strong>Share button fix</strong> — Trivial CSS change, affects 968 users on PDP. Good "easy win" to close the section on.</li>
+      <li class="note">Cross-link the CarGo UX Report for the Wall 1 / Wall 2 baseline. If leadership is new to this, this is the second meeting about these issues.</li>
+    </ul>
+  </div>
+
+  <div style="margin-bottom:6px;font-size:10px;color:var(--text-lo);letter-spacing:1.5px;text-transform:uppercase;"># Section 07 — Recommendations (4 min)</div>
+  <div class="presenter-notes">
+    <div class="pn-label">// presenter bullets</div>
+    <ul class="pn-bullets">
+      <li class="fs"><strong>The two rec-cards are deliberately separate</strong> — Product fixes and marketing moves have different owners. Don't blur them. Marketing shouldn't own the deploy regression; engineering shouldn't own the budget reallocation.</li>
+      <li class="stat"><strong>P1 marketing moves</strong> — Pause bottom four, extend vip_launch. If you only get two decisions out of this meeting, these are the two.</li>
+      <li class="stat"><strong>P1 product fixes</strong> — TypeError, Purchase Complete, city APIs. If you get a third decision, get an engineering DRI for these.</li>
+      <li class="gap"><strong>P4 attribution instrumentation</strong> — This is the ask for next-cycle investment. Flag it explicitly — "we can do better analysis next quarter if we instrument utm_campaign as a page variable."</li>
+      <li class="note">Close with: "We can re-run this entire analysis in 2 weeks. The MCP turned hours of SQL into minutes of questions — this is not a quarterly report anymore."</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══════════════════════ DISCOVERY QUESTIONS ══════════════════════ -->
+<section class="section" id="discovery">
+  <div class="section-header">
+    <div class="section-cmd">cat discovery-questions.txt</div>
+    <div class="section-title">Discovery Questions</div>
+    <div class="section-desc">Use these to surface context the report doesn't have. Each is tagged by who should answer it.</div>
+  </div>
+
+  <div class="discovery-list">
+
+    <div class="dq-item open">
+      <div class="dq-header">
+        <div class="dq-num">01</div>
+        <div>
+          <div class="dq-tag tag-mktg">Marketing</div>
+          <div class="dq-question">What's the brief, creative, and targeting for vip_launch_2025 — and can we reuse it as a template for a parallel campaign?</div>
+        </div>
+        <div class="dq-type">opens: scaling</div>
+      </div>
+      <div class="dq-why">
+        A 37.9% PDP rate and 27.6% revenue rate is 1.5× to 2.6× the portfolio average. Something about this campaign's audience, copy, or landing experience is working much harder than elsewhere. If the team can document it, we can run a second parallel campaign (different audience, same playbook) and measure the incremental contribution.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We already maxed out that audience" → OK, but the pattern (creative + landing) may generalize to adjacent audiences. Let's test.<br>
+        "We don't know what made it work" → That's the more common answer. Then the next step is diagnostic — look at referrer breakdowns, landing page, and ad creative in one doc.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">02</div>
+        <div>
+          <div class="dq-tag tag-mktg">Marketing</div>
+          <div class="dq-question">Why is holiday_promo_2025 still running in April? Is there budget lock-in, or is this a residual spend we can reclaim?</div>
+        </div>
+        <div class="dq-type">opens: reallocation</div>
+      </div>
+      <div class="dq-why">
+        A "holiday" campaign running 3+ months after the holiday is usually either (a) spend that never got paused, (b) branded creative that's still delivering mild brand lift, or (c) a creative refresh that's just named poorly. Need to know which to decide if it's a clean cut or a rename.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "It's on auto-renew" → Pause it; redirect budget to vip_launch or newsletter cadence.<br>
+        "It's actually Q2 creative we mislabeled" → Fine — but then the UTM needs to change too, or we'll keep misattributing.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">03</div>
+        <div>
+          <div class="dq-tag tag-eng">Engineering</div>
+          <div class="dq-question">Was there a deploy to <code class="code-inline">main.000620b5.js</code> in the last 2 weeks? The "TypeError: n is not a function" error is brand new (+345%).</div>
+        </div>
+        <div class="dq-type">opens: regression diagnosis</div>
+      </div>
+      <div class="dq-why">
+        The bundle hash is specific (<code class="code-inline">main.000620b5.js</code>). If engineering can confirm when that hash was deployed, we have a deploy window. The error signature is a minified function call — needs a source map to get a real traceback. 48 users per 2w is small but climbing.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We shipped a frontend release on [date]" → Correlate the error spike to that date. If they line up, roll back or hotfix.<br>
+        "No recent deploys" → Then it's either a dependency update or a data-triggered code path. Still worth a source-map lookup.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">04</div>
+        <div>
+          <div class="dq-tag tag-eng">Engineering</div>
+          <div class="dq-question">Is there an alert on the <code class="code-inline">[SH] Purchase Complete</code> button error-click rate? 26 users hit an error on the terminal checkout action in the last 2 weeks — zero prior.</div>
+        </div>
+        <div class="dq-type">opens: monitoring gap</div>
+      </div>
+      <div class="dq-why">
+        This is the final click in the purchase flow. Any error here is lost revenue — and the fact that it went from 0 to 26 users suggests a recent change. A P1-level alert should have fired. If there's no alert, that's a secondary finding: add one.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We don't have per-element error monitoring" → That's the finding. The Fullstory signal exists; it just needs a threshold and a notifier.<br>
+        "We have monitoring but it didn't fire" → Threshold is too permissive. Tighten it.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">05</div>
+        <div>
+          <div class="dq-tag tag-eng">Engineering</div>
+          <div class="dq-question">The <code class="code-inline">/v2/cars/getAllCarsInOrgInCity</code> endpoint is degrading in Austin, St. Louis, and Raleigh. Is there a partition or shard that handles these cities?</div>
+        </div>
+        <div class="dq-type">opens: infra</div>
+      </div>
+      <div class="dq-why">
+        Three specific cities regressing together suggests shared infrastructure — a region, a shard, a data source. If this endpoint is partitioned geographically, the fix might be isolated to that partition. This was a known issue in the prior UX report and it got worse.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "These cities share a backend" → Narrow the investigation to that backend — capacity, config, upstream data.<br>
+        "They're all independent" → Then it's a coincidence of three regressions in two weeks — which is less likely than you'd think. Worth investigating why the timing lines up.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">06</div>
+        <div>
+          <div class="dq-tag tag-data">Data / Analytics</div>
+          <div class="dq-question">The Revenue Event fires for 1,933 UTM users but only 2,060 UTM users hit a URL with "checkout" in the path. That's 93.8% — can you confirm how Revenue Event is wired?</div>
+        </div>
+        <div class="dq-type">opens: definition sanity</div>
+      </div>
+      <div class="dq-why">
+        The ratio is suspiciously tight. Revenue Event may be firing server-side or from a confirmation URL outside the checkout pattern. If the definition is wrong, we're over- or under-counting. Need to confirm before using these rates in any exec-level comms.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "It fires on the /confirmation page" → OK, that's why it's not filtered by URL-contains-checkout. Definition is fine.<br>
+        "It's a server-side API push after the payment succeeds" → Also fine. Doc it in the methodology.<br>
+        "We don't really know" → Flag this before socializing the report further.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">07</div>
+        <div>
+          <div class="dq-tag tag-data">Marketing Ops</div>
+          <div class="dq-question">Can we push utm_campaign into the Fullstory page variable on every SPA route, not just the landing page URL?</div>
+        </div>
+        <div class="dq-type">opens: instrumentation upgrade</div>
+      </div>
+      <div class="dq-why">
+        Right now UTM attribution only works on the landing URL. Once the user SPA-navigates, the UTM leaves the URL and we lose per-page attribution. Pushing utm_campaign into <code class="code-inline">window.FS.setVars("page", ...)</code> on every route would unlock per-campaign day-level metrics — including exact 2-week comparisons per campaign, not just per-portfolio.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We can do it — just needs a tag manager change" → Ship it. ~1 day of work for 10× better attribution data.<br>
+        "It requires a frontend deploy" → Still small — one line in the router effect.
+      </div>
+    </div>
+
+    <div class="dq-item">
+      <div class="dq-header">
+        <div class="dq-num">08</div>
+        <div>
+          <div class="dq-tag tag-exec">Exec / Leadership</div>
+          <div class="dq-question">If we could move every UTM campaign's conversion rate up 5pp by fixing the product issues in Section 06, what's the revenue impact?</div>
+        </div>
+        <div class="dq-type">opens: business case for product fixes</div>
+      </div>
+      <div class="dq-why">
+        Framing the product fixes in revenue terms converts "engineering backlog" into "quarterly OKR." 5pp on 1,933 revenue users is ~97 more revenue events per month. Multiply by deal size. Use this to justify prioritization.
+      </div>
+      <div class="dq-surface">
+        <div class="dq-surface-label">If they say...</div>
+        "We don't have AOV data" → That's a separate tracking gap. Propose a follow-up.<br>
+        "That's a big assumption" → Acknowledge — it's a rough estimate. Still orders of magnitude bigger than the cost of the fixes.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ PUSHBACK ══════════════════════ -->
+<section class="section" id="pushback">
+  <div class="section-header">
+    <div class="section-cmd">grep -r "pushback" ./cargo-campaign-performance/</div>
+    <div class="section-title">Stakeholder Pushback Handlers</div>
+    <div class="section-desc">The five challenges you'll hear. Response + reframe for each.</div>
+  </div>
+
+  <div class="objection-list">
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">These conversion rates seem too high. 14.6% landing-to-revenue isn't what we see in our own dashboards.</div>
+        </div>
+        <div class="obj-persona">// CMO / Marketing Leader</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            Two things. First, this is <strong>UTM-tagged users only</strong> — a self-selected, highly qualified cohort. They clicked an ad or tapped an email link. That's already the top decile of intent. Second, <strong>CarGo is a demo environment</strong> — some portion of the Revenue Event firings are internal, scripted, or QA traffic. Real production numbers will differ. The <em>relative</em> ratios (vip_launch vs cargo_rental, newsletter vs google) will hold across environments — the absolutes won't.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"The absolutes are environment-specific. The ratios are directional. Use the ratios — they're what tell us where to spend."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">How is this different from GA4 attribution? Why should we trust this over our existing reporting?</div>
+        </div>
+        <div class="obj-persona">// Marketing Ops / Analytics</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            GA4 is a model — it applies attribution rules (last-click, first-click, data-driven) on top of observed events. <strong>Fullstory is the raw event stream</strong> — every page view, every click, every error, with session context. This report uses <em>cohort-based attribution</em>: users who landed with UTM=X, grouped as a segment, and we measured what they did. It's simpler and more transparent than GA4's attribution models, but also less forgiving — it won't credit a campaign that didn't drive a URL-visible UTM.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"GA4 tells you the attributed outcome. Fullstory tells you the observed behavior. Both have a place. This is observed."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">cargo_rental_2025 generates more revenue in absolute terms. Why would we cut it?</div>
+        </div>
+        <div class="obj-persona">// Performance Marketing Lead</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            <strong>We're not proposing cutting cargo_rental_2025.</strong> It's contributing 22% of UTM revenue — that's real. The proposal is to <strong>audit its landing experience for a rate lift</strong>. Its 10.8% revenue rate is below portfolio average; whatever's depressing that rate (landing copy mismatch, slow page, broken CTA) is a compounding loss. A 5pp rate lift would be 115 more revenue events per month without spending another dollar.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"The biggest campaign with the weakest rate is the biggest optimization opportunity — more than any net-new campaign we'd launch."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">If ProductPage traffic is down 38%, why are we talking about campaign tactics instead of emergency mode?</div>
+        </div>
+        <div class="obj-persona">// CEO / GM</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            <strong>Two separate problems, two separate workstreams.</strong> Campaigns only explain 12 percentage points of the 38% decline — the other 26pp is non-campaign traffic (organic, direct, referral). That's an SEO or PR or partner-referral problem, not a marketing campaign problem. We're flagging both in this report. The campaign review is actionable today; the organic decline needs its own investigation with the SEO team or whoever owns acquisition outside of paid.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"Two-thirds of the decline is outside our lane. We flagged it. We need a different team to own that diagnosis."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-header">
+        <div>
+          <div class="obj-quote">You're saying product bugs are depressing marketing ROI. That's convenient for marketing.</div>
+        </div>
+        <div class="obj-persona">// Product / Engineering Lead</div>
+      </div>
+      <div class="obj-body">
+        <div>
+          <div class="obj-response-label orl-response">// response</div>
+          <div class="obj-response">
+            <strong>The data is the data — it's behavior, not interpretation.</strong> 968 users are dead-clicking the share button on PDP. 26 users are clicking the final checkout button and getting an error. 151 users in St. Louis alone hit a network error in the inventory API. These aren't opinions or marketing's framing — they're event counts from Fullstory. Marketing didn't cause them, and product bugs depress <em>every</em> team's metrics, not just marketing's. The point isn't blame. It's that a fix lifts everyone.
+          </div>
+        </div>
+        <div>
+          <div class="obj-response-label orl-frame">// frame</div>
+          <div class="obj-frame">
+            <strong>"These aren't marketing's interpretation. They're Fullstory event counts. A fix makes everyone's metrics better — product, marketing, support."</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ INVESTIGATION WORKFLOW ══════════════════════ -->
+<section class="section" id="investigation">
+  <div class="section-header">
+    <div class="section-cmd">cat investigation-workflow.md</div>
+    <div class="section-title">How this report was produced</div>
+    <div class="section-desc">Fullstory MCP workflow used to generate every number in the full report. Reusable for the next 2-week cycle.</div>
+  </div>
+
+  <div class="workflow-steps">
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">01</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Discover UTM infrastructure</div>
+        <div class="workflow-step-desc">
+          Start with <code class="code-inline">discover_org_context</code> to find available custom variables, defined events, and pages. For CarGo, this surfaced:
+          <ul style="margin-top:8px;padding-left:20px;list-style:disc;">
+            <li>utm_campaign, utm_source, utm_medium — all page-scope and user-scope custom variables</li>
+            <li>ProductPage = page_id 2</li>
+            <li>Revenue Event defined event = id <code class="code-inline">KSNijoJTTEpe</code></li>
+          </ul>
+        </div>
+        <div class="workflow-step-cmd">
+<span class="comment"># Fullstory MCP call</span>
+discover_org_context(queries=["utm_campaign", "utm_source", "utm_medium", "revenue", "ProductPage"])
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">02</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Detect UTM landings via URL substring</div>
+        <div class="workflow-step-desc">
+          Dimensioning by the user-scope custom variable didn't work in metric-builder. Substring match on URL worked:<br>
+          <code class="code-inline">visitedUrl where URL contains "utm_campaign="</code> → group by DIMENSION_URL_QUERY prefix "utm_campaign=" → returns distribution of campaigns.<br>
+          Same pattern for utm_source and utm_medium.
+        </div>
+        <div class="workflow-step-cmd">
+<span class="comment"># Build top_n metric with URL_QUERY dimension</span>
+build_metric(
+  query="Count page views where URL contains 'utm_campaign=', grouped by utm_campaign. Top 20.",
+  output_type="top_n"
+)
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">03</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Scope to ProductPage visitors via segment</div>
+        <div class="workflow-step-desc">
+          Built a segment: "users who visited page_id 2 in the last 30 days." Attached to the UTM landing metric. Result: UTM distribution of users who actually reached PDP. Repeated for utm_source and utm_medium.
+        </div>
+        <div class="workflow-step-cmd">
+<span class="comment"># Build segment + attach to metric</span>
+seg = build_segment(query="Users who visited page_id 2 in last 30 days")
+update_metric(metric_id=landing_metric, segment_id=seg.segment_id)
+compute_metric(metric_id=updated, time_range="last_30_days")
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">04</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Compute daily trends for 2-week comparison</div>
+        <div class="workflow-step-desc">
+          compute_metric only accepts preset enums (last_7_days, last_30_days, etc.) — no custom date ranges. Workaround: build trend metrics over 30 days, then manually bucket the daily data into current-2w vs prior-2w windows.
+        </div>
+        <div class="workflow-step-cmd">
+<span class="comment"># Trend metric with daily frequency</span>
+build_metric(
+  query="Daily count of ProductPage views, last 30 days",
+  output_type="trend"
+)
+<span class="comment"># Sum day-level values manually for each 14-day window</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">05</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Build per-campaign segments for revenue attribution</div>
+        <div class="workflow-step-desc">
+          For the top 3 campaigns, built individual segments matching <code class="code-inline">utm_campaign=&lt;value&gt;</code> in URL. Attached each to the Revenue Event unique-users metric. Same for top 2 sources. This gives per-campaign landing-to-revenue rates.
+        </div>
+        <div class="workflow-step-cmd">
+<span class="comment"># Per-campaign cohorts</span>
+for campaign in ["vip_launch_2025", "cargo_rental_2025", "summer_sale_2024"]:
+  seg = build_segment(query=f"Users whose URL contained utm_campaign={campaign}")
+  m = update_metric(metric_id=revenue_event, segment_id=seg.segment_id)
+  result = compute_metric(metric_id=m, time_range="last_30_days")
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">06</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Discover non-campaign friction via discover_groups</div>
+        <div class="workflow-step-desc">
+          Ran <code class="code-inline">discover_groups</code> scoped to Purchase Funnel (id <code class="code-inline">2BWVg4GQY7Uo</code>) with <code class="code-inline">compare_to_previous=true</code>. Returns frustration signals sorted by delta_pct. Also ran scoped to page_id 2 (ProductPage). Combined output surfaces regressions without manually hunting through signal categories.
+        </div>
+        <div class="workflow-step-cmd">
+<span class="comment"># Find signals that spiked vs prior 2w</span>
+discover_groups(
+  funnel_id="2BWVg4GQY7Uo",
+  compare_to_previous=True,
+  start_time="2026-04-04",
+  end_time="2026-04-17",
+  limit=5
+)
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-step">
+      <div class="workflow-step-num"><div class="wsn-inner">07</div></div>
+      <div class="workflow-step-body">
+        <div class="workflow-step-title">Re-run for next cycle</div>
+        <div class="workflow-step-desc">
+          Every metric and segment from this analysis is saved and has a Fullstory URL. To produce the next 2-week report, re-compute the existing metrics with <code class="code-inline">last_30_days</code>, re-bucket the trend data, and re-run <code class="code-inline">discover_groups</code> against the new window. Estimated time: 30 minutes, not days.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ REFERENCES ══════════════════════ -->
+<section class="section" id="docs">
+  <div class="section-header">
+    <div class="section-cmd">ls references/</div>
+    <div class="section-title">References &amp; Saved Objects</div>
+    <div class="section-desc">Quick links to the Fullstory objects that back every number in the report, plus useful external docs.</div>
+  </div>
+
+  <div class="doc-section-label dsl-fs">// saved fullstory objects</div>
+  <div class="doc-grid" style="margin-bottom:24px;">
+    <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/907915089" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📈</div>
+      <div>
+        <div class="doc-link-title">ProductPage daily trend</div>
+        <div class="doc-link-desc">Metric 907915089 · Section 01 chart data source</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/metrics/create/907915089</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1495863321" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📈</div>
+      <div>
+        <div class="doc-link-title">UTM landings daily trend</div>
+        <div class="doc-link-desc">Metric 1495863321 · Section 01 chart data source</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/metrics/create/1495863321</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/1495697180" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📊</div>
+      <div>
+        <div class="doc-link-title">UTM landings by campaign (PDP-scoped)</div>
+        <div class="doc-link-desc">Metric 1495697180 · Section 02 leaderboard</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/metrics/create/1495697180</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/metrics/create/491581852" target="_blank" class="doc-link">
+      <div class="doc-link-icon">💰</div>
+      <div>
+        <div class="doc-link-title">Revenue Event (unique users)</div>
+        <div class="doc-link-desc">Metric 491581852 · Event ID KSNijoJTTEpe</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/metrics/create/491581852</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:grROgoOxfAsi" target="_blank" class="doc-link">
+      <div class="doc-link-icon">👥</div>
+      <div>
+        <div class="doc-link-title">UTM-tagged users segment</div>
+        <div class="doc-link-desc">Segment grROgoOxfAsi · the "13,272 users" number</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/segments/everyone/people:search:grROgoOxfAsi</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:P2WW49fGt3C4" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🧭</div>
+      <div>
+        <div class="doc-link-title">ProductPage visitors segment</div>
+        <div class="doc-link-desc">Segment P2WW49fGt3C4 · used as scope for campaign metrics</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/segments/everyone/people:search:P2WW49fGt3C4</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:qwpqkP6FLbZE" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🏷️</div>
+      <div>
+        <div class="doc-link-title">vip_launch_2025 users segment</div>
+        <div class="doc-link-desc">Segment qwpqkP6FLbZE · best-performing campaign cohort</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/segments/everyone/people:search:qwpqkP6FLbZE</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/segments/everyone/people:search:xoQDSVtbZ2BE" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📧</div>
+      <div>
+        <div class="doc-link-title">newsletter source users segment</div>
+        <div class="doc-link-desc">Segment xoQDSVtbZ2BE · email channel cohort</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/segments/everyone/people:search:xoQDSVtbZ2BE</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="doc-section-label dsl-mktg">// fullstory funnels</div>
+  <div class="doc-grid" style="margin-bottom:24px;">
+    <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🛒</div>
+      <div>
+        <div class="doc-link-title">Purchase Funnel (managed)</div>
+        <div class="doc-link-desc">The scope for discover_groups friction analysis</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/funnels/details/2BWVg4GQY7Uo</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/YiVDRnS8mILQ" target="_blank" class="doc-link">
+      <div class="doc-link-icon">➡️</div>
+      <div>
+        <div class="doc-link-title">PDP → Checkout Start funnel</div>
+        <div class="doc-link-desc">For Section 03 funnel cross-reference</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/funnels/details/YiVDRnS8mILQ</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/ytEwKbV4XEIq" target="_blank" class="doc-link">
+      <div class="doc-link-icon">✅</div>
+      <div>
+        <div class="doc-link-title">Checkout Review → Success</div>
+        <div class="doc-link-desc">End-of-funnel completion rate</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/funnels/details/ytEwKbV4XEIq</div>
+      </div>
+    </a>
+    <a href="https://app.fullstory.com/ui/18PNWR/funnels/details/MSdxpcaXdnZZ" target="_blank" class="doc-link">
+      <div class="doc-link-icon">💰</div>
+      <div>
+        <div class="doc-link-title">Checkout From Search (revenue funnel)</div>
+        <div class="doc-link-desc">Managed funnel variant with revenue step</div>
+        <div class="doc-link-url">app.fullstory.com/ui/18PNWR/funnels/details/MSdxpcaXdnZZ</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="doc-section-label dsl-fs">// related internal assets</div>
+  <div class="doc-grid">
+    <a href="../" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📄</div>
+      <div>
+        <div class="doc-link-title">Full Campaign Performance Report</div>
+        <div class="doc-link-desc">The executive-facing asset — what you're presenting</div>
+        <div class="doc-link-url">./cargo-campaign-performance/index.html</div>
+      </div>
+    </a>
+    <a href="../../cargo-ux-report/" target="_blank" class="doc-link">
+      <div class="doc-link-icon">🧱</div>
+      <div>
+        <div class="doc-link-title">CarGo UX Report</div>
+        <div class="doc-link-desc">The Wall 1 / Wall 2 baseline — Section 06 cross-references this</div>
+        <div class="doc-link-url">./cargo-ux-report/index.html</div>
+      </div>
+    </a>
+    <a href="../../cargo-ux-report/field-guide/" target="_blank" class="doc-link">
+      <div class="doc-link-icon">📘</div>
+      <div>
+        <div class="doc-link-title">CarGo UX Report — Field Guide</div>
+        <div class="doc-link-desc">Pattern reference for this field guide</div>
+        <div class="doc-link-url">./cargo-ux-report/field-guide/index.html</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <div># SpecOps · Fullstory · Campaign Performance Field Guide · April 2026</div>
+  <div>Source: Fullstory MCP · Org 18PNWR · Not for external distribution</div>
+</footer>
+
+</body>
+</html>

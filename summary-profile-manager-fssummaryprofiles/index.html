@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullstory Profile Manager</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better aesthetics */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .bg-gradient {
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-primary {
+            transition: all 0.3s ease;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-r from-purple-500 from-10% via-sky-500 via-30% to-green-500 to-90% flex items-center justify-center min-h-screen p-4">
+    <div class="container bg-white rounded-xl shadow-2xl p-8 space-y-8 glass-effect">
+        <!-- Header -->
+        <header class="text-center space-y-2 relative">
+            <img src="./img/fs-logo.png" alt="Fullstory Logo" class="absolute top-0 left-0 h-12 w-auto">
+            <h1 class="text-4xl font-extrabold text-gray-800">Fullstory Profile Manager</h1>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-8">
+                <!-- API Key and Controls -->
+                <section id="credentials_section" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Access Credentials</h2>
+                        <button id="toggle_credentials_btn" class="text-sm text-blue-500 font-bold hover:underline">Hide
+                            Credentials</button>
+                    </div>
+                    <div id="credentials_content">
+                        <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                            <input type="text" id="api_key" placeholder="Enter API Key"
+                                class="flex-1 w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Status Message Section -->
+                <section id="status_section" class="bg-white p-6 rounded-lg shadow-inner mt-4">
+                    <p id="status_message" class="text-xl font-medium text-gray-600">Waiting for user input.</p>
+                </section>
+
+                <!-- List Profiles Section -->
+                <section id="profiles_list_section" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Profiles</h2>
+                        <button id="toggle_list_btn" class="text-sm text-blue-500 font-bold hover:underline">Hide
+                            Profiles</button>
+                    </div>
+
+                    <div id="profiles_list_content">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <button id="list_btn"
+                                class="button-primary px-4 py-3 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">Refresh
+                                Profiles</button>
+                            <label for="profiles_per_page" class="block text-gray-700 font-medium whitespace-nowrap">Per
+                                Page</label>
+                            <input type="number" id="profiles_per_page" value="10" min="1" max="100"
+                                class="w-16 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div class="mt-4">
+                            <input type="text" id="profile_filter" placeholder="Filter profiles..."
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+
+                        <ul id="profiles_list" class="mt-6 border border-gray-300 rounded-lg divide-y divide-gray-200">
+                            <li class="p-4 text-gray-500 text-center">Click "Refresh Profiles List" to get started.</li>
+                        </ul>
+                        <p id="total_profiles" class="text-sm text-gray-600 mt-2 text-center"></p>
+
+                        <!-- Pagination Controls -->
+                        <div id="pagination_controls" class="flex justify-between items-center mt-4">
+                            <button id="prev_page_btn"
+                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                            <span id="page_info" class="text-sm text-gray-600">Page 1 of 1</span>
+                            <button id="next_page_btn"
+                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Create & Update Profile Section -->
+                <section class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Current Profile</h2>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <span id="json_mode_label" class="mr-2 text-sm font-bold text-gray-500">Form</span>
+                            <div class="relative">
+                                <input type="checkbox" id="json_mode_toggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer peer-checked:bg-indigo-500 transition-colors"></div>
+                                <div class="absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full transition-transform peer-checked:translate-x-full shadow"></div>
+                            </div>
+                            <span class="ml-2 text-sm font-bold text-gray-500">JSON</span>
+                        </label>
+                    </div>
+                    <!-- Raw JSON mode textarea (hidden by default) -->
+                    <div id="json_mode_container" class="hidden space-y-4">
+                        <textarea id="raw_json_input" rows="20" placeholder='Paste full profile JSON here...'
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 font-mono text-sm"></textarea>
+                    </div>
+                    <div class="space-y-4">
+                        <label for="profile_id" class="block text-gray-700 font-medium">Profile ID:</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="profile_id"
+                                placeholder="ID to get, update or leave blank to create new"
+                                class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <button id="get_btn"
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg font-bold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Get
+                                Profile</button>
+                        </div>
+                    </div>
+                    <!-- Form mode fields -->
+                    <div id="form_mode_container">
+                    <div class="space-y-4">
+                        <label for="profile_name" class="block text-gray-700 font-medium">Profile Name</label>
+                        <input type="text" id="profile_name" placeholder="e.g., 'Support Agent Summary'"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"></input>
+                    </div>
+                    <div class="space-y-4">
+                        <label for="pre_prompt" class="block text-gray-700 font-medium">Pre-Prompt</label>
+                        <textarea id="pre_prompt" rows="3" placeholder="e.g., 'You are a support agent assistant...'"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    </div>
+                    <div class="space-y-4">
+                        <label for="post_prompt" class="block text-gray-700 font-medium">Post-Prompt</label>
+                        <textarea id="post_prompt" rows="3" placeholder="e.g., 'Summarize the user's primary goal...'"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    </div>
+
+                    <!-- New fields for Model and Temperature (LLM Model dropdown removed) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- <div class="space-y-4">
+                            <label for="llm_model" class="block text-gray-700 font-medium">LLM Model</label>
+                            <select id="llm_model" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option value="GEMINI_2_FLASH">GEMINI_2_FLASH</option>
+                                <option value="GEMINI_2_FLASH_LITE">GEMINI_2_FLASH_LITE</option>
+                            </select>
+                        </div> -->
+                        <div class="space-y-4">
+                            <label for="llm_temperature" class="block text-gray-700 font-medium">Temperature</label>
+                            <input type="text" id="llm_temperature" placeholder="e.g., 0.2"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label for="llm_response_schema" class="block text-gray-700 font-medium">Response Schema
+                            (JSON)</label>
+                        <textarea id="llm_response_schema" rows="5" placeholder='e.g., {"type": "OBJECT", "properties": {"summary": {"type": "STRING"}}, "required": ["summary"]}'
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label for="config_json" class="block text-gray-700 font-medium">Additional Configuration
+                            (JSON)</label>
+                        <textarea id="config_json" rows="8"
+                            placeholder='e.g., {"slice": {"mode": "LAST", "event_limit": 200}}'
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    </div>
+                    <div class="space-y-2 mt-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="delete_media_node" class="form-checkbox h-5 w-5 text-blue-600"
+                                checked>
+                            <span class="ml-2 text-gray-700">Delete Media Node</span>
+                        </label>
+                    </div>
+                    </div><!-- /form_mode_container -->
+                    <div class="flex space-x-4 mt-6">
+                        <button id="build_json_btn"
+                            class="button-primary flex-1 py-3 bg-indigo-500 text-white rounded-lg font-bold hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400">Build
+                            JSON</button>
+                    </div>
+                    <div class="flex space-x-4 mt-6">
+                        <button id="create_btn"
+                            class="button-primary flex-1 py-3 bg-blue-500 text-white rounded-lg font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            disabled>Create Profile</button>
+                        <button id="update_btn"
+                            class="button-primary flex-1 py-3 bg-yellow-500 text-white rounded-lg font-bold hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            disabled>Update Profile</button>
+                        <button id="delete_btn"
+                            class="button-primary py-3 px-4 bg-red-500 text-white rounded-lg font-bold hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">Delete</button>
+                    </div>
+                </section>
+
+                <!-- Review JSON Sections -->
+                <section id="generated_json_section" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Generated JSON</h2>
+                        <button id="toggle_json_btn" class="text-sm text-blue-500 font-bold hover:underline">Show
+                            JSON</button>
+                    </div>
+                    <div id="json_content" class="space-y-2 hidden">
+                        <label for="json_output" class="block text-gray-700 font-medium">JSON Payload</label>
+                        <textarea id="json_output" rows="10" readonly
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 resize-none"></textarea>
+                        <button id="copy_generated_btn"
+                            class="px-4 py-2 bg-gray-500 text-white rounded-lg font-bold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Copy
+                            to Clipboard</button>
+                    </div>
+                </section>
+
+                <section id="returned_json_section" class="bg-gray-50 p-6 rounded-lg border border-gray-200 mt-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Returned JSON</h2>
+                        <button id="toggle_returned_json_btn"
+                            class="text-sm text-blue-500 font-bold hover:underline">Show JSON</button>
+                    </div>
+                    <div id="returned_json_content" class="space-y-2 hidden">
+                        <label for="returned_json_output" class="block text-gray-700 font-medium">JSON Payload</label>
+                        <textarea id="returned_json_output" rows="10" readonly
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 resize-none"></textarea>
+                        <button id="copy_returned_btn"
+                            class="px-4 py-2 bg-gray-500 text-white rounded-lg font-bold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Copy
+                            to Clipboard</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- List Sessions by User Email Section -->
+                <section id="sessions_section" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">List Sessions by User Email</h2>
+                        <button id="toggle_sessions_btn" class="text-sm text-blue-500 font-bold hover:underline">Hide
+                            Sessions List</button>
+                    </div>
+                    <div id="sessions_content" class="space-y-6">
+                        <div class="space-y-4">
+                            <label for="user_email" class="block text-gray-700 font-medium">User Email:</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="email" id="user_email" placeholder="e.g., john.doe@example.com"
+                                    class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <button id="list_sessions_btn"
+                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">List
+                                    Sessions</button>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-gray-700 font-medium">Sessions for User:</label>
+                            <ul id="sessions_list"
+                                class="border border-gray-300 rounded-lg max-h-48 overflow-y-auto divide-y divide-gray-200">
+                                <li class="p-4 text-center text-gray-500">Enter an email and click "List Sessions".</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Test Profile Section -->
+                <section id="test_section" class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-700">Test Session Summary</h2>
+                        <button id="toggle_test_btn" class="text-sm text-blue-500 font-bold hover:underline">Hide Test
+                            Section</button>
+                    </div>
+                    <div id="test_content" class="space-y-6">
+                        <div class="space-y-4">
+                            <label class="block text-gray-700 font-medium">Session URL or ID:</label>
+                            <input type="text" id="session_url" placeholder="Paste FullStory session URL (e.g. https://app.fullstory.com/ui/...)"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-gray-400 text-sm">or</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="text" id="session_device_id" placeholder="Device ID"
+                                    class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm">
+                                <span class="text-gray-400 font-bold">:</span>
+                                <input type="text" id="session_session_id" placeholder="Session ID"
+                                    class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm">
+                            </div>
+                            <input type="hidden" id="session_id">
+                            <div class="flex items-center space-x-2">
+                                <button id="test_btn"
+                                    class="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg font-bold hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400">Test
+                                    Profile</button>
+                            </div>
+                        </div>
+
+                        <!-- Debug log for the API call URL -->
+                        <p id="test_url_debug" class="text-sm text-gray-500 break-all"></p>
+
+                        <hr class="my-6">
+
+                        <div class="mt-6 space-y-2">
+                            <label for="summary_output" class="block text-gray-700 font-medium">Summary Output</label>
+                            <textarea id="summary_output" rows="10" readonly
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 resize-y"></textarea>
+                            <button id="copy_summary_btn"
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg font-bold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Copy
+                                to Clipboard</button>
+                        </div>
+
+                        <div class="mt-6 space-y-2">
+                            <div class="flex items-center space-x-2">
+                                <label for="context_output" class="block text-gray-700 font-medium">Session
+                                    Context</label>
+                                <button id="fetch_context_btn"
+                                    class="px-2 py-1 bg-gray-500 text-white rounded-lg text-xs font-bold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Get
+                                    Context</button>
+                            </div>
+                            <textarea id="context_output" rows="5" readonly
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 resize-y"></textarea>
+                            <button id="copy_context_btn"
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg font-bold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Copy
+                                to Clipboard</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- FullStory Initialization Script -->
+    <script>
+        window['_fs_host'] = 'fullstory.com';
+        window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
+        window['_fs_org'] = '18PP88';
+        window['_fs_namespace'] = 'FS';
+        !function (m, n, e, t, l, o, g, y) {
+            var s, f, a = function (h) {
+                return !(h in m) || (m.console && m.console.log && m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].'), !1)
+            }(e)
+            ; function p(b) {
+                var h, d = []; function j() {
+                    h && (d.forEach((function (b) {
+                        var d; try { d = b[h[0]] && b[h[0]](h[1]) } catch (h) { return void (b[3] && b[3](h)) }
+                        d && d.then ? d.then(b[2], b[3]) : b[2] && b[2](d)
+                    })), d.length = 0)
+                } function r(b) { return function (d) { h || (h = [b, d], j()) } } return b(r(0), r(1)), {
+                    then: function (b, h) { return p((function (r, i) { d.push([b, h, r, i]), j() })) }
+                }
+            } a && (g = m[e] = function () {
+                var b = function (b, d, j, r) {
+                    function i(i, c) {
+                        h(b, d, j, i, c, r)
+                    } r = r || 2; var c, u = /Async$/; return u.test(b) ? (b = b.replace(u, ""), "function" == typeof Promise ? new Promise(i) : p(i)) : h(b, d, j, c, c, r)
+                }
+                ; function h(h, d, j, r, i, c) { return b._api ? b._api(h, d, j, r, i, c) : (b.q && b.q.push([h, d, j, r, i, c]), null) } return b.q = [], b
+            }(), y = function (b) {
+                function h(h) {
+                    "function" == typeof h[4] && h[4](new Error(b))
+                } var d = g.q; if (d) { for (var j = 0; j < d.length; j++)h(d[j]); d.length = 0, d.push = h }
+            }, function () {
+                (o = n.createElement(t)).async = !0, o.crossOrigin = "anonymous", o.src = "https://" + l, o.onerror = function () { y("Error loading " + l) }
+                    ; var b = n.getElementsByTagName(t)[0]; b && b.parentNode ? b.parentNode.insertBefore(o, b) : n.head.appendChild(o)
+            }(), function () {
+                function b() { }
+                function h(b, h, d) { g(b, h, d, 1) } function d(b, d, j) { h("setProperties", { type: b, properties: d }, j) } function j(b, h) { d("user", b, h) } function r(b, h, d) {
+                    j({
+                        uid: b
+                    }, d), h && j(h, d)
+                } g.identify = r, g.setUserVars = j, g.identifyAccount = b, g.clearUserCookie = b, g.setVars = d, g.event = function (b, d, j) {
+                    h("trackEvent", {
+                        name: b, properties: d
+                    }, j)
+                }, g.anonymize = function () { r(!1) }, g.shutdown = function () { h("shutdown") }, g.restart = function () { h("restart") },
+                    g.log = function (b, d) { h("log", { level: b, msg: d }) }, g.consent = function (b) { h("setIdentity", { consent: !arguments.length || b }) }
+            }(), s = "fetch",
+                f = "XMLHttpRequest", g._w = {}, g._w[f] = m[f], g._w[s] = m[s], m[s] && (m[s] = function () { return g._w[s].apply(this, arguments) }), g._v = "2.0.0")
+        }(window, document, window._fs_namespace, "script", window._fs_script);
+    </script>
+    <script>
+        const API_ENDPOINT = "https://api.fullstory.com/v2/visit_profile";
+        const SUMMARY_ENDPOINT = "https://api.fullstory.com/v2/sessions/";
+        const CONTEXT_ENDPOINT = "https://api.fullstory.com/v2/sessions/";
+
+        // DOM elements
+        const apiKeyInput = document.getElementById('api_key');
+        const profileIdInput = document.getElementById('profile_id');
+        const profileNameInput = document.getElementById('profile_name');
+        const prePromptTextarea = document.getElementById('pre_prompt');
+        const postPromptTextarea = document.getElementById('post_prompt');
+        // const llmModelSelect = document.getElementById('llm_model'); // REMOVED
+        const llmTemperatureInput = document.getElementById('llm_temperature');
+        const llmResponseSchemaTextarea = document.getElementById('llm_response_schema');
+        const configJsonTextarea = document.getElementById('config_json');
+        const buildJsonBtn = document.getElementById('build_json_btn');
+        const createBtn = document.getElementById('create_btn');
+        const getBtn = document.getElementById('get_btn');
+        const updateBtn = document.getElementById('update_btn');
+        const deleteBtn = document.getElementById('delete_btn');
+        const listBtn = document.getElementById('list_btn');
+        const profileFilterInput = document.getElementById('profile_filter');
+        const sessionIdInput = document.getElementById('session_id');
+        const sessionUrlInput = document.getElementById('session_url');
+        const sessionDeviceIdInput = document.getElementById('session_device_id');
+        const sessionSessionIdInput = document.getElementById('session_session_id');
+        const userEmailInput = document.getElementById('user_email');
+        const listSessionsBtn = document.getElementById('list_sessions_btn');
+        const sessionsList = document.getElementById('sessions_list');
+        const testBtn = document.getElementById('test_btn');
+        const summaryOutput = document.getElementById('summary_output');
+        const contextOutput = document.getElementById('context_output');
+        const statusMessage = document.getElementById('status_message');
+        const profilesList = document.getElementById('profiles_list');
+        const prevPageBtn = document.getElementById('prev_page_btn');
+        const nextPageBtn = document.getElementById('next_page_btn');
+        const pageInfoSpan = document.getElementById('page_info');
+        const profilesPerPageInput = document.getElementById('profiles_per_page');
+        const testUrlDebug = document.getElementById('test_url_debug');
+        const totalProfilesSpan = document.getElementById('total_profiles');
+
+        const profilesListSection = document.getElementById('profiles_list_section');
+        const toggleListBtn = document.getElementById('toggle_list_btn');
+        const profilesListContent = document.getElementById('profiles_list_content');
+        const testSection = document.getElementById('test_section');
+        const toggleTestBtn = document.getElementById('toggle_test_btn');
+        const testContent = document.getElementById('test_content');
+
+        const generatedJsonSection = document.getElementById('generated_json_section');
+        const toggleJsonBtn = document.getElementById('toggle_json_btn');
+        const generatedJsonOutputTextarea = document.getElementById('json_output');
+        const generatedJsonContent = document.getElementById('json_content');
+        const copyGeneratedBtn = document.getElementById('copy_generated_btn');
+
+        const returnedJsonSection = document.getElementById('returned_json_section');
+        const toggleReturnedJsonBtn = document.getElementById('toggle_returned_json_btn');
+        const returnedJsonOutputTextarea = document.getElementById('returned_json_output');
+        const returnedJsonContent = document.getElementById('returned_json_content');
+        const copyReturnedBtn = document.getElementById('copy_returned_btn');
+
+        const sessionsSection = document.getElementById('sessions_section');
+        const toggleSessionsBtn = document.getElementById('toggle_sessions_btn');
+        const sessionsContent = document.getElementById('sessions_content');
+
+        const credentialsSection = document.getElementById('credentials_section');
+        const toggleCredentialsBtn = document.getElementById('toggle_credentials_btn');
+        const credentialsContent = document.getElementById('credentials_content');
+
+        const copySummaryBtn = document.getElementById('copy_summary_btn');
+        const fetchContextBtn = document.getElementById('fetch_context_btn');
+        const copyContextBtn = document.getElementById('copy_context_btn');
+        const deleteMediaNodeCheckbox = document.getElementById('delete_media_node');
+
+        const jsonModeToggle = document.getElementById('json_mode_toggle');
+        const jsonModeLabel = document.getElementById('json_mode_label');
+        const jsonModeContainer = document.getElementById('json_mode_container');
+        const formModeContainer = document.getElementById('form_mode_container');
+        const rawJsonInput = document.getElementById('raw_json_input');
+
+        // Pagination state
+        let allProfiles = [];
+        let currentPage = 1;
+        let profilesPerPage = parseInt(profilesPerPageInput.value, 10) || 10;
+
+        // Input fields that trigger button disabling
+        const profileInputFields = [
+            profileIdInput, profileNameInput, prePromptTextarea, postPromptTextarea,
+            llmTemperatureInput, llmResponseSchemaTextarea, configJsonTextarea, rawJsonInput
+        ];
+        profileInputFields.forEach(field => {
+            field.addEventListener('input', () => {
+                createBtn.disabled = true;
+                updateBtn.disabled = true;
+                toggleButtonColor(createBtn, false, 'blue');
+                toggleButtonColor(updateBtn, false, 'yellow');
+            });
+        });
+
+        // Event Listeners
+        buildJsonBtn.addEventListener('click', buildJson);
+        createBtn.addEventListener('click', createProfile);
+        getBtn.addEventListener('click', () => getProfileDetails(profileIdInput.value));
+        updateBtn.addEventListener('click', updateProfile);
+        deleteBtn.addEventListener('click', deleteProfile);
+        listBtn.addEventListener('click', () => {
+            profilesPerPage = parseInt(profilesPerPageInput.value, 10) || 10;
+            listProfiles();
+        });
+        testBtn.addEventListener('click', testProfile);
+        listSessionsBtn.addEventListener('click', listSessions);
+        toggleListBtn.addEventListener('click', () => toggleVisibility(profilesListContent, toggleListBtn, 'Profiles'));
+        toggleTestBtn.addEventListener('click', () => toggleVisibility(testContent, toggleTestBtn, 'Test Section'));
+        toggleJsonBtn.addEventListener('click', () => toggleVisibility(generatedJsonContent, toggleJsonBtn, 'JSON'));
+        toggleReturnedJsonBtn.addEventListener('click', () => toggleVisibility(returnedJsonContent, toggleReturnedJsonBtn, 'Returned JSON'));
+        toggleSessionsBtn.addEventListener('click', () => toggleVisibility(sessionsContent, toggleSessionsBtn, 'Sessions List'));
+        toggleCredentialsBtn.addEventListener('click', () => toggleVisibility(credentialsContent, toggleCredentialsBtn, 'Credentials'));
+
+        // JSON mode toggle
+        jsonModeToggle.addEventListener('change', () => {
+            const isJsonMode = jsonModeToggle.checked;
+            if (isJsonMode) {
+                // Switching to JSON mode: serialize current form state into the raw textarea
+                try {
+                    const payload = assembleProfilePayloadFromForm();
+                    rawJsonInput.value = JSON.stringify(payload, null, 2);
+                } catch (e) {
+                    rawJsonInput.value = '';
+                }
+                formModeContainer.classList.add('hidden');
+                jsonModeContainer.classList.remove('hidden');
+            } else {
+                // Switching to form mode: parse JSON back into form fields
+                try {
+                    const json = JSON.parse(rawJsonInput.value);
+                    populateFormFromJson(json);
+                } catch (e) {
+                    // If JSON is invalid, just switch back without modifying form
+                }
+                jsonModeContainer.classList.add('hidden');
+                formModeContainer.classList.remove('hidden');
+            }
+            // Disable buttons on mode switch
+            createBtn.disabled = true;
+            updateBtn.disabled = true;
+            toggleButtonColor(createBtn, false, 'blue');
+            toggleButtonColor(updateBtn, false, 'yellow');
+        });
+
+        // Session ID input sync: URL field <-> separate device/session fields <-> hidden combined field
+        function parseSessionFromUrl(url) {
+            // Handle: https://app.fullstory.com/ui/{org}/session/{deviceId}:{sessionId}
+            const uiMatch = url.match(/\/ui\/[^/]+\/session\/(\d+:\d+)/);
+            if (uiMatch) return uiMatch[1];
+            // Handle: https://app.fullstory.com/ui/{org}/session/{deviceId}%3A{sessionId}
+            const encodedMatch = url.match(/\/ui\/[^/]+\/session\/(\d+%3A\d+)/i);
+            if (encodedMatch) return decodeURIComponent(encodedMatch[1]);
+            return null;
+        }
+
+        sessionUrlInput.addEventListener('input', () => {
+            const val = sessionUrlInput.value.trim();
+            const parsed = parseSessionFromUrl(val);
+            if (parsed) {
+                const [deviceId, sessId] = parsed.split(':');
+                sessionDeviceIdInput.value = deviceId;
+                sessionSessionIdInput.value = sessId;
+                sessionIdInput.value = parsed;
+            }
+        });
+
+        function syncSessionIdFromParts() {
+            const d = sessionDeviceIdInput.value.trim();
+            const s = sessionSessionIdInput.value.trim();
+            if (d && s) {
+                sessionIdInput.value = `${d}:${s}`;
+            } else {
+                sessionIdInput.value = '';
+            }
+        }
+        sessionDeviceIdInput.addEventListener('input', syncSessionIdFromParts);
+        sessionSessionIdInput.addEventListener('input', syncSessionIdFromParts);
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderProfilesList(currentPage);
+            }
+        });
+        nextPageBtn.addEventListener('click', () => {
+            if ((currentPage * profilesPerPage) < allProfiles.length) {
+                currentPage++;
+                renderProfilesList(currentPage);
+            }
+        });
+
+        profileFilterInput.addEventListener('input', (event) => {
+            const filterText = event.target.value.toLowerCase();
+            const filteredProfiles = allProfiles.filter(profile => {
+                const name = profile.name ? profile.name.toLowerCase() : '';
+                const id = profile.id ? profile.id.toLowerCase() : '';
+                return name.includes(filterText) || id.includes(filterText);
+            });
+            renderProfilesList(currentPage, filteredProfiles);
+        });
+
+        profilesList.addEventListener('click', (event) => {
+            const listItem = event.target.closest('li');
+            if (listItem) {
+                const idSpan = listItem.querySelector('.profile-id');
+                if (idSpan) {
+                    const profileId = idSpan.textContent.trim();
+                    getProfileDetails(profileId);
+                    // Disable create/update buttons after getting profile details
+                    createBtn.disabled = true;
+                    updateBtn.disabled = true;
+                    toggleButtonColor(createBtn, false, 'blue');
+                    toggleButtonColor(updateBtn, false, 'yellow');
+                }
+            }
+        });
+
+        copyGeneratedBtn.addEventListener('click', () => copyToClipboard(generatedJsonOutputTextarea));
+        copyReturnedBtn.addEventListener('click', () => copyToClipboard(returnedJsonOutputTextarea));
+        copySummaryBtn.addEventListener('click', () => copyToClipboard(summaryOutput));
+        copyContextBtn.addEventListener('click', () => copyToClipboard(contextOutput));
+        fetchContextBtn.addEventListener('click', fetchSessionContext);
+
+        function copyToClipboard(textarea) {
+            textarea.select();
+            document.execCommand('copy');
+            displayMessage('Content copied to clipboard!', 'info');
+        }
+
+        function getHeaders(apiKey) {
+            if (!apiKey) {
+                displayMessage("Please enter an API key.", "error");
+                return null;
+            }
+            const headers = new Headers();
+            headers.append('Authorization', `Basic ${apiKey}`);
+            headers.append('Content-Type', 'application/json');
+            return headers;
+        }
+
+        // Assembles payload from form fields only (used by toggle and as the core builder)
+        function assembleProfilePayloadFromForm() {
+            let payload = {};
+
+            try {
+                if (configJsonTextarea.value.trim() !== "") {
+                    payload = JSON.parse(configJsonTextarea.value);
+                }
+            } catch (error) {
+                throw new Error("Invalid JSON in Additional Configuration.");
+            }
+
+            if (profileNameInput.value.trim() !== "") {
+                payload.name = profileNameInput.value.trim();
+            }
+
+            const llmPayload = {};
+            if (prePromptTextarea.value.trim() !== "") {
+                llmPayload.pre_prompt = prePromptTextarea.value.trim();
+            }
+            if (postPromptTextarea.value.trim() !== "") {
+                llmPayload.post_prompt = postPromptTextarea.value.trim();
+            }
+            if (llmTemperatureInput.value) {
+                llmPayload.temperature = parseFloat(llmTemperatureInput.value);
+            }
+            if (llmResponseSchemaTextarea.value.trim() !== "") {
+                try {
+                    llmPayload.response_schema = JSON.parse(llmResponseSchemaTextarea.value);
+                } catch (error) {
+                    throw new Error("Invalid JSON in Output Schema.");
+                }
+            }
+
+            if (Object.keys(llmPayload).length > 0) {
+                payload.llm = llmPayload;
+            }
+
+            if (deleteMediaNodeCheckbox.checked && payload.media) {
+                delete payload.media;
+            }
+
+            return payload;
+        }
+
+        // Main assembler: delegates to form or raw JSON depending on mode
+        function assembleProfilePayload() {
+            if (jsonModeToggle.checked) {
+                try {
+                    const payload = JSON.parse(rawJsonInput.value);
+                    if (deleteMediaNodeCheckbox.checked && payload.media) {
+                        delete payload.media;
+                    }
+                    return payload;
+                } catch (error) {
+                    throw new Error("Invalid JSON in raw JSON editor.");
+                }
+            }
+            return assembleProfilePayloadFromForm();
+        }
+
+        // Populate form fields from a JSON object (used when switching from JSON mode to form mode)
+        function populateFormFromJson(json) {
+            profileNameInput.value = json.name || '';
+
+            const llm = json.llm || {};
+            prePromptTextarea.value = llm.pre_prompt || '';
+            postPromptTextarea.value = llm.post_prompt || '';
+            llmTemperatureInput.value = llm.temperature || '';
+            llmResponseSchemaTextarea.value = llm.response_schema ? JSON.stringify(llm.response_schema, null, 2) : '';
+
+            // Everything except name and llm goes into additional config
+            const remaining = JSON.parse(JSON.stringify(json));
+            delete remaining.name;
+            delete remaining.llm;
+            delete remaining.id;
+            configJsonTextarea.value = Object.keys(remaining).length > 0 ? JSON.stringify(remaining, null, 2) : '';
+        }
+
+        function buildJson() {
+            try {
+                const payload = assembleProfilePayload();
+                generatedJsonOutputTextarea.value = JSON.stringify(payload, null, 2);
+                createBtn.disabled = false;
+                updateBtn.disabled = false;
+                toggleButtonColor(createBtn, true, 'blue');
+                toggleButtonColor(updateBtn, true, 'yellow');
+                displayMessage("JSON payload built successfully. Create and Update buttons are now enabled.", "success");
+            } catch (error) {
+                displayMessage(`Error assembling JSON: ${error.message}`, "error");
+                createBtn.disabled = true;
+                updateBtn.disabled = true;
+                toggleButtonColor(createBtn, false, 'blue');
+                toggleButtonColor(updateBtn, false, 'yellow');
+            }
+        }
+
+        function toggleButtonColor(button, isEnabled, color) {
+            if (isEnabled) {
+                button.classList.remove(`bg-gray-500`, `text-gray-200`, `cursor-not-allowed`);
+                button.classList.add(`bg-${color}-500`, `text-white`);
+            } else {
+                button.classList.add(`bg-gray-500`, `text-gray-200`, `cursor-not-allowed`);
+                button.classList.remove(`bg-${color}-500`, `text-white`);
+            }
+        }
+
+        async function createProfile() {
+            const apiKey = apiKeyInput.value;
+            const headers = getHeaders(apiKey);
+            if (!headers) return;
+
+            const payloadText = generatedJsonOutputTextarea.value.trim();
+            if (!payloadText) {
+                displayMessage("Please build the JSON payload first.", "error");
+                return;
+            }
+
+            try {
+                const payload = JSON.parse(payloadText);
+                if (!payload.name) {
+                    displayMessage("Profile name cannot be empty.", "error");
+                    return;
+                }
+
+                displayMessage("Creating profile...", "loading");
+
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    profileIdInput.value = result.id;
+                    displayMessage(`Profile created successfully! ID: ${result.id}`, "success");
+                    // Instead of reloading the list, we directly get the new profile's details and update the list.
+                    getProfileDetails(result.id);
+                    listProfiles();
+                } else {
+                    const error = result.error || response.statusText;
+                    displayMessage(`API Error: ${error}`, "error");
+                }
+            } catch (error) {
+                if (error.message.includes("Invalid JSON")) {
+                    displayMessage(error.message, "error");
+                } else {
+                    displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+                }
+            }
+        }
+
+        async function updateProfile() {
+            const apiKey = apiKeyInput.value;
+            const profileId = profileIdInput.value;
+            const headers = getHeaders(apiKey);
+
+            if (!profileId) {
+                displayMessage("Please enter a Profile ID to update.", "error");
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to update profile ${profileId}?`)) {
+                return;
+            }
+
+            if (!headers) return;
+
+            const payloadText = generatedJsonOutputTextarea.value.trim();
+            if (!payloadText) {
+                displayMessage("Please build the JSON payload first.", "error");
+                return;
+            }
+
+            try {
+                const payload = JSON.parse(payloadText);
+
+                displayMessage(`Updating profile ${profileId}...`, "loading");
+
+                const updateUrl = `${API_ENDPOINT}/${profileId}`;
+                const response = await fetch(updateUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    displayMessage(`Profile ${profileId} updated successfully!`, "success");
+                    listProfiles(); // Refresh the list to show changes
+                } else {
+                    const error = result.error || response.statusText;
+                    displayMessage(`API Error: ${error}`, "error");
+                }
+            } catch (error) {
+                if (error.message.includes("Invalid JSON")) {
+                    displayMessage(error.message, "error");
+                } else {
+                    displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+                }
+            }
+        }
+
+        async function deleteProfile() {
+            const apiKey = apiKeyInput.value;
+            const profileId = profileIdInput.value;
+            const headers = getHeaders(apiKey);
+
+            if (!profileId) {
+                displayMessage("Please enter a Profile ID to delete.", "error");
+                return;
+            }
+
+            if (!headers) return;
+
+            if (!confirm(`Are you sure you want to DELETE profile ${profileId}? This cannot be undone.`)) {
+                return;
+            }
+
+            displayMessage(`Deleting profile ${profileId}...`, "loading");
+
+            try {
+                const deleteUrl = `${API_ENDPOINT}/${profileId}`;
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: headers
+                });
+
+                if (response.ok) {
+                    displayMessage(`Profile ${profileId} deleted successfully.`, "success");
+                    profileIdInput.value = '';
+                    profileNameInput.value = '';
+                    prePromptTextarea.value = '';
+                    postPromptTextarea.value = '';
+                    llmTemperatureInput.value = '';
+                    llmResponseSchemaTextarea.value = '';
+                    configJsonTextarea.value = '';
+                    rawJsonInput.value = '';
+                    generatedJsonOutputTextarea.value = '';
+                    returnedJsonOutputTextarea.value = '';
+                    createBtn.disabled = true;
+                    updateBtn.disabled = true;
+                    toggleButtonColor(createBtn, false, 'blue');
+                    toggleButtonColor(updateBtn, false, 'yellow');
+                    listProfiles();
+                } else {
+                    const result = await response.json();
+                    const error = result.error || result.message || response.statusText;
+                    displayMessage(`API Error: ${error}`, "error");
+                }
+            } catch (error) {
+                displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+            }
+        }
+
+        async function fetchAllProfiles(apiKey, paginationToken = null, profiles = []) {
+            const headers = getHeaders(apiKey);
+            if (!headers) return [];
+
+            // Use a limit of 50 for API fetching to troubleshoot potential issues
+            let url = `${API_ENDPOINT}?limit=50`;
+            if (paginationToken) {
+                url += `&pagination_token=${paginationToken}`;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || response.statusText);
+                }
+
+                const newProfiles = result.profiles || [];
+                profiles = profiles.concat(newProfiles);
+
+                // FIX: Check if next_pagination_token exists AND if we received any profiles in this page to avoid infinite loop
+                if (result.next_pagination_token && newProfiles.length > 0) {
+                    return fetchAllProfiles(apiKey, result.next_pagination_token, profiles);
+                } else {
+                    return profiles;
+                }
+            } catch (error) {
+                displayMessage(`API Error during pagination: ${error.message}`, "error");
+                return profiles; // Return what has been fetched so far
+            }
+        }
+
+        async function listProfiles() {
+            const apiKey = apiKeyInput.value;
+            displayMessage("Fetching all profiles...", "loading");
+            allProfiles = await fetchAllProfiles(apiKey);
+            totalProfilesSpan.textContent = `Total Profiles: ${allProfiles.length}`;
+            if (allProfiles.length > 0) {
+                displayMessage("All profiles fetched successfully.", "success");
+                currentPage = 1;
+                renderProfilesList(currentPage);
+            } else {
+                displayMessage("No profiles found or an error occurred.", "info");
+                profilesList.innerHTML = `<li class="p-4 text-center text-gray-500 italic">No profiles found.</li>`;
+            }
+        }
+
+        function renderProfilesList(page, filteredProfiles = allProfiles) {
+            profilesList.innerHTML = '';
+            const startIndex = (page - 1) * profilesPerPage;
+            const endIndex = startIndex + profilesPerPage;
+            const profilesToDisplay = filteredProfiles.slice(startIndex, endIndex);
+
+            if (profilesToDisplay.length > 0) {
+                profilesToDisplay.forEach(profile => {
+                    const li = document.createElement('li');
+                    li.className = "p-4 hover:bg-gray-100 transition-colors cursor-pointer flex justify-between items-center";
+                    li.innerHTML = `
+                        <span><strong>${profile.name || 'Unnamed Profile'}</strong><br><span class="text-sm text-gray-500 profile-id">${profile.id}</span></span>
+                    `;
+                    profilesList.appendChild(li);
+                });
+            } else {
+                profilesList.innerHTML = `<li class="p-4 text-center text-gray-500 italic">No profiles found for this page.</li>`;
+            }
+
+            updatePaginationControls(filteredProfiles.length);
+        }
+
+        function updatePaginationControls(totalProfiles) {
+            const totalPages = Math.ceil(totalProfiles / profilesPerPage);
+            pageInfoSpan.textContent = `Page ${currentPage} of ${totalPages || 1}`;
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage >= totalPages;
+        }
+
+        async function getProfileDetails(profileId) {
+            const apiKey = apiKeyInput.value;
+            const headers = getHeaders(apiKey);
+            if (!headers) return;
+
+            if (!profileId) {
+                displayMessage("Please enter a Profile ID to fetch details.", "error");
+                return;
+            }
+
+            displayMessage("Fetching profile details...", "loading");
+
+            try {
+                const url = `${API_ENDPOINT}/${profileId}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                const result = await response.json();
+
+                // Always display the full returned JSON
+                returnedJsonOutputTextarea.value = JSON.stringify(result, null, 2);
+
+                if (response.ok) {
+                    profileIdInput.value = result.id;
+                    profileNameInput.value = result.name || '';
+
+                    const llm = result.llm || {};
+                    const config = result.configuration || {};
+
+                    prePromptTextarea.value = llm.pre_prompt || '';
+                    postPromptTextarea.value = llm.post_prompt || '';
+                    // llmModelSelect.value = llm.model || ''; // REMOVED
+                    llmTemperatureInput.value = llm.temperature || '';
+                    llmResponseSchemaTextarea.value = llm.response_schema ? JSON.stringify(llm.response_schema, null, 2) : '';
+
+                    // The remaining configuration
+                    let remainingConfig = JSON.parse(JSON.stringify(config));
+                    delete remainingConfig.llm;
+                    configJsonTextarea.value = JSON.stringify(remainingConfig, null, 2);
+
+                    // Also populate raw JSON editor for JSON mode
+                    const rawPayload = JSON.parse(JSON.stringify(result));
+                    delete rawPayload.id;
+                    rawJsonInput.value = JSON.stringify(rawPayload, null, 2);
+
+                    displayMessage(`Loaded details for profile ${profileId}.`, "success");
+                } else {
+                    const error = result.error || response.statusText;
+                    displayMessage(`API Error: ${error}`, "error");
+                }
+            } catch (error) {
+                displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+            }
+            createBtn.disabled = true;
+            updateBtn.disabled = true;
+            toggleButtonColor(createBtn, false, 'blue');
+            toggleButtonColor(updateBtn, false, 'yellow');
+        }
+
+        async function testProfile() {
+            const apiKey = apiKeyInput.value;
+            const profileId = profileIdInput.value;
+            const sessionId = sessionIdInput.value;
+
+            if (!apiKey || !profileId || !sessionId) {
+                displayMessage("Please provide an API Key, Profile ID, and Session ID.", "error");
+                return;
+            }
+
+            const headers = getHeaders(apiKey);
+            if (!headers) return;
+
+            // The API requires the session_id to be URL encoded if it contains a colon.
+            const urlEncodedSessionId = encodeURIComponent(sessionId);
+            const summaryUrl = `${SUMMARY_ENDPOINT}${urlEncodedSessionId}/summary?config_profile=${profileId}`;
+            const contextUrl = `${CONTEXT_ENDPOINT}${urlEncodedSessionId}/context`;
+
+            // Display the debug URL before making the call
+            testUrlDebug.textContent = `API Call: GET ${summaryUrl}`;
+
+            displayMessage("Generating session summary...", "loading");
+            summaryOutput.value = ""; // Clear previous summary
+            contextOutput.value = ""; // Clear previous context
+
+            try {
+                // Fetch the session summary first
+                const summaryResponse = await fetch(summaryUrl, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                const summaryResult = await summaryResponse.json();
+
+                if (summaryResponse.ok) {
+                    // Handle both plain text summaries and structured responses
+                    if (summaryResult.response) {
+                        // Structured response (response_schema was used)
+                        summaryOutput.value = JSON.stringify(summaryResult.response, null, 2);
+                    } else {
+                        summaryOutput.value = summaryResult.summary || 'No summary returned.';
+                    }
+                    displayMessage("Session summary generated successfully! Now fetching session context...", "success");
+
+                    // Now, fetch the session context
+                    let contextPayload = {};
+                    try {
+                        if (configJsonTextarea.value.trim() !== "") {
+                            contextPayload = JSON.parse(configJsonTextarea.value);
+                        }
+                        if (deleteMediaNodeCheckbox.checked && contextPayload.media) {
+                            delete contextPayload.media;
+                        }
+                    } catch (error) {
+                        displayMessage(`Error parsing context JSON: ${error.message}`, "error");
+                        contextPayload = {};
+                    }
+
+                    const contextResponse = await fetch(contextUrl, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(contextPayload)
+                    });
+
+                    const contextResult = await contextResponse.json();
+
+                    if (contextResponse.ok) {
+                        contextOutput.value = JSON.stringify(contextResult, null, 2);
+                        displayMessage("Session summary and context generated successfully!", "success");
+                    } else {
+                        const contextError = contextResult.error || contextResponse.statusText;
+                        displayMessage(`API Error getting context: ${contextError}`, "error");
+                        contextOutput.value = `Error getting context: ${contextError}`;
+                    }
+
+                } else {
+                    const error = summaryResult.error || summaryResponse.statusText;
+                    displayMessage(`API Error: ${error}`, "error");
+                    summaryOutput.value = `Error generating summary: ${error}`;
+                }
+            } catch (error) {
+                displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+                summaryOutput.value = `An unexpected error occurred: ${error.message}`;
+            }
+        }
+
+        async function fetchSessionContext() {
+            const apiKey = apiKeyInput.value;
+            const sessionId = sessionIdInput.value;
+
+            if (!apiKey || !sessionId) {
+                displayMessage("Please provide an API Key and Session ID.", "error");
+                return;
+            }
+
+            const headers = getHeaders(apiKey);
+            if (!headers) return;
+
+            const urlEncodedSessionId = encodeURIComponent(sessionId);
+            const contextUrl = `${CONTEXT_ENDPOINT}${urlEncodedSessionId}/context`;
+
+            displayMessage("Fetching session context...", "loading");
+            contextOutput.value = ""; // Clear previous context
+
+            try {
+                let contextPayload = {};
+                try {
+                    if (configJsonTextarea.value.trim() !== "") {
+                        contextPayload = JSON.parse(configJsonTextarea.value);
+                    }
+                    if (deleteMediaNodeCheckbox.checked && contextPayload.media) {
+                        delete contextPayload.media;
+                    }
+                } catch (error) {
+                    displayMessage(`Error parsing context JSON: ${error.message}`, "error");
+                    contextPayload = {};
+                }
+
+                const contextResponse = await fetch(contextUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(contextPayload)
+                });
+
+                const contextResult = await contextResponse.json();
+
+                if (contextResponse.ok) {
+                    contextOutput.value = JSON.stringify(contextResult, null, 2);
+                    displayMessage("Session context fetched successfully!", "success");
+                } else {
+                    const contextError = contextResult.error || contextResponse.statusText;
+                    displayMessage(`API Error getting context: ${contextError}`, "error");
+                    contextOutput.value = `Error getting context: ${contextError}`;
+                }
+            } catch (error) {
+                displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+                contextOutput.value = `An unexpected error occurred: ${error.message}`;
+            }
+        }
+
+        async function listSessions() {
+            const apiKey = apiKeyInput.value;
+            const userEmail = userEmailInput.value;
+            const headers = getHeaders(apiKey);
+
+            if (!apiKey || !userEmail) {
+                displayMessage("Please provide an API Key and User Email.", "error");
+                return;
+            }
+
+            const urlEncodedEmail = encodeURIComponent(userEmail);
+            // The documentation specifies the v2 endpoint for listing sessions
+            const listSessionsUrl = `https://api.fullstory.com/sessions/v2?email=${urlEncodedEmail}`;
+
+            displayMessage("Fetching sessions for user...", "loading");
+            sessionsList.innerHTML = `<li class="p-4 text-center text-gray-500 italic">Loading...</li>`;
+
+            try {
+                const response = await fetch(listSessionsUrl, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const sessions = result.sessions || [];
+                    sessionsList.innerHTML = '';
+                    if (sessions.length > 0) {
+                        sessions.forEach(session => {
+                            const li = document.createElement('li');
+                            li.className = "p-4 hover:bg-gray-100 transition-colors cursor-pointer text-sm flex justify-between items-center";
+
+                            const time = new Date(session.createdTime * 1000).toLocaleString();
+
+                            li.innerHTML = `
+                                <div>
+                                    <strong>Session ID:</strong> <span class="session-id break-all">${session.sessionId}</span><br>
+                                    <strong>User ID:</strong> <span class="user-id break-all">${session.userId}</span><br>
+                                    <strong>Time:</strong> ${time}
+                                </div>
+                                <button class="open-replay-btn px-2 py-1 bg-blue-500 text-white rounded-lg text-xs font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400" data-fsurl="${session.fsUrl}">Open Replay</button>
+                            `;
+                            sessionsList.appendChild(li);
+                        });
+                        displayMessage("Sessions loaded successfully.", "success");
+                    } else {
+                        sessionsList.innerHTML = `<li class="p-4 text-center text-gray-500 italic">No sessions found for this user.</li>`;
+                        displayMessage("No sessions found for this user.", "info");
+                    }
+                } else {
+                    const error = result.error || response.statusText;
+                    displayMessage(`API Error: ${error}`, "error");
+                    sessionsList.innerHTML = `<li class="p-4 text-center text-red-500">Could not load sessions.</li>`;
+                }
+            } catch (error) {
+                displayMessage(`An unexpected error occurred: ${error.message}`, "error");
+                sessionsList.innerHTML = `<li class="p-4 text-center text-red-500">An error occurred while fetching sessions.</li>`;
+            }
+        }
+
+        sessionsList.addEventListener('click', (event) => {
+            const listItem = event.target.closest('li');
+            if (!listItem) return;
+
+            const sessionIdSpan = listItem.querySelector('.session-id');
+            const userIdSpan = listItem.querySelector('.user-id');
+            const openReplayBtn = event.target.closest('.open-replay-btn');
+
+            if (openReplayBtn) {
+                const fsUrl = openReplayBtn.getAttribute('data-fsurl');
+                if (fsUrl) {
+                    window.open(fsUrl, '_blank');
+                }
+            } else if (sessionIdSpan && userIdSpan) {
+                const sessionId = sessionIdSpan.textContent.trim();
+                const userId = userIdSpan.textContent.trim();
+                sessionIdInput.value = `${userId}:${sessionId}`;
+                sessionDeviceIdInput.value = userId;
+                sessionSessionIdInput.value = sessionId;
+                sessionUrlInput.value = '';
+                displayMessage(`Session ID and User ID copied to test field.`, "info");
+            }
+        });
+
+        function toggleVisibility(element, button, sectionName) {
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                button.textContent = `Hide ${sectionName}`;
+            } else {
+                element.classList.add('hidden');
+                button.textContent = `Show ${sectionName}`;
+            }
+        }
+
+        function toggleJsonView() {
+            if (generatedJsonContent.classList.contains('hidden')) {
+                try {
+                    const payload = assembleProfilePayload();
+                    generatedJsonOutputTextarea.value = JSON.stringify(payload, null, 2);
+                    generatedJsonContent.classList.remove('hidden');
+                    toggleJsonBtn.textContent = 'Hide JSON';
+                } catch (error) {
+                    displayMessage(`Error assembling JSON: ${error.message}`, "error");
+                }
+            } else {
+                generatedJsonContent.classList.add('hidden');
+                toggleJsonBtn.textContent = 'Show JSON';
+            }
+        }
+
+        function toggleReturnedJsonView() {
+            if (returnedJsonContent.classList.contains('hidden')) {
+                returnedJsonContent.classList.remove('hidden');
+                toggleReturnedJsonBtn.textContent = `Hide Returned JSON`;
+            } else {
+                returnedJsonContent.classList.add('hidden');
+                toggleReturnedJsonBtn.textContent = `Show Returned JSON`;
+            }
+        }
+
+        function displayMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'mt-4 text-xl font-medium';
+            if (type === 'success') {
+                statusMessage.classList.add('text-green-600');
+            } else if (type === 'error') {
+                statusMessage.classList.add('text-red-600');
+            } else if (type === 'info') {
+                statusMessage.classList.add('text-blue-600');
+            } else if (type === 'loading') {
+                statusMessage.classList.add('text-gray-600', 'animate-pulse');
+            }
+        }
+    </script>
+</body>
+
+</html>
