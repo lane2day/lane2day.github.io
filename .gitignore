@@ -1,3 +1,4 @@
 _site/
 candidates.tsv
 .DS_Store
+.thumbs/

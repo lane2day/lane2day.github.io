@@ -6,6 +6,7 @@
 //   node scripts/pub.mjs remove <slug>                      unregister
 //   node scripts/pub.mjs list [--json]                      show entries + derived metadata
 //   node scripts/pub.mjs build                              build _site/ locally (follows symlinks)
+//   node scripts/pub.mjs thumbs [slug…] [--force]           screenshot each page into .thumbs/ for the card grid
 //   node scripts/pub.mjs deploy [--yes]                     build + force-push _site/ to the gh-pages branch
 import fs from "node:fs";
 import path from "node:path";
@@ -16,6 +17,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REG = path.join(ROOT, "registry");
 const OUT = path.join(ROOT, "_site");
+const THUMBS = path.join(ROOT, ".thumbs");
 const CONFIG = { siteTitle: "Lane's published HTML", branch: "gh-pages", remote: "origin", ...readJSON(path.join(ROOT, "config.json")) };
 const SKIP_DIRS = new Set([".git", "node_modules", ".venv", "venv", "__pycache__", ".next", ".cache"]);
 const SECRET_PATTERNS = [
@@ -287,8 +289,18 @@ function build() {
     e.isDir ? copyDir(e.real, path.join(OUT, e.slug)) : copyFileWithAssets(e.htmlFile, path.join(OUT, e.slug), w);
     w.forEach((m) => warnings.push(`${e.slug}: ${m}`));
   }
+  let haveThumbs = 0;
+  for (const e of ok) {
+    const src = path.join(THUMBS, e.slug + ".png");
+    if (!fs.existsSync(src)) continue;
+    fs.mkdirSync(path.join(OUT, "_thumbs"), { recursive: true });
+    fs.copyFileSync(src, path.join(OUT, "_thumbs", e.slug + ".png"));
+    e.thumb = "_thumbs/" + e.slug + ".png";
+    haveThumbs++;
+  }
+  if (ok.length > haveThumbs) warnings.push(`${ok.length - haveThumbs} page(s) have no thumbnail — run: node scripts/pub.mjs thumbs`);
   ok.sort((a, b) => b.updated - a.updated);
-  const manifest = ok.map(({ slug, url, title, description, project, tags, repo, source, updated }) => ({ slug, url, title, description, project, tags, repo, source, updated }));
+  const manifest = ok.map(({ slug, url, title, description, project, tags, repo, source, updated, thumb }) => ({ slug, url, title, description, project, tags, repo, source, updated, thumb }));
   fs.writeFileSync(path.join(OUT, "manifest.json"), JSON.stringify(manifest, null, 2));
   fs.writeFileSync(path.join(OUT, "index.html"), renderIndex(manifest));
   warnings.forEach((w) => console.warn("warning: " + w));
@@ -312,42 +324,110 @@ function cmdDeploy(args) {
   console.log(`deployed to ${CONFIG.branch}${CONFIG.siteUrl ? " → " + CONFIG.siteUrl : ""}`);
 }
 
+function hueOf(s) {
+  let h = 0;
+  for (let i = 0; i < String(s).length; i++) h = (h * 31 + String(s).charCodeAt(i)) % 360;
+  return h;
+}
+
 function renderIndex(items) {
-  const rows = items.map((i) => {
+  const chip = (text, cls = "") => `<span class="chip ${cls}" style="--h:${hueOf(text)}">${esc(text)}</span>`;
+  const cards = items.map((i) => {
     const q = [i.title, i.description, i.project, i.slug, ...(i.tags || [])].join(" ").toLowerCase();
     const date = new Date(i.updated);
-    return `<li data-q="${esc(q)}">
-  <div class="main">
-    <a class="t" href="${esc(i.url)}">${esc(i.title)}</a>
+    const letter = (String(i.title || i.slug).trim()[0] || "?").toUpperCase();
+    const shot = i.thumb
+      ? `<img class="shot" src="${esc(i.thumb)}" alt="" loading="lazy" decoding="async">`
+      : `<div class="shot ph" style="--h:${hueOf(i.project || i.slug)}"><span>${esc(letter)}</span></div>`;
+    return `<a class="card" href="${esc(i.url)}" data-q="${esc(q)}">
+  <div class="thumb">${shot}</div>
+  <div class="body">
+    <div class="t">${esc(i.title)}</div>
     ${i.description ? `<p class="d">${esc(i.description)}</p>` : ""}
-    <div class="meta"><span class="chip">${esc(i.project)}</span>${(i.tags || []).map((t) => `<span class="chip tag">${esc(t)}</span>`).join("")}${i.repo ? `<a href="${esc(i.repo)}">repo</a>` : ""}<code>${esc(i.source)}</code></div>
+    <div class="chips">${chip(i.project)}${(i.tags || []).map((t) => chip(t, "tag")).join("")}</div>
+    <div class="foot"><time datetime="${date.toISOString()}">${date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</time></div>
   </div>
-  <time datetime="${date.toISOString()}">${date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</time>
-</li>`;
+</a>`;
   }).join("\n");
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(CONFIG.siteTitle)}</title>${CONFIG.public ? '\n<meta name="robots" content="noindex, nofollow">' : ""}
 <style>
-:root{--bg:#fafaf9;--fg:#1c1917;--mut:#78716c;--line:#e7e5e4;--card:#fff;--acc:#4f46e5;--chip:#f5f5f4}
-@media (prefers-color-scheme:dark){:root{--bg:#0c0a09;--fg:#f5f5f4;--mut:#a8a29e;--line:#292524;--card:#1c1917;--acc:#a5b4fc;--chip:#292524}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,sans-serif}
-main{max-width:820px;margin:0 auto;padding:48px 16px}h1{font-size:28px;margin:0 0 4px}.sub{color:var(--mut);margin:0 0 24px}
-input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;margin-bottom:16px}
-ul{list-style:none;padding:0;margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
-li{display:flex;gap:16px;justify-content:space-between;align-items:baseline;padding:16px;border-top:1px solid var(--line)}li:first-child{border-top:0}
-.main{min-width:0}.t{font-weight:600;color:inherit;text-decoration:none}.t:hover{color:var(--acc)}
-.d{color:var(--mut);font-size:14px;margin:2px 0 6px}.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--mut)}
-.meta a{color:var(--acc)}.chip{background:var(--chip);border-radius:999px;padding:1px 8px}code{font-family:ui-monospace,monospace;overflow-wrap:anywhere}
-time{color:var(--mut);font-size:13px;white-space:nowrap}.empty{color:var(--mut)}
-@media (max-width:560px){li{flex-direction:column;gap:4px}}
+:root{--bg:#fafaf9;--fg:#1c1917;--mut:#78716c;--line:#e7e5e4;--card:#fff;--acc:#4f46e5;--chip:#f5f5f4;--shadow:0 8px 24px rgba(28,25,23,.12);--chipbg:92%;--chipfg:30%;--chipsat:60%}
+@media (prefers-color-scheme:dark){:root{--bg:#0c0a09;--fg:#f5f5f4;--mut:#a8a29e;--line:#292524;--card:#1c1917;--acc:#a5b4fc;--chip:#292524;--shadow:0 8px 28px rgba(0,0,0,.5);--chipbg:22%;--chipfg:78%;--chipsat:45%}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:1180px;margin:0 auto;padding:48px 24px 80px}
+h1{font-size:30px;margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--mut);margin:0 0 22px;font-size:14px}
+input{width:100%;max-width:420px;padding:9px 13px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;font-size:14px;margin-bottom:26px}
+input:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:18px}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--acc)}
+.card:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.thumb{aspect-ratio:16/10;background:var(--chip);border-bottom:1px solid var(--line);overflow:hidden}
+.shot{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
+.ph{display:grid;place-items:center;background:linear-gradient(140deg,hsl(var(--h) 42% 42%),hsl(var(--h) 44% 24%))}
+.ph span{font-size:40px;font-weight:700;color:#fff;opacity:.92}
+.body{padding:13px 14px 14px;display:flex;flex-direction:column;gap:7px;flex:1}
+.t{font-weight:600;font-size:14.5px;line-height:1.35;letter-spacing:-.01em}
+.d{color:var(--mut);font-size:12.5px;line-height:1.45;margin:0;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:1px}
+.chip{font-size:11px;font-weight:500;padding:2px 7px;border-radius:5px;background:hsl(var(--h) var(--chipsat) var(--chipbg));color:hsl(var(--h) var(--chipsat) var(--chipfg));white-space:nowrap}
+.foot{margin-top:auto;padding-top:4px;color:var(--mut);font-size:11.5px}
+.empty{color:var(--mut);grid-column:1/-1}
+#none{display:none;color:var(--mut);font-size:14px;padding:24px 0}
+@media (max-width:560px){main{padding:32px 16px 60px}.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}}
 </style></head><body><main>
 <h1>${esc(CONFIG.siteTitle)}</h1><p class="sub">${items.length} page${items.length === 1 ? "" : "s"} · source of truth lives in each project</p>
 <input id="q" type="search" placeholder="Filter by title, project, tag…" aria-label="Filter">
-<ul id="list">${rows || '<li class="empty">Nothing published yet.</li>'}</ul>
+<div class="grid" id="list">${cards || '<p class="empty">Nothing published yet.</p>'}</div>
+<p id="none">No matches.</p>
 </main><script>
-const q=document.getElementById("q");q.addEventListener("input",()=>{const v=q.value.toLowerCase();document.querySelectorAll("#list li[data-q]").forEach(li=>li.hidden=!li.dataset.q.includes(v))});
+const q=document.getElementById("q"),none=document.getElementById("none");
+q.addEventListener("input",()=>{const v=q.value.toLowerCase().trim();let n=0;
+document.querySelectorAll("#list .card").forEach(c=>{const m=c.dataset.q.includes(v);c.hidden=!m;if(m)n++});
+none.style.display=n?"none":"block"});
 </script></body></html>`;
+}
+
+// ---------- thumbnails ----------
+// Screenshots each built page with Playwright driving the installed Chrome (no browser download).
+// Cached in .thumbs/<slug>.png so deploys stay fast; re-shoot with --force.
+function cmdThumbs(args) {
+  const force = bool(args, "--force");
+  const only = args.filter((a) => !a.startsWith("--"));
+  const { ok } = build();
+  fs.mkdirSync(THUMBS, { recursive: true });
+  const wait = CONFIG.thumbWaitMs ?? 2000;
+  const size = CONFIG.thumbViewport || "1280,800";
+  let made = 0, kept = 0, failed = 0, blank = 0;
+  for (const e of ok) {
+    if (only.length && !only.includes(e.slug)) continue;
+    const out = path.join(THUMBS, e.slug + ".png");
+    const page = path.join(OUT, e.slug, "index.html");
+    if (!fs.existsSync(page)) { console.warn(`warning: no built page for ${e.slug}, skipped`); continue; }
+    if (fs.existsSync(out) && !force) { kept++; continue; }
+    process.stdout.write(`shooting ${e.slug} … `);
+    try {
+      execFileSync("npx", ["--yes", "playwright@latest", "screenshot", "--channel=chrome",
+        "--viewport-size=" + size, "--wait-for-timeout=" + wait, "file://" + page, out],
+        { stdio: ["ignore", "ignore", "pipe"], timeout: 180000 });
+      // A page that needs a running backend screenshots as a uniform blank. Those compress to a
+      // few KB, far below any real capture, so drop them and let the gradient placeholder stand in.
+      const bytes = fs.statSync(out).size;
+      if (bytes < (CONFIG.thumbMinBytes ?? 12000)) {
+        fs.rmSync(out, { force: true });
+        console.log("blank — app shell? using placeholder"); blank++;
+      } else { console.log("ok"); made++; }
+    } catch (err) {
+      console.log("FAILED"); failed++;
+      fs.rmSync(out, { force: true });
+    }
+  }
+  console.log(`thumbnails: ${made} new, ${kept} cached${blank ? `, ${blank} blank (placeholder)` : ""}${failed ? `, ${failed} failed` : ""} → .thumbs/`);
+  if (made || failed) console.log("run: node scripts/pub.mjs deploy");
 }
 
 // ---------- discover ----------
@@ -481,6 +561,6 @@ function cmdImport(file) {
 // ---------- main ----------
 const [cmd, ...args] = process.argv.slice(2);
 try {
-({ discover: cmdDiscover, add: cmdAdd, remove: cmdRemove, rm: cmdRemove, list: cmdList, ls: cmdList, build: () => build(), deploy: cmdDeploy }[cmd]
+({ discover: cmdDiscover, add: cmdAdd, remove: cmdRemove, rm: cmdRemove, list: cmdList, ls: cmdList, build: () => build(), thumbs: cmdThumbs, deploy: cmdDeploy }[cmd]
   || (() => { console.log(fs.readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").slice(1, 10).map((l) => l.replace(/^\/\/ ?/, "")).join("\n")); }))(args);
 } catch (e) { console.error("error: " + e.message); process.exit(1); }
