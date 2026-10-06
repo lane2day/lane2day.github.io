@@ -7,7 +7,9 @@
       "kind": "deck",
       "status": "published",
       "format": "one-pager",
-      "audience": ["accenture"],
+      "audience": [
+        "accenture"
+      ],
       "title": null,
       "description": null,
       "tags": [],
@@ -28,7 +30,9 @@
       "kind": "deck",
       "status": "published",
       "format": "deck",
-      "audience": ["accenture"],
+      "audience": [
+        "accenture"
+      ],
       "title": null,
       "description": null,
       "tags": [],
@@ -52,7 +56,10 @@
       "audience": [],
       "title": null,
       "description": null,
-      "tags": ["cargo", "friction"],
+      "tags": [
+        "cargo",
+        "friction"
+      ],
       "versions": [
         {
           "path": "~/Documents/GitHub/mn/projects/solutions/adv-friction-reports/cargo/20260426.html",
@@ -73,7 +80,9 @@
       "audience": [],
       "title": null,
       "description": null,
-      "tags": ["cargo"],
+      "tags": [
+        "cargo"
+      ],
       "versions": [
         {
           "path": "~/Documents/GitHub/mn/projects/solutions/field-playbooks/cargo-campaign-performance",
@@ -94,7 +103,10 @@
       "audience": [],
       "title": null,
       "description": null,
-      "tags": ["cargo", "ux"],
+      "tags": [
+        "cargo",
+        "ux"
+      ],
       "versions": [
         {
           "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/cargo-ux-report",
@@ -112,7 +124,9 @@
       "kind": "report",
       "status": "published",
       "format": "report",
-      "audience": ["copart"],
+      "audience": [
+        "copart"
+      ],
       "title": null,
       "description": null,
       "tags": [],
@@ -121,10 +135,15 @@
           "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/copart-mcp-analysis",
           "type": "folder",
           "date": "2026-09-08"
+        },
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/copart/mcp-generated-report.html",
+          "type": "file",
+          "date": "2026-10-06"
         }
       ],
       "addedAt": "2026-10-05",
-      "updatedAt": "2026-10-05",
+      "updatedAt": "2026-10-06",
       "notes": null
     },
     {
@@ -133,7 +152,9 @@
       "kind": "deck",
       "status": "published",
       "format": "one-pager",
-      "audience": ["el-palacio-de-hierro"],
+      "audience": [
+        "el-palacio-de-hierro"
+      ],
       "title": null,
       "description": null,
       "tags": [],
@@ -178,7 +199,9 @@
       "audience": [],
       "title": null,
       "description": null,
-      "tags": ["competitive"],
+      "tags": [
+        "competitive"
+      ],
       "versions": [
         {
           "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/fs-vs-noibu",
@@ -217,10 +240,14 @@
       "kind": "deck",
       "status": "published",
       "format": "report",
-      "audience": ["ometria"],
+      "audience": [
+        "ometria"
+      ],
       "title": null,
       "description": null,
-      "tags": ["integration"],
+      "tags": [
+        "integration"
+      ],
       "versions": [
         {
           "path": "~/Documents/GitHub/mn/projects/solutions/field-kit/examples/ometria-integration/index.html",
@@ -251,6 +278,293 @@
       ],
       "addedAt": "2026-10-05",
       "updatedAt": "2026-10-05",
+      "notes": null
+    },
+    {
+      "id": "agentic-architecture-gsi",
+      "slug": "agentic-architecture-gsi",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/partners/agentic-architecture-gsi.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "find-validate-fix",
+      "slug": "find-validate-fix",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/projects/solutions/partners/find-validate-fix-agentic.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "same-tools-different-job",
+      "slug": "same-tools-different-job",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/asset-store/same-tools-different-job.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "cpto-demo-deck",
+      "slug": "cpto-demo-deck",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/asset-store/cpto-demo-deck-20260916.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "cpto-demo-field-guide",
+      "slug": "cpto-demo-field-guide",
+      "kind": "deck",
+      "status": "published",
+      "format": "one-pager",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/asset-store/cpto-demo-field-guide-20260916.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "steve-overview",
+      "slug": "steve-overview",
+      "kind": "page",
+      "status": "published",
+      "format": "one-pager",
+      "audience": [],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/asset-store/steve-overview.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "marriott-agentic-architecture",
+      "slug": "marriott-agentic-architecture",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [
+        "marriott"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/marriott/agentic-architecture.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "marriott-redemption-error-analysis",
+      "slug": "marriott-redemption-error-analysis",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": [
+        "marriott"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/marriott/redemption-error-analysis",
+          "type": "folder",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "pepsi-wfa-b2b",
+      "slug": "pepsi-wfa-b2b",
+      "kind": "deck",
+      "status": "published",
+      "format": "report",
+      "audience": [
+        "pepsi"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/pepsi/wfa-b2b-2026-06.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "pepsi-loyalty-analysis",
+      "slug": "pepsi-loyalty-analysis",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": [
+        "pepsi"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/pepsi/pepsiconnect-loyalty-analysis.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "alo-yoga-graphql-incident",
+      "slug": "alo-yoga-graphql-incident",
+      "kind": "report",
+      "status": "published",
+      "format": "report",
+      "audience": [
+        "alo-yoga"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/alo-yoga/graphql-incident-report.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "papa-johns-intro-deck",
+      "slug": "papa-johns-intro-deck",
+      "kind": "deck",
+      "status": "published",
+      "format": "deck",
+      "audience": [
+        "papa-johns"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/papa-johns/pitch/intro-deck.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
+      "notes": null
+    },
+    {
+      "id": "papa-johns-field-guide",
+      "slug": "papa-johns-field-guide",
+      "kind": "deck",
+      "status": "published",
+      "format": "one-pager",
+      "audience": [
+        "papa-johns"
+      ],
+      "title": null,
+      "description": null,
+      "tags": [],
+      "versions": [
+        {
+          "path": "~/Documents/GitHub/mn/users/lane2day/customers/papa-johns/pitch/field-guide.html",
+          "type": "file",
+          "date": "2026-10-06"
+        }
+      ],
+      "addedAt": "2026-10-06",
+      "updatedAt": "2026-10-06",
       "notes": null
     }
   ]
